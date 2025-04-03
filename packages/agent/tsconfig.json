@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "composite": true
+  },
+  "references": [
+    { "path": "../lib" },
+    { "path": "../contracts" }
+  ],
+  "include": ["src/**/*", "index.ts"],
+  "exclude": ["dist/**", "node_modules", "coverage", "cache"]
+}
+

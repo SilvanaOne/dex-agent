@@ -1,0 +1,67 @@
+{
+  "name": "@dex-agent/lib",
+  "description": "DEX example library",
+  "version": "0.1.0",
+  "author": "DFST",
+  "bugs": "https://github.com/SilvanaOne/dex-agent/issues",
+  "dependencies": {
+    "@mysten/sui": "^1.26.0",
+    "js-sha256": "^0.11.0",
+    "mina-signer": "^3.0.7",
+    "nanoid": "^5.1.5",
+    "pinata": "^2.1.3",
+    "secp256k1": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "esbuild": "^0.25.2",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "exports": {
+    "types": "./dist/node/index.d.ts",
+    "node": {
+      "import": "./dist/node/index.js",
+      "require": "./dist/node/index.cjs"
+    },
+    "browser": "./dist/web/index.js",
+    "default": "./dist/web/index.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://dex.silvana.dev",
+  "keywords": [
+    "cloud",
+    "fungible-token",
+    "mina-protocol",
+    "silvana",
+    "NFT",
+    "proving",
+    "tokens",
+    "typescript"
+  ],
+  "license": "Apache-2.0",
+  "main": "dist/web/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "SilvanaOne/dex-agent.git",
+  "scripts": {
+    "build": "rm -rf dist && tsc && tsc --build tsconfig.web.json && node build-cjs.js",
+    "test": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps -r dotenv/config --require dotenv/config --env-file=../client/.env --test",
+    "localnet": "RUST_LOG=off,sui_node=info sui start --with-faucet --force-regenesis",
+    "template": "npm run test test/template.test.ts",
+    "price": "npm run test test/price.test.ts",
+    "signature": "npm run test test/signature.test.ts",
+    "public-key": "npm run test test/public-key.test.ts"
+  },
+  "type": "module",
+  "types": "./dist/node/index.d.ts"
+}

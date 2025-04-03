@@ -1,0 +1,57 @@
+{
+  "name": "@dex-agent/client",
+  "version": "0.1.0",
+  "author": "DFST",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps -r dotenv/config --require dotenv/config  --env-file=.env.public --env-file=.env.circuit --env-file=.env --env-file=../../.env --test",
+    "localnet": "RUST_LOG=off,sui_node=info sui start --with-faucet --force-regenesis",
+    "template": "npm run test test/template.test.ts",
+    "deploy": "npm run test test/deploy.test.ts",
+    "upgrade": "npm run test test/upgrade.test.ts",
+    "users": "npm run test test/users.test.ts",
+    "topup": "npm run test test/topup.test.ts",
+    "fetch": "npm run test test/fetch.test.ts",
+    "trade": "npm run test test/trade.test.ts",
+    "block": "npm run test test/block.test.ts",
+    "block-da": "npm run test test/block-da.test.ts",
+    "da": "npm run test test/da.test.ts",
+    "events": "npm run test test/events.test.ts",
+    "rollup": "npm run test test/rollup.test.ts",
+    "circuits": "npm run test test/circuits.test.ts",
+    "circuit": "npm run test test/circuit.test.ts",
+    "config": "npm run test test/config.test.ts",
+    "faucet": "npm run test test/faucet.test.ts",
+    "prove": "npm run test test/prove.test.ts",
+    "proof": "npm run test test/proof.test.ts",
+    "merge": "npm run test test/merge.test.ts",
+    "settle": "npm run test test/settle.test.ts",
+    "signature": "npm run test test/signature.test.ts",
+    "start": "npm run users && npm run topup && npm run trade",
+    "batch": "npm run topup && npm run trade && npm run block && npm run trade && npm run block && npm run trade && npm run block && npm run trade && npm run block",
+    "build": "rm -rf dist && tsc && tsc --build tsconfig.web.json && node build-cjs.js",
+    "release": "npm publish --access public"
+  },
+  "node": {
+    "version": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "@types/secp256k1": "^4.0.6",
+    "dotenv": "^16.4.7",
+    "esbuild": "^0.25.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@dex-agent/contracts": "^0.1.0",
+    "@dex-agent/lib": "^0.1.0",
+    "@mysten/sui": "^1.26.0",
+    "@silvana-one/mina-utils": "^1.0.0",
+    "@silvana-one/storage": "^1.0.0",
+    "o1js": "^2.3.0",
+    "secp256k1": "^5.0.1"
+  },
+  "types": "./dist/node/index.d.ts"
+}
