@@ -12,7 +12,7 @@
     "build:ui": "npm run build -w packages/lib && npm run build -w packages/ui",
     "build:root": "rm -rf dist && tsc",
     "build:agent": "corepack npm run build -w packages/lib && corepack npm run build -w packages/contracts && corepack npm run build -w packages/agent && corepack npm run build:root",
-    "deploy:agent": "npm run build:agent && silvana deploy --exclude 'packages/ui' --repo dex-agent --dry",
+    "deploy:agent": "npm run build:agent && silvana deploy --exclude 'packages/ui' --repo dex-agent",
     "run:agent": "node --loader=ts-node/esm --enable-source-maps index.ts",
     "run:worker": "node dist/index.js"
   },
