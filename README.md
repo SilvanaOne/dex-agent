@@ -41,6 +41,7 @@ Txs are signed using mina.signFields() methods
 ## Future work
 
 - direct verification of signatures produced by Auro Wallet on sui: when Mina crypto primitives will be available on sui
+- calculation of IndexedMerkleMap root on sui: when Mina-compatible Poseidon hash will be available on sui
 - adding Project Untitled support and using polynomial commitments to verify data stored on data availability layer: when Project Untitled will be available.
 
 ## Packages
