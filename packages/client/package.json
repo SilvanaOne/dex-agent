@@ -28,6 +28,7 @@
     "merge": "npm run test test/merge.test.ts",
     "settle": "npm run test test/settle.test.ts",
     "signature": "npm run test test/signature.test.ts",
+    "walrus": "npm run test test/walrus.test.ts",
     "start": "npm run users && npm run topup && npm run trade",
     "batch": "npm run topup && npm run trade && npm run block && npm run trade && npm run block && npm run trade && npm run block && npm run trade && npm run block",
     "build": "rm -rf dist && tsc && tsc --build tsconfig.web.json && node build-cjs.js",

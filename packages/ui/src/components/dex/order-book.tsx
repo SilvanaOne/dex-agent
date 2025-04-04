@@ -1,17 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Orderbook } from "@dex-agent/lib";
-interface OrderBookEntry {
-  price: number;
-  amount: number;
-  total: number;
-}
+import { Orderbook, UserTradingAccount } from "@dex-agent/lib";
 
 export default function OrderBookComponent({
   orderbook,
+  account,
 }: {
   orderbook?: Orderbook;
+  account?: UserTradingAccount;
 }) {
   const bids = orderbook
     ? Object.entries(orderbook.sorted_bids).map(
@@ -19,6 +16,7 @@ export default function OrderBookComponent({
           price: Number(BigInt(price) / 1_000_000n) / 1000,
           amount: Number(amount / 1_000_000n) / 1000,
           total: Number(total / 1_000_000n) / 1000,
+          user: account?.bid?.price === BigInt(price),
         })
       )
     : [];
@@ -29,6 +27,7 @@ export default function OrderBookComponent({
             price: Number(BigInt(price) / 1_000_000n) / 1000,
             amount: Number(amount / 1_000_000n) / 1000,
             total: Number(total / 1_000_000n) / 1000,
+            user: account?.ask?.price === BigInt(price),
           })
         )
       : []
@@ -102,7 +101,13 @@ export default function OrderBookComponent({
             key={`ask-${index}`}
             className="grid grid-cols-3 text-[10px] hover:bg-[#2a2e37] transition-colors relative"
           >
-            <div className="text-[#f6465d] z-10">{ask.price.toFixed(2)}</div>
+            <div
+              className={`${
+                ask.user ? "font-semibold text-2xs text-[#f6465d] z-10" : ""
+              } text-[#f6465d] z-10`}
+            >
+              {ask.price.toFixed(2)}
+            </div>
             <div className="text-right z-10">{ask.amount.toFixed(4)}</div>
             <div className="text-right z-10">{ask.total.toFixed(4)}</div>
             <div
@@ -130,7 +135,13 @@ export default function OrderBookComponent({
             key={`bid-${index}`}
             className="grid grid-cols-3 text-[10px] hover:bg-[#2a2e37] transition-colors relative"
           >
-            <div className="text-[#02c076] z-10">{bid.price.toFixed(2)}</div>
+            <div
+              className={`${
+                bid.user ? "font-semibold text-2xs text-[#02c076] z-10" : ""
+              } text-[#02c076] z-10`}
+            >
+              {bid.price.toFixed(2)}
+            </div>
             <div className="text-right z-10">{bid.amount.toFixed(4)}</div>
             <div className="text-right z-10">{bid.total.toFixed(4)}</div>
             <div

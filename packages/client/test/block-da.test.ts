@@ -95,7 +95,7 @@ describe("DEX Block Data Availability", async () => {
     blockBlobId = await saveToDA({
       data: provableBlockData.serialize(),
       address: adminAddress,
-      numEpochs: 5,
+      days: 5,
     });
     console.log(`block blobId:`, blockBlobId);
   });

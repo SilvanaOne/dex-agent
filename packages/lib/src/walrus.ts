@@ -1,4 +1,4 @@
-const daemon: "local" | "testnet" = "local" as "local" | "testnet";
+const daemon: "local" | "testnet" = "testnet" as "local" | "testnet";
 const basePublisherUrl =
   daemon === "local"
     ? "http://127.0.0.1:31415"
@@ -10,6 +10,9 @@ const readerUrl =
     : "https://wal-aggregator-testnet.staketab.org/v1/blobs/";
 //"https://aggregator.walrus-testnet.walrus.space/v1/blobs/";
 
+const MIN_EPOCHS = 2;
+const MAX_EPOCHS = 53;
+
 export async function saveToWalrus({
   data,
   address,
@@ -20,7 +23,12 @@ export async function saveToWalrus({
   numEpochs?: number;
 }): Promise<string | undefined> {
   let sendToParam = address ? `&send_object_to=${address}` : "";
-  let epochs = numEpochs < 2 ? 2 : numEpochs;
+  let epochs =
+    numEpochs < MIN_EPOCHS
+      ? MIN_EPOCHS
+      : numEpochs > MAX_EPOCHS
+      ? MAX_EPOCHS
+      : numEpochs;
   console.log("Writing to Walrus");
   console.time("written");
   const response = await fetch(

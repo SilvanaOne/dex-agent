@@ -36,7 +36,7 @@ describe("Store circuit", async () => {
     console.log("circuit text size:", circuit.length);
     blobId = await saveToDA({
       data: circuit,
-      days: 100,
+      days: 50,
       filename: "circuit.ts",
       description: "Circuit for DEX",
     });

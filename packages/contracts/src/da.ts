@@ -67,7 +67,7 @@ export async function checkDataAvailability(params: {
     const blockBlobId = await saveToDA({
       data: provableBlockData.serialize(),
       address,
-      days: 100,
+      days: 50,
       filename: `dex-block${blockNumber}.json`,
       description: `block ${blockNumber}`,
     });

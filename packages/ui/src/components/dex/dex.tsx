@@ -998,7 +998,7 @@ export default function DEX() {
           <div className="h-2/5 flex border-b border-[#2a2e37] bg-[#161a1e]">
             {/* Order Book */}
             <div className="w-1/2 border-r border-[#2a2e37] overflow-hidden">
-              <OrderBook orderbook={orderbook} />
+              <OrderBook orderbook={orderbook} account={account} />
             </div>
 
             {/* Market Trades */}

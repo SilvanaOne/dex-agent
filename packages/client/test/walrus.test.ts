@@ -1,13 +1,18 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import { saveToDA, readFromDA, getDAUrl } from "@dex-agent/lib";
+import {
+  saveToWalrus,
+  readFromWalrus,
+  getWalrusUrl,
+  readFromDA,
+} from "@dex-agent/lib";
 import { readFile } from "node:fs/promises";
 let blobId1: string | undefined = undefined;
 let blobId2: string | undefined = undefined;
-describe("DA", async () => {
-  it("should save to DA", async () => {
-    blobId1 = await saveToDA({
+describe("Walrus", async () => {
+  it("should save to Walrus", async () => {
+    blobId1 = await saveToWalrus({
       data: JSON.stringify(
         {
           message: "Hello, world!",
@@ -16,53 +21,51 @@ describe("DA", async () => {
         null,
         2
       ),
-      days: 50,
+      numEpochs: 53,
     });
     assert.ok(blobId1, "blobId is not set");
   });
 
-  it.skip("should save to DA big file", async () => {
+  it("should save to Walrus big file", async () => {
     const circuit = await readFile(
       "../contracts/src/contracts/rollup.ts",
       "utf-8"
     );
     console.log("circuit text size:", circuit.length);
-    blobId2 = await saveToDA({
+    blobId2 = await saveToWalrus({
       data: circuit,
-      days: 50,
-      filename: "rollup.ts",
-      description: "Circuit for DEX",
+      numEpochs: 53,
     });
     assert.ok(blobId2, "blobId is not set");
   });
 
-  it.skip("should read from DA", async () => {
+  it("should read from Walrus", async () => {
     if (!blobId1) {
       throw new Error("blobId is not set");
     }
-    const blob = await readFromDA({
+    const blob = await readFromWalrus({
       blobId: blobId1,
     });
     console.log("blob", blob);
     assert.ok(blob, "blob is not received");
   });
 
-  it.skip("should read from DA big file", async () => {
+  it("should read from Walrus big file", async () => {
     if (!blobId2) {
       throw new Error("blobId is not set");
     }
-    const blob = await readFromDA({
+    const blob = await readFromWalrus({
       blobId: blobId2,
     });
     //console.log("blob", blob);
     assert.ok(blob, "blob is not received");
   });
 
-  it("should get DA url", async () => {
+  it("should get Walrus url", async () => {
     if (!blobId1) {
       throw new Error("blobId is not set");
     }
-    const url = await getDAUrl({ blobId: blobId1 });
+    const url = await getWalrusUrl({ blobId: blobId1 });
     console.log("url", url);
     assert.ok(url, "url is not set");
   });
