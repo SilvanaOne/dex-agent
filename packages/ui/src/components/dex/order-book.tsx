@@ -103,7 +103,7 @@ export default function OrderBookComponent({
           >
             <div
               className={`${
-                ask.user ? "font-semibold text-2xs text-[#f6465d] z-10" : ""
+                ask.user ? "font-semibold text-2xs" : ""
               } text-[#f6465d] z-10`}
             >
               {ask.price.toFixed(2)}
@@ -137,7 +137,7 @@ export default function OrderBookComponent({
           >
             <div
               className={`${
-                bid.user ? "font-semibold text-2xs text-[#02c076] z-10" : ""
+                bid.user ? "font-semibold text-2xs" : ""
               } text-[#02c076] z-10`}
             >
               {bid.price.toFixed(2)}
