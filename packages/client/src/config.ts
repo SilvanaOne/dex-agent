@@ -117,10 +117,14 @@ export async function updateConfig(config: Partial<DexConfig>): Promise<void> {
   tx.setSender(address);
   tx.setGasBudget(100_000_000);
   //const signedTx = await tx.sign({ client: suiClient, signer: keypair });
-  const { tx: updateTx, digest } = await executeTx({
+  const result = await executeTx({
     tx,
     keyPair: keypair,
   });
+  if (!result) {
+    throw new Error("Failed to update config");
+  }
+  const { tx: updateTx, digest } = result;
 
   // Wait for transaction to complete
   const waitResult = await waitTx(digest);
@@ -152,14 +156,14 @@ export async function createConfig(config: DexConfig): Promise<{
     dependencies,
     keypair,
   });
-  const {
-    tx: executePublishTx,
-    digest,
-    events,
-  } = await executeTx({
+  const result = await executeTx({
     tx: publishTx,
     keyPair: keypair,
   });
+  if (!result) {
+    throw new Error("Failed to publish config");
+  }
+  const { tx: executePublishTx, digest, events } = result;
   let configPackageID: string | undefined = undefined;
   let configID: string | undefined = undefined;
   let adminID: string | undefined = undefined;
@@ -230,14 +234,14 @@ export async function createConfig(config: DexConfig): Promise<{
   //   client: suiClient,
   // });
 
-  const {
-    tx: createTx,
-    digest: createDigest,
-    events: createEvents,
-  } = await executeTx({
+  const result2 = await executeTx({
     tx,
     keyPair: keypair,
   });
+  if (!result2) {
+    throw new Error("Failed to create config");
+  }
+  const { tx: createTx, digest: createDigest, events: createEvents } = result2;
 
   createTx.objectChanges?.map((change) => {
     if (

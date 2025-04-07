@@ -174,14 +174,14 @@ describe("Create users", async () => {
     //   client: suiClient,
     // });
 
-    const {
-      tx: createUsersTx,
-      digest,
-      events,
-    } = await executeTx({
+    const result = await executeTx({
       tx,
       keyPair: keypair,
     });
+    if (!result) {
+      throw new Error("Failed to create users");
+    }
+    const { tx: createUsersTx, digest, events } = result;
     console.log("Created users:", {
       digest,
       events,

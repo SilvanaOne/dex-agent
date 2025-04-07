@@ -83,6 +83,8 @@ export async function settle(params: {
   cache: Cache;
 }): Promise<SettleResult> {
   const { jobId, endTime, cache, chain } = params;
+  settlements = [];
+  data_availability = [];
   nonce = params.nonce;
   if (!adminSecretKey) {
     throw new Error("ADMIN_SECRET_KEY is not set");
@@ -157,12 +159,15 @@ async function settleIteration(params: {
       verbose: true,
       cache,
     });
-    if (daTx && daTx.blobId && daTx.digest && daTx.blockNumber) {
+    if (daTx) console.log("daTx", daTx);
+    if (daTx && daTx.blobId && daTx.digest && daTx.blockNumber !== undefined) {
       data_availability.push({
         block_number: daTx.blockNumber,
         data_availability: daTx.blobId,
         data_availability_digest: daTx.digest,
       });
+    } else if (daTx) {
+      console.error("daTx is missing some fields", daTx);
     }
   }
   if (Date.now() > endTime) {
@@ -255,12 +260,20 @@ async function settleIteration(params: {
           verbose: true,
           cache,
         });
-        if (daTx && daTx.blobId && daTx.digest && daTx.blockNumber) {
+        if (daTx) console.log("daTx", daTx);
+        if (
+          daTx &&
+          daTx.blobId &&
+          daTx.digest &&
+          daTx.blockNumber !== undefined
+        ) {
           data_availability.push({
             block_number: daTx.blockNumber,
             data_availability: daTx.blobId,
             data_availability_digest: daTx.digest,
           });
+        } else if (daTx) {
+          console.error("daTx is missing some fields", daTx);
         }
         while (daTx && Date.now() < endTime && settling) {
           console.log("da tx:", {
@@ -273,17 +286,26 @@ async function settleIteration(params: {
             verbose: true,
             cache,
           });
-          if (daTx && daTx.blobId && daTx.digest && daTx.blockNumber) {
+          if (daTx) console.log("daTx", daTx);
+          if (
+            daTx &&
+            daTx.blobId &&
+            daTx.digest &&
+            daTx.blockNumber !== undefined
+          ) {
             data_availability.push({
               block_number: daTx.blockNumber,
               data_availability: daTx.blobId,
               data_availability_digest: daTx.digest,
             });
+          } else if (daTx) {
+            console.error("daTx is missing some fields", daTx);
           }
         }
         const settlement = await settlementPromise;
         if (settlement) {
           currentMinaBlockNumber++;
+          settlements.push(settlement);
           return true;
         }
       }
@@ -314,133 +336,141 @@ export async function settleMinaContract(params: {
 }): Promise<SettlementTransaction | undefined> {
   const { proof, blobId, chain, cache } = params;
   console.time("settle");
-  settling = true;
-  await getProverSecretKey();
-  await initBlockchain(chain);
-
-  const CONTRACT_VERIFICATION_KEY_HASH =
-    process.env.CONTRACT_VERIFICATION_KEY_HASH;
-  const CONTRACT_VERIFICATION_KEY_DATA =
-    process.env.CONTRACT_VERIFICATION_KEY_DATA;
-
-  if (!CONTRACT_VERIFICATION_KEY_HASH || !CONTRACT_VERIFICATION_KEY_DATA) {
-    throw new Error(
-      "CONTRACT_VERIFICATION_KEY_HASH or CONTRACT_VERIFICATION_KEY_DATA is not set"
-    );
-  }
-
-  const verificationKey = new VerificationKey({
-    hash: Field(BigInt(CONTRACT_VERIFICATION_KEY_HASH)),
-    data: CONTRACT_VERIFICATION_KEY_DATA,
-  });
-
-  console.log("Compiling DEX Contract");
-  console.time("compile");
-  if (!vkContract || !vkProgram) {
-    vkProgram = await compileDEXProgram(cache);
-    const { verificationKey: vkc } = await DEXContract.compile({ cache });
-    vkContract = vkc;
-  }
-  if (
-    vkContract.data !== verificationKey.data ||
-    vkContract.hash.toJSON() !== verificationKey.hash.toJSON()
-  ) {
-    throw new Error("Verification key mismatch");
-  }
-  console.timeEnd("compile");
-
-  const adminPrivateKey = PrivateKey.fromBase58(params.adminPrivateKey);
-  const admin = adminPrivateKey.toPublicKey();
-  const poolPublicKey = PublicKey.fromBase58(params.poolPublicKey);
-  const pool = poolPublicKey;
-
-  console.log("DEX contract address:", pool.toBase58());
-
-  console.log(
-    "Admin",
-    admin.toBase58(),
-    "balance:",
-    await accountBalanceMina(admin)
-  );
-
-  const dex = new DEXContract(pool);
-  const startTx = Number(proof.publicInput.sequence.toBigInt()) + 1;
-  const endTx = Number(proof.publicOutput.sequence.toBigInt());
-  const txs_number = endTx - startTx + 1;
-  const blockNumber = Number(proof.publicInput.blockNumber.toBigInt());
-  console.log("blockNumber", blockNumber);
-  const memo = `block ${blockNumber} (${txs_number} ${
-    txs_number === 1 ? "tx" : "txs"
-  }: ${startTx} - ${endTx})`.substring(0, 30);
-  console.log("memo", memo);
-
-  if (!vkProgram) {
-    throw new Error("Verification key is not set");
-  }
-
-  const ok = await verify(proof, vkProgram);
-  console.log("ok", ok);
-  if (!ok) {
-    throw new Error("Proof is not valid");
-  }
-
-  const submitted = await submitBlockProofDataAvailability({
-    blockNumber,
-    blobId,
-  });
-  if (!submitted) {
-    throw new Error("Failed to submit block proof data availability");
-  }
-  let apiNonce = 0;
   try {
-    apiNonce = (await getNonce({ address: admin.toBase58(), chain })) ?? 0;
-  } catch (e: any) {
-    console.log("Failed to get nonce from API", e?.message);
-  }
-  await fetchMinaAccount({ publicKey: pool, force: true });
-  await fetchMinaAccount({ publicKey: admin, force: true });
+    settling = true;
+    await getProverSecretKey();
+    await initBlockchain(chain);
 
-  const o1jsNonce = Number(Mina.getAccount(admin).nonce.toBigint());
-  nonce = Math.max(nonce, apiNonce ?? 0, o1jsNonce);
+    const CONTRACT_VERIFICATION_KEY_HASH =
+      process.env.CONTRACT_VERIFICATION_KEY_HASH;
+    const CONTRACT_VERIFICATION_KEY_DATA =
+      process.env.CONTRACT_VERIFICATION_KEY_DATA;
 
-  const tx = await Mina.transaction(
-    {
-      sender: admin,
-      fee: 100_000_000,
-      memo,
-      nonce,
-    },
-    async () => {
-      await dex.settle(proof);
+    if (!CONTRACT_VERIFICATION_KEY_HASH || !CONTRACT_VERIFICATION_KEY_DATA) {
+      throw new Error(
+        "CONTRACT_VERIFICATION_KEY_HASH or CONTRACT_VERIFICATION_KEY_DATA is not set"
+      );
     }
-  );
-  await tx.prove();
-  const sentTx = await sendTx({
-    tx: tx.sign([adminPrivateKey]),
-    description: "settle",
-    wait: false,
-    verbose: true,
-  });
-  if (sentTx?.status !== expectedTxStatus) {
-    console.error("sentTx", sentTx);
-    throw new Error(`Deploy DEX Contract failed: ${sentTx?.status}`);
+
+    const verificationKey = new VerificationKey({
+      hash: Field(BigInt(CONTRACT_VERIFICATION_KEY_HASH)),
+      data: CONTRACT_VERIFICATION_KEY_DATA,
+    });
+
+    console.log("Compiling DEX Contract");
+    console.time("compile");
+    if (!vkContract || !vkProgram) {
+      vkProgram = await compileDEXProgram(cache);
+      const { verificationKey: vkc } = await DEXContract.compile({ cache });
+      vkContract = vkc;
+    }
+    if (
+      vkContract.data !== verificationKey.data ||
+      vkContract.hash.toJSON() !== verificationKey.hash.toJSON()
+    ) {
+      throw new Error("Verification key mismatch");
+    }
+    console.timeEnd("compile");
+
+    const adminPrivateKey = PrivateKey.fromBase58(params.adminPrivateKey);
+    const admin = adminPrivateKey.toPublicKey();
+    const poolPublicKey = PublicKey.fromBase58(params.poolPublicKey);
+    const pool = poolPublicKey;
+
+    console.log("DEX contract address:", pool.toBase58());
+
+    console.log(
+      "Admin",
+      admin.toBase58(),
+      "balance:",
+      await accountBalanceMina(admin)
+    );
+
+    const dex = new DEXContract(pool);
+    const startTx = Number(proof.publicInput.sequence.toBigInt()) + 1;
+    const endTx = Number(proof.publicOutput.sequence.toBigInt());
+    const txs_number = endTx - startTx + 1;
+    const blockNumber = Number(proof.publicInput.blockNumber.toBigInt());
+    console.log("blockNumber", blockNumber);
+    const memo = `block ${blockNumber} (${txs_number} ${
+      txs_number === 1 ? "tx" : "txs"
+    }: ${startTx} - ${endTx})`.substring(0, 30);
+    console.log("memo", memo);
+
+    if (!vkProgram) {
+      throw new Error("Verification key is not set");
+    }
+
+    const ok = await verify(proof, vkProgram);
+    console.log("ok", ok);
+    if (!ok) {
+      throw new Error("Proof is not valid");
+    }
+
+    const submitted = await submitBlockProofDataAvailability({
+      blockNumber,
+      blobId,
+    });
+    if (!submitted) {
+      throw new Error("Failed to submit block proof data availability");
+    }
+    let apiNonce = 0;
+    try {
+      apiNonce = (await getNonce({ address: admin.toBase58(), chain })) ?? 0;
+    } catch (e: any) {
+      console.log("Failed to get nonce from API", e?.message);
+    }
+    await fetchMinaAccount({ publicKey: pool, force: true });
+    await fetchMinaAccount({ publicKey: admin, force: true });
+
+    const o1jsNonce = Number(Mina.getAccount(admin).nonce.toBigint());
+    nonce = Math.max(nonce, apiNonce ?? 0, o1jsNonce);
+
+    const tx = await Mina.transaction(
+      {
+        sender: admin,
+        fee: 100_000_000,
+        memo,
+        nonce,
+      },
+      async () => {
+        await dex.settle(proof);
+      }
+    );
+    await tx.prove();
+    const sentTx = await sendTx({
+      tx: tx.sign([adminPrivateKey]),
+      description: "settle",
+      wait: false,
+      verbose: true,
+    });
+    if (sentTx?.status !== expectedTxStatus) {
+      console.error("sentTx", sentTx);
+      throw new Error(`Deploy DEX Contract failed: ${sentTx?.status}`);
+    }
+    nonce++;
+    const hash = sentTx?.hash;
+
+    Memory.info("sent Mina Tx");
+    await submitMinaTx({
+      blockNumber,
+      minaTx: hash,
+    });
+    settling = false;
+    console.timeEnd("settle");
+    return {
+      blockNumber,
+      number_of_transactions: txs_number,
+      sequences: [startTx, endTx],
+      settlement_hash: hash,
+      nonce,
+      proof_data_availability: submitted?.blobId,
+      proof_data_availability_digest: submitted?.digest,
+    };
+  } catch (e: any) {
+    console.error("Error in settleMinaContract", e.message);
+    settling = false;
+    console.timeEnd("settle");
+    return undefined;
   }
-  nonce++;
-  const hash = sentTx?.hash;
-  console.timeEnd("settle");
-  Memory.info("sent Mina Tx");
-  await submitMinaTx({
-    blockNumber,
-    minaTx: hash,
-  });
-  settling = false;
-  return {
-    blockNumber,
-    number_of_transactions: txs_number,
-    sequences: [startTx, endTx],
-    settlement_hash: hash,
-    nonce,
-    proof_data_availability: submitted?.digest,
-    proof_data_availability_digest: submitted?.digest,
-  };
 }

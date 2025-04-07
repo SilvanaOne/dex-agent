@@ -155,14 +155,14 @@ describe("Topup DEX users", async () => {
     //   client: suiClient,
     // });
 
-    const {
-      tx: topupTx,
-      digest,
-      events,
-    } = await executeTx({
+    const result = await executeTx({
       tx,
       keyPair: keypair,
     });
+    if (!result) {
+      throw new Error("Failed to topup users");
+    }
+    const { tx: topupTx, digest, events } = result;
     console.log("Topup users:", {
       digest,
       events,

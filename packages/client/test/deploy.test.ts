@@ -96,14 +96,14 @@ describe("Deploy DEX contracts", async () => {
       dependencies,
       keypair,
     });
-    const {
-      tx: publishTx,
-      digest,
-      events,
-    } = await executeTx({
+    const result = await executeTx({
       tx,
       keyPair: keypair,
     });
+    if (!result) {
+      throw new Error("Failed to publish DEX package");
+    }
+    const { tx: publishTx, digest, events } = result;
     publishTx.objectChanges?.map((change) => {
       if (change.type === "published") {
         packageID = change.packageId;
@@ -258,14 +258,14 @@ describe("Deploy DEX contracts", async () => {
     //   client: suiClient,
     // });
 
-    const {
-      tx: initTx,
-      digest,
-      events,
-    } = await executeTx({
+    const result = await executeTx({
       tx,
       keyPair: keypair,
     });
+    if (!result) {
+      throw new Error("Failed to create DEX");
+    }
+    const { tx: initTx, digest, events } = result;
     console.log("initTx", initTx.objectChanges);
     initTx.objectChanges?.map((change) => {
       if (
@@ -448,14 +448,14 @@ public fun update_block_state_data_availability(
     //   client: suiClient,
     // });
 
-    const {
-      tx: updateBlockTx,
-      digest,
-      events,
-    } = await executeTx({
+    const result = await executeTx({
       tx,
       keyPair: keypair,
     });
+    if (!result) {
+      throw new Error("Failed to update block");
+    }
+    const { tx: updateBlockTx, digest, events } = result;
     console.log(`update block tx:`, {
       digest,
       events,

@@ -1,7 +1,7 @@
 {
   "name": "dex-agent",
   "description": "DEX example",
-  "version": "0.2.0",
+  "version": "0.2.6",
   "author": "DFST",
   "license": "Apache-2.0",
   "private": true,

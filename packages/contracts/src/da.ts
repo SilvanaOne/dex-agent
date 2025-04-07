@@ -103,6 +103,7 @@ export async function checkDataAvailability(params: {
     }
     return {
       ...result,
+      blockNumber,
       blobId: blockBlobId,
     };
   } catch (error: any) {

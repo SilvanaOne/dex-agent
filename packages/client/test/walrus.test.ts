@@ -21,7 +21,7 @@ describe("Walrus", async () => {
         null,
         2
       ),
-      numEpochs: 53,
+      numEpochs: 2,
     });
     assert.ok(blobId1, "blobId is not set");
   });
@@ -34,7 +34,7 @@ describe("Walrus", async () => {
     console.log("circuit text size:", circuit.length);
     blobId2 = await saveToWalrus({
       data: circuit,
-      numEpochs: 53,
+      numEpochs: 2,
     });
     assert.ok(blobId2, "blobId is not set");
   });

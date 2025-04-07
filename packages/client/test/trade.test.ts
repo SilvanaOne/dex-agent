@@ -186,10 +186,14 @@ describe("Trade", async () => {
         //   client: suiClient,
         // });
 
-        const { digest, events } = await executeTx({
+        const result = await executeTx({
           tx,
           keyPair: keypair,
         });
+        if (!result) {
+          throw new Error("Failed to bid");
+        }
+        const { digest, events } = result;
         console.timeEnd("bid state");
 
         console.log(`${trader.name} bid:`, digest);
@@ -263,10 +267,14 @@ describe("Trade", async () => {
         // });
         console.timeEnd("ask signature");
         console.time("ask tx send");
-        const { digest, events } = await executeTx({
+        const result = await executeTx({
           tx,
           keyPair: keypair,
         });
+        if (!result) {
+          throw new Error("Failed to ask");
+        }
+        const { digest, events } = result;
         console.timeEnd("ask tx send");
         console.timeEnd("ask state");
         if (wait) {
