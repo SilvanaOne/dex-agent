@@ -38,11 +38,14 @@ function copyDir(src, dest) {
 
 // Copy Prisma client files from src to dist
 const prismaSrcDir = "./src/prisma";
-const prismaDestDir = "./dist/node/prisma";
+const prismaDestDir1 = "./dist/node/prisma";
+const prismaDestDir2 = "./dist/web/prisma";
 
 if (fs.existsSync(prismaSrcDir)) {
-  console.log(`Copying Prisma client files from ${prismaSrcDir} to ${prismaDestDir}...`);
-  copyDir(prismaSrcDir, prismaDestDir);
+  console.log(`Copying Prisma client files from ${prismaSrcDir} to ${prismaDestDir1}...`);
+  copyDir(prismaSrcDir, prismaDestDir1);
+  console.log(`Copying Prisma client files from ${prismaSrcDir} to ${prismaDestDir2}...`);
+  copyDir(prismaSrcDir, prismaDestDir2);
   console.log("Prisma client files copied successfully.");
 } else {
   console.warn(`Prisma client directory ${prismaSrcDir} not found.`);
