@@ -6,6 +6,7 @@
   "bugs": "https://github.com/SilvanaOne/dex-agent/issues",
   "dependencies": {
     "@mysten/sui": "^1.26.0",
+    "@prisma/client": "^6.6.0",
     "js-sha256": "^0.11.0",
     "mina-signer": "^3.0.7",
     "nanoid": "^5.1.5",
@@ -14,7 +15,10 @@
   },
   "devDependencies": {
     "@types/node": "^22.13.14",
+    "dotenv": "^16.4.7",
+    "dotenv-cli": "^8.0.0",
     "esbuild": "^0.25.2",
+    "prisma": "^6.6.0",
     "typescript": "^5.8.2"
   },
   "engines": {
@@ -54,13 +58,21 @@
   },
   "repository": "SilvanaOne/dex-agent.git",
   "scripts": {
-    "build": "rm -rf dist && tsc && tsc --build tsconfig.web.json && node build-cjs.js",
+    "build": "rm -rf dist && prisma generate && tsc && tsc --build tsconfig.web.json && node build-cjs.js",
     "test": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps -r dotenv/config --require dotenv/config --env-file=../client/.env --test",
     "localnet": "RUST_LOG=off,sui_node=info sui start --with-faucet --force-regenesis",
     "template": "npm run test test/template.test.ts",
     "price": "npm run test test/price.test.ts",
     "signature": "npm run test test/signature.test.ts",
-    "public-key": "npm run test test/public-key.test.ts"
+    "public-key": "npm run test test/public-key.test.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:format": "prisma format",
+    "prisma:seed": "dotenv -e ../../.env -- prisma db seed",
+    "prisma:migrate": "dotenv -e ../../.env -- prisma migrate dev --name v2",
+    "prisma:status": "dotenv -e ../../.env -- prisma migrate status",
+    "prisma:studio": "dotenv -e ../../.env -- prisma studio",
+    "prisma:push": "dotenv -e ../../.env -- prisma db push",
+    "prisma:migrate:deploy": "dotenv -e ../../.env -- prisma migrate deploy"
   },
   "type": "module",
   "types": "./dist/node/index.d.ts"

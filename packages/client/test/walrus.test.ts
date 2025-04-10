@@ -21,12 +21,13 @@ describe("Walrus", async () => {
         null,
         2
       ),
-      numEpochs: 2,
+      numEpochs: 53,
     });
     assert.ok(blobId1, "blobId is not set");
   });
 
   it("should save to Walrus big file", async () => {
+    //await new Promise((resolve) => setTimeout(resolve, 10000));
     const circuit = await readFile(
       "../contracts/src/contracts/rollup.ts",
       "utf-8"
@@ -34,7 +35,7 @@ describe("Walrus", async () => {
     console.log("circuit text size:", circuit.length);
     blobId2 = await saveToWalrus({
       data: circuit,
-      numEpochs: 2,
+      numEpochs: 53,
     });
     assert.ok(blobId2, "blobId is not set");
   });

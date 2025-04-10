@@ -1,5 +1,6 @@
 import * as esbuild from "esbuild";
 import path from "node:path";
+import fs from "node:fs";
 import { platform } from "node:process";
 
 const entry = "./src/index.ts";
@@ -9,6 +10,45 @@ let jsEntry = path.resolve(
   path.basename(entry).replace(".ts", ".js")
 );
 let outfile = jsEntry.replace(".js", ".cjs");
+
+
+// Function to copy directory recursively
+function copyDir(src, dest) {
+  // Create destination directory if it doesn't exist
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest, { recursive: true });
+  }
+
+  // Read all files/directories in the source directory
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+
+    if (entry.isDirectory()) {
+      // Recursively copy subdirectories
+      copyDir(srcPath, destPath);
+    } else {
+      // Copy files
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
+// Copy Prisma client files from src to dist
+const prismaSrcDir = "./src/prisma";
+const prismaDestDir = "./dist/node/prisma";
+
+if (fs.existsSync(prismaSrcDir)) {
+  console.log(`Copying Prisma client files from ${prismaSrcDir} to ${prismaDestDir}...`);
+  copyDir(prismaSrcDir, prismaDestDir);
+  console.log("Prisma client files copied successfully.");
+} else {
+  console.warn(`Prisma client directory ${prismaSrcDir} not found.`);
+}
+
+
 
 await esbuild.build({
   entryPoints: ["./dist/node/index.js"],
@@ -55,3 +95,4 @@ function makeJsooExternal() {
     },
   };
 }
+

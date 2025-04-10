@@ -152,6 +152,11 @@ export interface UserTradingAccount {
   nonce: bigint;
 }
 
+export interface SequenceState {
+  sequence: bigint;
+  state: Record<string, UserTradingAccount>;
+}
+
 export interface User {
   suiAddress: string;
   minaPublicKey: string;
@@ -250,6 +255,33 @@ export interface OperationEvent {
   operation: OperationData;
   timestamp: number;
 }
+
+export interface ActionCreateAccountRequest extends ActionCreateAccount {
+  operation: Operation.CREATE_ACCOUNT;
+}
+
+export interface ActionBidRequest extends ActionBid {
+  operation: Operation.BID;
+}
+
+export interface ActionAskRequest extends ActionAsk {
+  operation: Operation.ASK;
+}
+
+export interface ActionTradeRequest extends ActionTrade {
+  operation: Operation.TRADE;
+}
+
+export interface ActionTransferRequest extends ActionTransfer {
+  operation: Operation.TRANSFER;
+}
+
+export type ActionRequest =
+  | ActionCreateAccountRequest
+  | ActionBidRequest
+  | ActionAskRequest
+  | ActionTradeRequest
+  | ActionTransferRequest;
 
 export interface RawOperationEvent {
   type:

@@ -35,3 +35,4 @@ packages/*/.env.*
 .pnp.*
 
 
+.vercel

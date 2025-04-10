@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("SILVANA_DATABASE_URL")
+}
+
+model State {
+  sequence BigInt
+  address  String
+
+  baseTokenAmount         BigInt
+  baseTokenStakedAmount   BigInt
+  baseTokenBorrowedAmount BigInt
+
+  quoteTokenAmount         BigInt
+  quoteTokenStakedAmount   BigInt
+  quoteTokenBorrowedAmount BigInt
+
+  bidAmount BigInt
+  bidPrice  BigInt
+  bidIsSome Boolean
+
+  askAmount BigInt
+  askPrice  BigInt
+  askIsSome Boolean
+
+  nonce BigInt
+
+  @@id([sequence, address])
+  @@index([sequence])
+  @@index([address])
+}
+
+model FetchedSequences {
+  sequence BigInt @id
+}
+
+enum Operation {
+  CREATE_ACCOUNT
+  BID
+  ASK
+  TRADE
+  TRANSFER
+}
+
+enum ActionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model ActionRequest {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  operation Operation
+  status    ActionStatus @default(PENDING)
+
+  // CREATE_ACCOUNT fields
+  address         String?
+  poolPublicKey   String?
+  publicKey       String?
+  publicKeyBase58 String?
+  name            String?
+  role            String?
+  image           String?
+  baseBalance     BigInt?
+  quoteBalance    BigInt?
+
+  // BID/ASK fields
+  userPublicKey   String?
+  baseTokenAmount BigInt?
+  price           BigInt?
+  isSome          Boolean?
+  nonce           BigInt?
+  userSignatureR  BigInt?
+  userSignatureS  BigInt?
+
+  // TRADE fields
+  buyerPublicKey   String?
+  sellerPublicKey  String?
+  quoteTokenAmount BigInt?
+  buyerNonce       BigInt?
+  sellerNonce      BigInt?
+
+  // TRANSFER fields
+  senderPublicKey   String?
+  receiverPublicKey String?
+  senderNonce       BigInt?
+  receiverNonce     BigInt?
+  senderSignatureR  BigInt?
+  senderSignatureS  BigInt?
+
+  @@index([operation])
+  @@index([status])
+}
