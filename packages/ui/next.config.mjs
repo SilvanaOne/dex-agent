@@ -52,6 +52,17 @@ const nextConfig = {
     
     return config;
   },
+  
+  // Add this section to properly include Prisma binaries in the Vercel deployment
+  output: 'standalone',
+  outputFileTracing: true,
+  experimental: {
+    ...nextConfig.experimental,
+    outputFileTracingRoot: path.join(__dirname, '../..'),
+    outputFileTracingIncludes: {
+      '/packages/lib/src/prisma/**/*': ['*']
+    }
+  },
 };
 
 export default withLogtail(nextConfig);
