@@ -35,6 +35,17 @@ const nextConfig = {
       ...config.resolve.alias,
       "@dex-agent/lib": path.join(__dirname, "..", "lib"),
     };
+    
+    // Fix for Prisma client
+    if (isServer) {
+      // Copy the Prisma engine binary files
+      config.plugins.push(
+        new webpack.IgnorePlugin({
+          resourceRegExp: /^\.\/libquery_engine-.*$/,
+        })
+      );
+    }
+    
     return config;
   },
 };
