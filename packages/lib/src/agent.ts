@@ -22,6 +22,22 @@ export async function agentSettle() {
   return answer;
 }
 
+export async function agentProveAccount(params: {
+  address: string;
+  blockNumber: number;
+  sequence: number;
+}) {
+  console.log("agent: starting prove account");
+  const args = JSON.stringify(params);
+
+  const answer = await dexProverRequest({
+    task: "proveAccount",
+    metadata: `prove account`,
+    args,
+  });
+  return answer;
+}
+
 export async function agentMonitor(params: { blockNumber: number }) {
   console.log("agent: starting monitor");
   const answer = await dexProverRequest({
@@ -36,7 +52,7 @@ export async function agentMonitor(params: { blockNumber: number }) {
 }
 
 async function dexProverRequest(params: {
-  task: "prove" | "merge" | "settle" | "monitor";
+  task: "prove" | "merge" | "settle" | "monitor" | "proveAccount";
   metadata?: string;
   args?: string;
 }) {
@@ -56,6 +72,26 @@ async function dexProverRequest(params: {
     task,
     args: args ?? JSON.stringify({ task }),
     metadata,
+    chain,
+  });
+  return answer;
+}
+
+export async function dexProverResult(params: { jobId: string }) {
+  const chain = process.env.NEXT_PUBLIC_MINA_CHAIN || process.env.MINA_CHAIN;
+  if (!chain) {
+    throw new Error("MINA_CHAIN is not set");
+  }
+  if (chain !== "devnet" && chain !== "zeko" && chain !== "mainet") {
+    throw new Error("MINA_CHAIN is not valid");
+  }
+  const { jobId } = params;
+  const answer = await silvanaProverRequest({
+    command: "jobResult",
+    developer: "DFST",
+    repo: "dex-agent",
+    transactions: [],
+    jobId,
     chain,
   });
   return answer;

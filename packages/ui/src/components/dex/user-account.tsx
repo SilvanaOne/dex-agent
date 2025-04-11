@@ -8,14 +8,18 @@ import type {
 } from "@dex-agent/lib";
 import { useState } from "react";
 import Processing from "./ui/processing";
-
+import { daUrl } from "@/lib/chain";
+import { shortenString } from "@/lib/short";
 interface UserAccountProps {
   account: UserTradingAccount | undefined;
   pendingTransactions: PendingTransactions | undefined;
   highlight: boolean;
   faucet: () => void;
   createAccount: () => void;
+  proveAccount: () => void;
   processing: TransactionType | undefined;
+  proof?: string;
+  jobId?: string;
 }
 
 export default function UserAccount({
@@ -24,7 +28,10 @@ export default function UserAccount({
   highlight,
   faucet,
   createAccount,
+  proveAccount,
   processing,
+  proof,
+  jobId,
 }: UserAccountProps) {
   const [activeTab, setActiveTab] = useState<
     "balances" | "deposits" | "withdrawals"
@@ -178,6 +185,36 @@ export default function UserAccount({
               <span className="text-[#848e9c]">Account Nonce:</span>
               <span className="font-medium">{account.nonce.toString()}</span>
             </div>
+            <div className="flex justify-between text-[9px]">
+              <span className="text-[#848e9c]">Prove account Job ID:</span>
+              {jobId ? (
+                <a
+                  href={`https://silvascan.io/testnet/agent-job/${jobId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-[#1E80FF] hover:underline"
+                >
+                  {shortenString(jobId ?? "", 10)}
+                </a>
+              ) : (
+                <span className="font-medium">-</span>
+              )}
+            </div>
+            <div className="flex justify-between text-[9px]">
+              <span className="text-[#848e9c]">Proof:</span>
+              {proof ? (
+                <a
+                  href={daUrl(proof ?? "")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-[#1E80FF] hover:underline"
+                >
+                  {shortenString(proof ?? "", 10)}
+                </a>
+              ) : (
+                <span className="font-medium">-</span>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -294,7 +331,13 @@ export default function UserAccount({
 
       {/* Faucet button with blue color */}
       <button
-        onClick={faucet}
+        onClick={() => {
+          if (account) {
+            proveAccount();
+          } else {
+            faucet();
+          }
+        }}
         disabled={processing !== undefined}
         className="h-9 w-full bg-[#1E80FF] hover:bg-[#1a70e0] rounded-lg text-[12px] font-semibold transition-colors flex items-center justify-center"
       >
@@ -303,6 +346,13 @@ export default function UserAccount({
             <Processing />
             Getting funds from faucet...
           </>
+        ) : processing === "proveAccount" ? (
+          <>
+            <Processing />
+            Proving account...
+          </>
+        ) : account ? (
+          "Prove Account"
         ) : (
           "Faucet"
         )}

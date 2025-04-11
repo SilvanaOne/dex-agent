@@ -381,6 +381,7 @@ export type TransactionType =
   | "transfer"
   | "faucet"
   | "createAccount"
+  | "proveAccount"
   | "stake"
   | "borrow"
   | "cancelBuy"

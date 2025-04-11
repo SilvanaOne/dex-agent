@@ -41,6 +41,9 @@ import {
   fetchSettlementTransactionEvents,
   blockCreationNeeded,
   checkBlockCreation,
+  agentProveAccount,
+  dexProverResult,
+  sleep,
 } from "@dex-agent/lib";
 import OrderBook from "@/components/dex/order-book";
 import { OrderForm } from "@/components/dex/order-form";
@@ -93,6 +96,8 @@ export default function DEX() {
   const [price, setPrice] = useState<number | undefined>(undefined);
   const [change, setChange] = useState<number | undefined>(undefined);
   const [orderType, setOrderType] = useState<TransactionType>("buy");
+  const [proof, setProof] = useState<string | undefined>(undefined);
+  const [jobId, setJobId] = useState<string | undefined>(undefined);
   const [networkInfo, setNetworkInfo] = useState<NetworkInfoData | undefined>(
     undefined
   );
@@ -693,6 +698,125 @@ export default function DEX() {
     }
   };
 
+  const proveAccount = async () => {
+    startProcessing("proveAccount");
+    if (!address) {
+      setTxData({
+        errors: [
+          {
+            code: "E0001",
+            message: "No user address",
+            severity: "error",
+          },
+        ],
+      });
+      return;
+    }
+    try {
+      const blockNumber = dex?.block_number;
+      const sequence = dex?.sequence;
+      if (!blockNumber || !sequence) {
+        setTxData({
+          errors: [
+            {
+              code: "E0001",
+              message: "No block number or sequence",
+              severity: "error",
+            },
+          ],
+        });
+        setProcessing(undefined);
+        return;
+      }
+      const result = await agentProveAccount({
+        address,
+        blockNumber: Number(blockNumber),
+        sequence: Number(sequence),
+      });
+      //setTxData(result);
+      if (DEBUG) console.log("result", result);
+      if (result?.success === undefined || result?.success === false) {
+        setTxData({
+          errors: [
+            {
+              code: "E0001",
+              message: "proveAccount failed",
+              severity: "error",
+            },
+          ],
+        });
+        setProcessing(undefined);
+        return;
+      } else {
+        const jobId = result.jobId;
+        console.log("jobId", jobId);
+        if (!jobId) {
+          setTxData({
+            errors: [
+              {
+                code: "E0001",
+                message: "proveAccount failed",
+                severity: "error",
+              },
+            ],
+          });
+        } else {
+          setJobId(jobId);
+          let received: string | undefined = undefined;
+          let failed = false;
+          let result = await dexProverResult({ jobId });
+          console.log("result", result?.result);
+          while (!received && !failed) {
+            await sleep(5000);
+            result = await dexProverResult({ jobId });
+            console.log("result", result?.result);
+            try {
+              if (result?.result) {
+                const { success, blobId } = JSON.parse(result.result);
+                if (success && blobId) {
+                  received = blobId;
+                } else {
+                  failed = true;
+                }
+              }
+            } catch (error: any) {
+              console.error("Error parsing result:", error.message);
+              failed = true;
+              setTxData({
+                errors: [
+                  {
+                    code: "E0001",
+                    message: "proveAccount failed",
+                    severity: "error",
+                  },
+                ],
+              });
+              setProcessing(undefined);
+              return;
+            }
+          }
+          if (received) {
+            setProof(received);
+          }
+          setProcessing(undefined);
+          return;
+        }
+      }
+    } catch (error: any) {
+      setTxData({
+        errors: [
+          {
+            code: "E0001",
+            message: error.message ?? "proveAccount failed",
+            severity: "error",
+          },
+        ],
+      });
+    } finally {
+      setProcessing(undefined);
+    }
+  };
+
   const executeOrder = async (order: OrderFormState) => {
     startProcessing(order.orderType);
 
@@ -1051,6 +1175,9 @@ export default function DEX() {
                   faucet={faucet}
                   processing={processing}
                   createAccount={createAccount}
+                  proveAccount={proveAccount}
+                  proof={proof}
+                  jobId={jobId}
                 />
               </div>
             </div>
