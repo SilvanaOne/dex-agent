@@ -414,6 +414,37 @@ export const DEXProgram = ZkProgram({
 
 export class DEXProof extends ZkProgram.Proof(DEXProgram) {}
 
+export const DEXAccountProofProgram = ZkProgram({
+  name: "DEXAccountProofProgram",
+  publicInput: RollupDEXState,
+  publicOutput: RollupUserTradingAccount,
+  methods: {
+    proveState: {
+      privateInputs: [DEXMap, PublicKey, RollupUserTradingAccount],
+      async method(
+        input: RollupDEXState,
+        map: DEXMap,
+        address: PublicKey,
+        account: RollupUserTradingAccount
+      ): Promise<{
+        publicOutput: RollupUserTradingAccount;
+      }> {
+        map.root.assertEquals(input.root);
+        map.length.assertEquals(input.length);
+        const key = Poseidon.hashPacked(PublicKey, address);
+        const value = map.get(key);
+        value.assertEquals(account.hash());
+
+        return {
+          publicOutput: account,
+        };
+      },
+    },
+  },
+});
+
+export class DEXAccountProof extends ZkProgram.Proof(DEXAccountProofProgram) {}
+
 const stateType = "SequenceStateV1";
 
 export class SequenceState {

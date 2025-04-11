@@ -6,6 +6,7 @@ export enum Operation {
   ASK = 3,
   TRADE = 4,
   TRANSFER = 5,
+  PROOF = 6,
   // WITHDRAW = 6,
   // DEPOSIT = 7,
   // STAKE = 8,
@@ -21,6 +22,7 @@ export const OperationNames: { [key: number]: string } = {
   3: "OperationAsk",
   4: "OperationTrade",
   5: "OperationTransfer",
+  6: "OperationProof",
   10: "OperationCreateBlock",
   11: "OperationDataAvailability",
 };
@@ -198,6 +200,11 @@ export interface ActionCreateAccount {
   quoteBalance: bigint;
 }
 
+export interface ActionProof {
+  sequence: bigint;
+  publicKeyBase58: string;
+}
+
 export interface ActionBid {
   userPublicKey: string;
   poolPublicKey: string;
@@ -276,12 +283,17 @@ export interface ActionTransferRequest extends ActionTransfer {
   operation: Operation.TRANSFER;
 }
 
+export interface ActionProofRequest extends ActionProof {
+  operation: Operation.PROOF;
+}
+
 export type ActionRequest =
   | ActionCreateAccountRequest
   | ActionBidRequest
   | ActionAskRequest
   | ActionTradeRequest
-  | ActionTransferRequest;
+  | ActionTransferRequest
+  | ActionProofRequest;
 
 export interface RawOperationEvent {
   type:

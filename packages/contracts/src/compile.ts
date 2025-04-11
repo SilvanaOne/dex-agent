@@ -1,7 +1,8 @@
 import { Cache, VerificationKey } from "o1js";
-import { DEXProgram } from "./contracts/rollup.js";
+import { DEXAccountProofProgram, DEXProgram } from "./contracts/rollup.js";
 
 let vk: VerificationKey | undefined = undefined;
+let vkAccount: VerificationKey | undefined = undefined;
 
 export async function compileDEXProgram(
   cache: Cache
@@ -24,4 +25,19 @@ export async function compileDEXProgram(
     throw new Error("Program verification key changed");
   }
   return vk;
+}
+
+export async function compileDEXAccountProofProgram(
+  cache: Cache
+): Promise<VerificationKey> {
+  if (!vkAccount) {
+    console.log("Compiling DEX Account Proof Program");
+    console.time("Compiled DEX Account Proof Program");
+    const { verificationKey } = await DEXAccountProofProgram.compile({
+      cache,
+    });
+    vkAccount = verificationKey;
+    console.timeEnd("Compiled DEX Account Proof Program");
+  }
+  return vkAccount;
 }

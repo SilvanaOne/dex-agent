@@ -3,6 +3,7 @@ import {
   PrismaClient,
   Prisma,
   Operation as PrismaOperation,
+  ActionStatus,
 } from "./prisma/client.js";
 import { SequenceState, ActionRequest, Operation } from "./types.js";
 
@@ -201,6 +202,9 @@ export async function addActionRequest(actionRequest: ActionRequest) {
     case Operation.TRANSFER:
       requestType = PrismaOperation.TRANSFER;
       break;
+    case Operation.PROOF:
+      requestType = PrismaOperation.PROOF;
+      break;
     default:
       throw new Error("Unknown action request operation");
   }
@@ -228,5 +232,16 @@ export async function addActionRequest(actionRequest: ActionRequest) {
           : null,
       status: "PENDING",
     },
+  });
+}
+
+export async function setRequestStatus(params: {
+  requestId: number;
+  status: ActionStatus;
+}) {
+  const { requestId, status } = params;
+  await prisma.actionRequest.update({
+    where: { id: requestId },
+    data: { status },
   });
 }

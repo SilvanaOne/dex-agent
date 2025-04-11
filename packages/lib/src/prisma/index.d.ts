@@ -38,7 +38,8 @@ export namespace $Enums {
   BID: 'BID',
   ASK: 'ASK',
   TRADE: 'TRADE',
-  TRANSFER: 'TRANSFER'
+  TRANSFER: 'TRANSFER',
+  PROOF: 'PROOF'
 };
 
 export type Operation = (typeof Operation)[keyof typeof Operation]
@@ -3292,6 +3293,7 @@ export namespace Prisma {
     receiverNonce: number | null
     senderSignatureR: number | null
     senderSignatureS: number | null
+    sequence: number | null
   }
 
   export type ActionRequestSumAggregateOutputType = {
@@ -3310,6 +3312,7 @@ export namespace Prisma {
     receiverNonce: bigint | null
     senderSignatureR: bigint | null
     senderSignatureS: bigint | null
+    sequence: bigint | null
   }
 
   export type ActionRequestMinAggregateOutputType = {
@@ -3344,6 +3347,7 @@ export namespace Prisma {
     receiverNonce: bigint | null
     senderSignatureR: bigint | null
     senderSignatureS: bigint | null
+    sequence: bigint | null
   }
 
   export type ActionRequestMaxAggregateOutputType = {
@@ -3378,6 +3382,7 @@ export namespace Prisma {
     receiverNonce: bigint | null
     senderSignatureR: bigint | null
     senderSignatureS: bigint | null
+    sequence: bigint | null
   }
 
   export type ActionRequestCountAggregateOutputType = {
@@ -3412,6 +3417,7 @@ export namespace Prisma {
     receiverNonce: number
     senderSignatureR: number
     senderSignatureS: number
+    sequence: number
     _all: number
   }
 
@@ -3432,6 +3438,7 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    sequence?: true
   }
 
   export type ActionRequestSumAggregateInputType = {
@@ -3450,6 +3457,7 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    sequence?: true
   }
 
   export type ActionRequestMinAggregateInputType = {
@@ -3484,6 +3492,7 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    sequence?: true
   }
 
   export type ActionRequestMaxAggregateInputType = {
@@ -3518,6 +3527,7 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    sequence?: true
   }
 
   export type ActionRequestCountAggregateInputType = {
@@ -3552,6 +3562,7 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    sequence?: true
     _all?: true
   }
 
@@ -3673,6 +3684,7 @@ export namespace Prisma {
     receiverNonce: bigint | null
     senderSignatureR: bigint | null
     senderSignatureS: bigint | null
+    sequence: bigint | null
     _count: ActionRequestCountAggregateOutputType | null
     _avg: ActionRequestAvgAggregateOutputType | null
     _sum: ActionRequestSumAggregateOutputType | null
@@ -3726,6 +3738,7 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    sequence?: boolean
   }, ExtArgs["result"]["actionRequest"]>
 
   export type ActionRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3760,6 +3773,7 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    sequence?: boolean
   }, ExtArgs["result"]["actionRequest"]>
 
   export type ActionRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3794,6 +3808,7 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    sequence?: boolean
   }, ExtArgs["result"]["actionRequest"]>
 
   export type ActionRequestSelectScalar = {
@@ -3828,9 +3843,10 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    sequence?: boolean
   }
 
-  export type ActionRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "operation" | "status" | "address" | "poolPublicKey" | "publicKey" | "publicKeyBase58" | "name" | "role" | "image" | "baseBalance" | "quoteBalance" | "userPublicKey" | "baseTokenAmount" | "price" | "isSome" | "nonce" | "userSignatureR" | "userSignatureS" | "buyerPublicKey" | "sellerPublicKey" | "quoteTokenAmount" | "buyerNonce" | "sellerNonce" | "senderPublicKey" | "receiverPublicKey" | "senderNonce" | "receiverNonce" | "senderSignatureR" | "senderSignatureS", ExtArgs["result"]["actionRequest"]>
+  export type ActionRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "operation" | "status" | "address" | "poolPublicKey" | "publicKey" | "publicKeyBase58" | "name" | "role" | "image" | "baseBalance" | "quoteBalance" | "userPublicKey" | "baseTokenAmount" | "price" | "isSome" | "nonce" | "userSignatureR" | "userSignatureS" | "buyerPublicKey" | "sellerPublicKey" | "quoteTokenAmount" | "buyerNonce" | "sellerNonce" | "senderPublicKey" | "receiverPublicKey" | "senderNonce" | "receiverNonce" | "senderSignatureR" | "senderSignatureS" | "sequence", ExtArgs["result"]["actionRequest"]>
 
   export type $ActionRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ActionRequest"
@@ -3867,6 +3883,7 @@ export namespace Prisma {
       receiverNonce: bigint | null
       senderSignatureR: bigint | null
       senderSignatureS: bigint | null
+      sequence: bigint | null
     }, ExtArgs["result"]["actionRequest"]>
     composites: {}
   }
@@ -4321,6 +4338,7 @@ export namespace Prisma {
     readonly receiverNonce: FieldRef<"ActionRequest", 'BigInt'>
     readonly senderSignatureR: FieldRef<"ActionRequest", 'BigInt'>
     readonly senderSignatureS: FieldRef<"ActionRequest", 'BigInt'>
+    readonly sequence: FieldRef<"ActionRequest", 'BigInt'>
   }
     
 
@@ -4760,7 +4778,8 @@ export namespace Prisma {
     senderNonce: 'senderNonce',
     receiverNonce: 'receiverNonce',
     senderSignatureR: 'senderSignatureR',
-    senderSignatureS: 'senderSignatureS'
+    senderSignatureS: 'senderSignatureS',
+    sequence: 'sequence'
   };
 
   export type ActionRequestScalarFieldEnum = (typeof ActionRequestScalarFieldEnum)[keyof typeof ActionRequestScalarFieldEnum]
@@ -5077,6 +5096,7 @@ export namespace Prisma {
     receiverNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
     senderSignatureR?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
     senderSignatureS?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    sequence?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
   }
 
   export type ActionRequestOrderByWithRelationInput = {
@@ -5111,6 +5131,7 @@ export namespace Prisma {
     receiverNonce?: SortOrderInput | SortOrder
     senderSignatureR?: SortOrderInput | SortOrder
     senderSignatureS?: SortOrderInput | SortOrder
+    sequence?: SortOrderInput | SortOrder
   }
 
   export type ActionRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -5148,6 +5169,7 @@ export namespace Prisma {
     receiverNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
     senderSignatureR?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
     senderSignatureS?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    sequence?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
   }, "id">
 
   export type ActionRequestOrderByWithAggregationInput = {
@@ -5182,6 +5204,7 @@ export namespace Prisma {
     receiverNonce?: SortOrderInput | SortOrder
     senderSignatureR?: SortOrderInput | SortOrder
     senderSignatureS?: SortOrderInput | SortOrder
+    sequence?: SortOrderInput | SortOrder
     _count?: ActionRequestCountOrderByAggregateInput
     _avg?: ActionRequestAvgOrderByAggregateInput
     _max?: ActionRequestMaxOrderByAggregateInput
@@ -5224,6 +5247,7 @@ export namespace Prisma {
     receiverNonce?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
     senderSignatureR?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
     senderSignatureS?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
+    sequence?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
   }
 
   export type StateCreateInput = {
@@ -5411,6 +5435,7 @@ export namespace Prisma {
     receiverNonce?: bigint | number | null
     senderSignatureR?: bigint | number | null
     senderSignatureS?: bigint | number | null
+    sequence?: bigint | number | null
   }
 
   export type ActionRequestUncheckedCreateInput = {
@@ -5445,6 +5470,7 @@ export namespace Prisma {
     receiverNonce?: bigint | number | null
     senderSignatureR?: bigint | number | null
     senderSignatureS?: bigint | number | null
+    sequence?: bigint | number | null
   }
 
   export type ActionRequestUpdateInput = {
@@ -5478,6 +5504,7 @@ export namespace Prisma {
     receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type ActionRequestUncheckedUpdateInput = {
@@ -5512,6 +5539,7 @@ export namespace Prisma {
     receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type ActionRequestCreateManyInput = {
@@ -5546,6 +5574,7 @@ export namespace Prisma {
     receiverNonce?: bigint | number | null
     senderSignatureR?: bigint | number | null
     senderSignatureS?: bigint | number | null
+    sequence?: bigint | number | null
   }
 
   export type ActionRequestUpdateManyMutationInput = {
@@ -5579,6 +5608,7 @@ export namespace Prisma {
     receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type ActionRequestUncheckedUpdateManyInput = {
@@ -5613,6 +5643,7 @@ export namespace Prisma {
     receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type BigIntFilter<$PrismaModel = never> = {
@@ -5901,6 +5932,7 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    sequence?: SortOrder
   }
 
   export type ActionRequestAvgOrderByAggregateInput = {
@@ -5919,6 +5951,7 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    sequence?: SortOrder
   }
 
   export type ActionRequestMaxOrderByAggregateInput = {
@@ -5953,6 +5986,7 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    sequence?: SortOrder
   }
 
   export type ActionRequestMinOrderByAggregateInput = {
@@ -5987,6 +6021,7 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    sequence?: SortOrder
   }
 
   export type ActionRequestSumOrderByAggregateInput = {
@@ -6005,6 +6040,7 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    sequence?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {

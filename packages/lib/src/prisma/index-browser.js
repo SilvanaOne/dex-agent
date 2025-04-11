@@ -170,7 +170,8 @@ exports.Prisma.ActionRequestScalarFieldEnum = {
   senderNonce: 'senderNonce',
   receiverNonce: 'receiverNonce',
   senderSignatureR: 'senderSignatureR',
-  senderSignatureS: 'senderSignatureS'
+  senderSignatureS: 'senderSignatureS',
+  sequence: 'sequence'
 };
 
 exports.Prisma.SortOrder = {
@@ -192,7 +193,8 @@ exports.Operation = exports.$Enums.Operation = {
   BID: 'BID',
   ASK: 'ASK',
   TRADE: 'TRADE',
-  TRANSFER: 'TRANSFER'
+  TRANSFER: 'TRANSFER',
+  PROOF: 'PROOF'
 };
 
 exports.ActionStatus = exports.$Enums.ActionStatus = {

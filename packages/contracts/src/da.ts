@@ -55,14 +55,14 @@ export async function checkDataAvailability(params: {
     const root = await calculateStateRoot({
       state: blockData.state.state,
     });
-    if (root !== sequenceData.map.root.toBigInt()) {
+    if (root !== sequenceData.state.map.root.toBigInt()) {
       throw new Error("state root does not match");
     }
     const provableBlockData: ProvableBlockData = new ProvableBlockData({
       ...blockData,
       state: blockData.state,
       events: blockData.events,
-      map: serializeIndexedMap(sequenceData.map),
+      map: serializeIndexedMap(sequenceData.state.map),
     });
     const blockBlobId = await saveToDA({
       data: provableBlockData.serialize(),

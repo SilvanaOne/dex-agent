@@ -22,7 +22,11 @@ import {
 } from "@mysten/sui/client";
 import { DexConfig, getConfig } from "./config.js";
 import { convertRollupEvent, convertRawOperationEvent } from "./event.js";
-import { rawBlockToBlock, rawBlockStateToBlockState } from "./block.js";
+import {
+  rawBlockToBlock,
+  rawBlockStateToBlockState,
+  blockCreationNeeded,
+} from "./block.js";
 import { publicKeyToU256, u256ToPublicKey } from "./public-key.js";
 
 export async function getDexID(): Promise<string> {
@@ -606,4 +610,32 @@ export async function fetchSettlementTransactionEvents(params: {
   return Array.from(blockMap.values()).sort((a, b) =>
     b.block_number > a.block_number ? 1 : -1
   );
+}
+
+export async function fetchBlockSequences(params: {
+  blockNumber: number;
+}): Promise<{ startSequence: bigint; endSequence: bigint } | undefined> {
+  const { blockNumber } = params;
+  try {
+    const dex = await fetchDex();
+    if (!dex) return undefined;
+    if (dex?.block_number === blockNumber)
+      return {
+        startSequence: dex.previous_block_last_sequence + 1n,
+        endSequence: dex.sequence - 1n,
+      };
+    if (dex?.block_number < blockNumber) return undefined;
+
+    const block = await fetchBlock({ blockNumber });
+    if (!block) {
+      return undefined;
+    }
+    return {
+      startSequence: BigInt(block.block.start_sequence),
+      endSequence: BigInt(block.block.end_sequence),
+    };
+  } catch (error: any) {
+    console.error("Error in fetchBlockSequences", error?.message);
+    return undefined;
+  }
 }

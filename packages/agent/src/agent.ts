@@ -1,7 +1,14 @@
 import { zkCloudWorker, Cloud, sleep } from "@silvana-one/prover";
 import { JobResult } from "@silvana-one/api";
 import { VerificationKey, Cache } from "o1js";
-import { prove, merge, settle, monitor } from "@dex-agent/contracts";
+import {
+  prove,
+  merge,
+  settle,
+  monitor,
+  createAccountProof,
+  fetchAccountProof,
+} from "@dex-agent/contracts";
 import { agentSettle } from "@dex-agent/lib";
 
 const MAX_RUN_TIME = 1000 * 60 * 5; // 5 minutes
@@ -51,7 +58,8 @@ export class DEXAgent extends zkCloudWorker {
       task !== "prove" &&
       task !== "merge" &&
       task !== "settle" &&
-      task !== "monitor"
+      task !== "monitor" &&
+      task !== "proveAccount"
     )
       throw new Error("Invalid task");
     try {
@@ -64,6 +72,8 @@ export class DEXAgent extends zkCloudWorker {
           return await this.settleDex();
         case "monitor":
           return await this.monitorDex(undefined);
+        case "proveAccount":
+          return await this.proveAccount();
       }
     } catch (error: any) {
       console.error(`Error in ${task}`, error.message);
@@ -73,7 +83,7 @@ export class DEXAgent extends zkCloudWorker {
       });
     }
   }
-  private stringifyJobResult(result: JobResult): string {
+  private stringifyJobResult(result: JobResult & { blobId?: string }): string {
     /*
         export interface JobResult {
           success: boolean;
@@ -184,6 +194,51 @@ export class DEXAgent extends zkCloudWorker {
     } else {
       return this.stringifyJobResult({
         success: true,
+      });
+    }
+  }
+
+  private async proveAccount(): Promise<string> {
+    console.time("proveAccount");
+    try {
+      const args = this.cloud.args ? JSON.parse(this.cloud.args) : undefined;
+      const address = args?.address;
+      if (!address) throw new Error("address is not set");
+      const sequence = args?.sequence;
+      if (!sequence) throw new Error("sequence is not set");
+      const blockNumber = args?.blockNumber;
+      if (!blockNumber) throw new Error("blockNumber is not set");
+      const result = await fetchAccountProof({
+        jobId: this.cloud.jobId,
+        cache: this.cache,
+        address,
+        sequence,
+        blockNumber,
+      });
+
+      console.log("proveAccount result", result);
+      if (!result) throw new Error("cannot create proof");
+
+      await this.cloud.publishTransactionMetadata({
+        txId: "dex:proveAccount:" + this.cloud.jobId,
+        metadata: {
+          custom: {
+            task: "prove account",
+            blobId: result,
+          },
+        },
+      });
+
+      console.timeEnd("proveAccount");
+      return this.stringifyJobResult({
+        success: true,
+        blobId: result,
+      });
+    } catch (error: any) {
+      console.error("Error in proveAccount", error.message);
+      return this.stringifyJobResult({
+        success: false,
+        error: String(error.message),
       });
     }
   }

@@ -45,6 +45,7 @@ enum Operation {
   ASK
   TRADE
   TRANSFER
+  PROOF
 }
 
 enum ActionStatus {
@@ -93,6 +94,11 @@ model ActionRequest {
   receiverNonce     BigInt?
   senderSignatureR   BigInt?
   senderSignatureS   BigInt?
+
+  // PROOF fields
+  sequence          BigInt?
+  //publicKeyBase58   String?
+
 
   @@index([operation])
   @@index([status])

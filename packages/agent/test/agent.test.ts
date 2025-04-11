@@ -24,13 +24,18 @@ const api = new zkCloudWorkerClient({
 describe("DEX Agent", async () => {
   it(`should call execute`, async () => {
     console.time(`executed`);
+    const args = JSON.stringify({
+      address: "B62qo69VLUPMXEC6AFWRgjdTEGsA3xKvqeU5CgYm3jAbBJL7dTvaQkv",
+      sequence: 47,
+      blockNumber: 28,
+    });
     const answer = await api.execute({
       developer: "DFST",
       repo: "dex-agent",
       transactions: [],
-      task: "prove",
-      args: "test",
-      metadata: `prove`,
+      task: "proveAccount",
+      args,
+      metadata: `prove account`,
     });
     console.log("answer:", answer);
     assert.ok(answer, "Answer should be defined");

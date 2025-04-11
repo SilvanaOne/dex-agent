@@ -1,5 +1,11 @@
 import { PublicKey, Cache, Poseidon } from "o1js";
-import { DEXProgram, DEXProof, SequenceState } from "./contracts/rollup.js";
+import {
+  DEXAccountProof,
+  DEXAccountProofProgram,
+  DEXProgram,
+  DEXProof,
+  SequenceState,
+} from "./contracts/rollup.js";
 import {
   Operation,
   ActionCreateAccount,
@@ -29,7 +35,7 @@ import {
   IndexedMapSerialized,
 } from "@silvana-one/storage";
 
-import { compileDEXProgram } from "./compile.js";
+import { compileDEXProgram, compileDEXAccountProofProgram } from "./compile.js";
 
 export async function calculateStateRoot(params: {
   state: Record<string, UserTradingAccount>;
@@ -137,6 +143,9 @@ export async function calculateState(params: {
   for (const event of events) {
     const operation = event.operation;
     const currentSequence = operation.sequence;
+    if (currentSequence > sequence) {
+      throw new Error("Current sequence is greater than sequence");
+    }
 
     const shouldProve = prove && currentSequence === sequence && shouldCompile;
     if (shouldProve) {
@@ -394,5 +403,49 @@ export async function processOperation(params: {
     dexState: newDexState,
     map: newMap,
     dexProof: dexProof,
+  };
+}
+
+export async function createAccountProof(params: {
+  address: PublicKey;
+  dexState: RollupDEXState;
+  map: DEXMap;
+  account: RollupUserTradingAccount;
+  prove?: boolean;
+  cache: Cache;
+}): Promise<{
+  dexAccountProof?: DEXAccountProof;
+  proofPublicOutput?: RollupUserTradingAccount;
+}> {
+  const { dexState, map, address, account, prove = false, cache } = params;
+  let dexAccountProof: DEXAccountProof | undefined = undefined;
+  let proofPublicOutput: RollupUserTradingAccount;
+  if (prove) console.time("prove");
+  if (prove) {
+    await compileDEXAccountProofProgram(cache);
+  }
+
+  if (prove) {
+    const { proof } = await DEXAccountProofProgram.proveState(
+      dexState,
+      map,
+      address,
+      account
+    );
+    dexAccountProof = proof;
+    proofPublicOutput = proof.publicOutput;
+  } else {
+    const { publicOutput } = await DEXAccountProofProgram.rawMethods.proveState(
+      dexState,
+      map,
+      address,
+      account
+    );
+    proofPublicOutput = publicOutput;
+  }
+  if (prove) console.timeEnd("prove");
+  return {
+    dexAccountProof: dexAccountProof,
+    proofPublicOutput,
   };
 }

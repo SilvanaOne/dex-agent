@@ -5,21 +5,44 @@ import {
   BlockData,
   fetchBlockState,
 } from "@dex-agent/lib";
-import { SequenceState } from "./contracts/index.js";
+import { SequenceState, DEXAccountProof } from "./contracts/index.js";
 import { deserializeIndexedMerkleMap } from "@silvana-one/storage";
-import { DEXMap, ProvableBlockData } from "./types/provable-types.js";
+import {
+  DEXMap,
+  ProvableBlockData,
+  RollupUserTradingAccount,
+} from "./types/provable-types.js";
 import { readFromDA } from "@dex-agent/lib";
-import { calculateState } from "./state.js";
+import { calculateState, createAccountProof } from "./state.js";
 import { getIDs } from "./id.js";
-import { Cache } from "o1js";
+import { Cache, PublicKey } from "o1js";
 
 export async function fetchSequenceData(params: {
   sequence: number;
   blockNumber: number;
   prove?: boolean;
+  accountProof?: boolean;
+  address?: string;
   cache: Cache;
-}): Promise<SequenceState | undefined> {
-  const { sequence, blockNumber, prove = false, cache } = params;
+}): Promise<
+  | {
+      state: SequenceState;
+      dexAccountProof?: DEXAccountProof;
+      proofPublicOutput?: RollupUserTradingAccount;
+    }
+  | undefined
+> {
+  const {
+    sequence,
+    blockNumber,
+    prove = false,
+    accountProof = false,
+    address,
+    cache,
+  } = params;
+  if (accountProof && !address) {
+    throw new Error("Address is not set, but account proof is requested");
+  }
   //console.log("fetchSequenceData", { sequence, blockNumber, prove });
   const { dexID } = await getIDs();
   if (!dexID) {
@@ -96,17 +119,44 @@ export async function fetchSequenceData(params: {
   }
   //console.log("events", events);
 
-  const state = await calculateState({
-    poolPublicKey,
-    blockNumber,
-    sequence,
-    serializedMap,
-    block: blockData.block,
-    blockState: blockState,
-    operations: events,
-    prove,
-    cache,
-  });
+  if (accountProof) {
+    if (!address) {
+      throw new Error("Address is not set, but account proof is requested");
+    }
+    const state = await calculateState({
+      poolPublicKey,
+      blockNumber,
+      sequence: sequence,
+      serializedMap,
+      block: blockData.block,
+      blockState: blockState,
+      operations: events,
+      prove: false,
+      cache,
+    });
+    console.log("state", state.sequences);
+    const { dexAccountProof, proofPublicOutput } = await createAccountProof({
+      address: PublicKey.fromBase58(address),
+      dexState: state.dexState,
+      map: state.map,
+      account: state.accounts[address],
+      prove: true,
+      cache,
+    });
+    return { state, dexAccountProof, proofPublicOutput };
+  } else {
+    const state = await calculateState({
+      poolPublicKey,
+      blockNumber,
+      sequence,
+      serializedMap,
+      block: blockData.block,
+      blockState: blockState,
+      operations: events,
+      prove,
+      cache,
+    });
 
-  return state;
+    return { state };
+  }
 }

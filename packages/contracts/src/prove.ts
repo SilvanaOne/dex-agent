@@ -6,6 +6,7 @@ import {
   getOrderbook,
   waitTx,
   blockCreationNeeded,
+  saveToDA,
 } from "@dex-agent/lib";
 import { deserializeIndexedMerkleMap } from "@silvana-one/storage";
 import { DEXMap, SequenceData } from "./types/provable-types.js";
@@ -273,7 +274,7 @@ async function runProver(params: {
   if (sequenceData) {
     const cpuTime = Date.now() - startTime;
     const submission = submitProof({
-      state: sequenceData,
+      state: sequenceData.state,
       jobId,
       cpuTime,
     });
@@ -288,6 +289,47 @@ async function runProver(params: {
   proverLock = false;
 }
 
+export async function fetchAccountProof(params: {
+  sequence: number;
+  blockNumber: number;
+  jobId: string;
+  cache: Cache;
+  address: string;
+}) {
+  const { sequence, blockNumber, jobId, cache, address } = params;
+  const startTime = Date.now();
+  const sequenceData = await fetchSequenceData({
+    sequence,
+    blockNumber,
+    prove: false,
+    accountProof: true,
+    address,
+    cache,
+  });
+  if (sequenceData) {
+    const accountProofJson = {
+      sequence,
+      blockNumber,
+      address,
+      account: sequenceData.proofPublicOutput?.toAccountData(),
+      accountProof: sequenceData.dexAccountProof?.toJSON(),
+    };
+    const serializedAccountProof = JSON.stringify(
+      accountProofJson,
+      (key, value) => (typeof value === "bigint" ? value.toString() : value),
+      2
+    );
+    const blobId = await saveToDA({
+      data: serializedAccountProof,
+      description: `Account proof for sequence ${sequence} on block ${blockNumber} for address ${address}`,
+      filename: `accountProof-${sequence}-${blockNumber}-${address}.json`,
+      days: 2,
+    });
+    return blobId;
+  }
+  return undefined;
+}
+
 export async function proveSequence(params: { sequenceData: SequenceData }) {
   const { sequenceData } = params;
   const {
@@ -299,6 +341,7 @@ export async function proveSequence(params: { sequenceData: SequenceData }) {
   console.log("proveSequence", {
     blockNumber,
     sequence,
+
     operation: OperationNames[operation.operation],
   });
   const map = deserializeIndexedMerkleMap({
