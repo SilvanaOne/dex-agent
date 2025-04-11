@@ -10,7 +10,7 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",
-    },
+    }
   },
   images: {
     remotePatterns: [
@@ -29,6 +29,11 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
+  output: 'standalone',
+  outputFileTracingRoot: path.join(__dirname, '../..'),
+  outputFileTracingIncludes: {
+    '/packages/lib/src/prisma/**/*': ['*']
+  },
 
   webpack(config, { buildId, dev, isServer, defaultLoaders, webpack }) {
     config.resolve.alias = {
@@ -51,17 +56,6 @@ const nextConfig = {
     }
     
     return config;
-  },
-  
-  // Add this section to properly include Prisma binaries in the Vercel deployment
-  output: 'standalone',
-  outputFileTracing: true,
-  experimental: {
-    ...nextConfig.experimental,
-    outputFileTracingRoot: path.join(__dirname, '../..'),
-    outputFileTracingIncludes: {
-      '/packages/lib/src/prisma/**/*': ['*']
-    }
   },
 };
 
