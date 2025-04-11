@@ -50,8 +50,7 @@ const nextConfig = {
       const libFolder = path.join(__dirname, "..", "lib");
       config.resolve.alias = {
         ...config.resolve.alias,
-        "./src/prisma/libquery_engine-rhel-openssl-3.0.x.so.node": path.join(libFolder, "src/prisma/libquery_engine-rhel-openssl-3.0.x.so.node"),
-        "src/prisma/libquery_engine-rhel-openssl-3.0.x.so.node": path.join(libFolder, "src/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
+        "libquery_engine-rhel-openssl-3.0.x.so.node": path.join(libFolder, "src/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
       };
     }
     
