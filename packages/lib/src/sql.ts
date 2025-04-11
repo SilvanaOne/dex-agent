@@ -7,9 +7,21 @@ import {
 } from "./prisma/client.js";
 import { SequenceState, ActionRequest, Operation } from "./types.js";
 
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.SILVANA_DATABASE_URL,
-});
+// Extend global type to add a persistent prisma instance in development
+declare global {
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined;
+}
+
+const prisma =
+  global.prisma ||
+  new PrismaClient({
+    datasourceUrl: process.env.SILVANA_DATABASE_URL,
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  global.prisma = prisma;
+}
 
 export async function addFetchedSequence(sequence: bigint) {
   if (await isSequenceFetched(sequence)) {
