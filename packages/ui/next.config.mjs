@@ -36,14 +36,18 @@ const nextConfig = {
       "@dex-agent/lib": path.join(__dirname, "..", "lib"),
     };
     
-    // Fix for Prisma client
+    // Fix for Prisma client in serverless environment
     if (isServer) {
-      // Copy the Prisma engine binary files
-      config.plugins.push(
-        new webpack.IgnorePlugin({
-          resourceRegExp: /^\.\/libquery_engine-.*$/,
-        })
-      );
+      // For libquery_engine files
+      config.externals = [...(config.externals || []), "prisma", "@prisma/client"];
+      
+      // Handle the Prisma binary specifically
+      const libFolder = path.join(__dirname, "..", "lib");
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        ".prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node": path.join(libFolder, "src/prisma/libquery_engine-rhel-openssl-3.0.x.so.node"),
+        "prisma/libquery_engine-rhel-openssl-3.0.x.so.node": path.join(libFolder, "src/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
+      };
     }
     
     return config;
