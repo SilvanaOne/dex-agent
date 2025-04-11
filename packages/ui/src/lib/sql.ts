@@ -4,8 +4,8 @@ import {
   Prisma,
   Operation as PrismaOperation,
   ActionStatus,
-} from "./prisma/client.js";
-import { SequenceState, ActionRequest, Operation } from "./types.js";
+} from "../prisma/client.js";
+import { SequenceState, ActionRequest, Operation } from "@dex-agent/lib";
 
 // Extend global type to add a persistent prisma instance in development
 declare global {

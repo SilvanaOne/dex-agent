@@ -26,4 +26,3 @@ export * from "./walrus.js";
 export * from "./ipfs.js";
 export * from "./agent.js";
 export * from "./nonce.js";
-export * from "./sql.js";
