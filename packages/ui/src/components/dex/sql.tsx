@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { sqlReadOnlyQuery } from "@/lib/sql";
+import { sqlReadOnlyQuery } from "@dex-agent/lib";
 interface SqlQueryProps {
   blockNumber: number;
   sequence: number;
