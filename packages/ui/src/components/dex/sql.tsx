@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { sqlReadOnlyQuery } from "@dex-agent/lib";
+import { sqlActionRequestQuery, sqlReadOnlyQuery } from "@dex-agent/lib";
+import Processing from "./ui/processing";
+
 interface SqlQueryProps {
   blockNumber: number;
   sequence: number;
@@ -30,8 +32,14 @@ ORDER BY
     setIsExecuting(true);
     setError(null);
     try {
-      const results = await sqlReadOnlyQuery(sqlQuery);
-      setResults(results as any);
+      const result = await sqlActionRequestQuery(sqlQuery);
+      if (result.success) {
+        setResults(result.data as any);
+        setError(null);
+      } else {
+        setError("Error executing query: " + result.error);
+        setResults(null);
+      }
     } catch (err) {
       setError(
         "Error executing query: " +
@@ -144,9 +152,15 @@ ORDER BY
         <button
           onClick={executeQuery}
           disabled={isExecuting}
-          className="bg-[#1E80FF] hover:bg-[#1a70e0] text-white rounded py-1 text-[10px] font-medium transition-colors disabled:opacity-50"
+          className="bg-[#1E80FF] hover:bg-[#1a70e0] text-white rounded py-1 text-[10px] flex items-center justify-center font-medium transition-colors disabled:opacity-50"
         >
-          {isExecuting ? "Executing..." : "Execute Query"}
+          {isExecuting ? (
+            <>
+              <Processing /> Executing...
+            </>
+          ) : (
+            "Execute Query"
+          )}
         </button>
       </div>
 
