@@ -58,13 +58,21 @@
   },
   "repository": "SilvanaOne/dex-agent.git",
   "scripts": {
-    "build": "rm -rf dist && tsc && tsc --build tsconfig.web.json && node build-cjs.js",
+    "build": "rm -rf dist && npm run prisma:generate && tsc && node build-cjs.js &&tsc --build tsconfig.web.json ",
     "test": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps -r dotenv/config --require dotenv/config --env-file=../client/.env --test",
     "localnet": "RUST_LOG=off,sui_node=info sui start --with-faucet --force-regenesis",
     "template": "npm run test test/template.test.ts",
     "price": "npm run test test/price.test.ts",
     "signature": "npm run test test/signature.test.ts",
-    "public-key": "npm run test test/public-key.test.ts"
+    "public-key": "npm run test test/public-key.test.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:format": "prisma format",
+    "prisma:seed": "dotenv -e ../../.env -- prisma db seed",
+    "prisma:migrate": "dotenv -e ../../.env -- prisma migrate dev --name v4",
+    "prisma:status": "dotenv -e ../../.env -- prisma migrate status",
+    "prisma:studio": "dotenv -e ../../.env -- prisma studio",
+    "prisma:push": "dotenv -e ../../.env -- prisma db push",
+    "prisma:migrate:deploy": "dotenv -e ../../.env -- prisma migrate deploy"
   },
   "type": "module",
   "types": "./dist/node/index.d.ts"

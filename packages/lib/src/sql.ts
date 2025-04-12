@@ -4,23 +4,25 @@ import {
   Prisma,
   Operation as PrismaOperation,
   ActionStatus,
-} from "../prisma/client.js";
-import { SequenceState, ActionRequest, Operation } from "@dex-agent/lib";
+} from "./prisma/client.js";
+import { SequenceState, ActionRequest, Operation } from "./types.js";
 
-// Extend global type to add a persistent prisma instance in development
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
-}
+// Using a type-only import for PrismaClient
+type GlobalPrisma = {
+  prisma?: PrismaClient;
+};
+
+// Safe access to global prisma instance
+const globalForPrisma = global as unknown as GlobalPrisma;
 
 const prisma =
-  global.prisma ||
+  globalForPrisma.prisma ||
   new PrismaClient({
     datasourceUrl: process.env.SILVANA_DATABASE_URL,
   });
 
 if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
+  globalForPrisma.prisma = prisma;
 }
 
 export async function addFetchedSequence(sequence: bigint) {

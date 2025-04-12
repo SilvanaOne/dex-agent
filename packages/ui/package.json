@@ -5,17 +5,10 @@
   "author": "DFST",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && ls ./src/prisma && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "prisma:generate": "prisma generate",
-    "prisma:format": "prisma format",
-    "prisma:seed": "dotenv -e ../../.env -- prisma db seed",
-    "prisma:migrate": "dotenv -e ../../.env -- prisma migrate dev --name v3",
-    "prisma:status": "dotenv -e ../../.env -- prisma migrate status",
-    "prisma:studio": "dotenv -e ../../.env -- prisma studio",
-    "prisma:push": "dotenv -e ../../.env -- prisma db push",
-    "prisma:migrate:deploy": "dotenv -e ../../.env -- prisma migrate deploy"
+    "lint": "next lint"
+
   },
   "dependencies": {
     "@dex-agent/lib": "^0.1.0",

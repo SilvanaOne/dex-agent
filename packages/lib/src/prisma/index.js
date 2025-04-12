@@ -192,7 +192,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/mike/Documents/Silvana/dex-agent/packages/ui/src/prisma",
+      "value": "/Users/mike/Documents/Silvana/dex-agent/packages/lib/src/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -206,7 +206,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/mike/Documents/Silvana/dex-agent/packages/ui/prisma/schema.prisma",
+    "sourceFilePath": "/Users/mike/Documents/Silvana/dex-agent/packages/lib/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
