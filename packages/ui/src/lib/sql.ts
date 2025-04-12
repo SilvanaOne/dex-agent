@@ -151,7 +151,8 @@ export async function sqlReadOnlyQuery(query: string) {
     throw new Error("Only SELECT queries are allowed");
   }
 
-  return await readOnlyPrisma.$executeRawUnsafe(query);
+  const results = await readOnlyPrisma.$queryRawUnsafe(query);
+  return results;
 }
 
 export async function sqlActionRequestQuery(query: string) {

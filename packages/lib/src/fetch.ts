@@ -622,7 +622,7 @@ export async function fetchBlockSequences(params: {
     if (dex?.block_number === blockNumber)
       return {
         startSequence: dex.previous_block_last_sequence + 1n,
-        endSequence: dex.sequence - 1n,
+        endSequence: dex.sequence,
       };
     if (dex?.block_number < blockNumber) return undefined;
 

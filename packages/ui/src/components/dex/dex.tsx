@@ -44,11 +44,13 @@ import {
   agentProveAccount,
   dexProverResult,
   sleep,
+  fetchBlockSequences,
 } from "@dex-agent/lib";
 import OrderBook from "@/components/dex/order-book";
 import { OrderForm } from "@/components/dex/order-form";
 import UserAccount from "@/components/dex/user-account";
 import OpenOrders from "@/components/dex/open-orders";
+import SqlQuery from "@/components/dex/sql";
 import { MarketTrades, Trade } from "@/components/dex/market-trades";
 import { LastOrders, LastOrder } from "@/components/dex/last-orders";
 import { LastProofs, Proof, ProofType } from "@/components/dex/last-proofs";
@@ -71,7 +73,12 @@ const TradingChart = dynamic(() => import("@/components/dex/trading-chart"), {
   ssr: false,
 });
 
+type ViewMode = "chart" | "sql";
+
 export default function DEX() {
+  const [viewMode, setViewMode] = useState<ViewMode>("chart");
+  const [blockOptions, setBlockOptions] = useState<number[]>([1]);
+  const [sequenceOptions, setSequenceOptions] = useState<number[]>([1]);
   const [dexVersion, setDexVersion] = useState<bigint | undefined>(undefined);
   const [dex, setDex] = useState<DexObject | undefined>(undefined);
   const [orderbook, setOrderbook] = useState<Orderbook | undefined>(undefined);
@@ -114,7 +121,63 @@ export default function DEX() {
     undefined
   );
   const [addressValid, setAddressValid] = useState<boolean>(true);
+  const [blockNumber, setBlockNumber] = useState<number | undefined>(undefined);
+  const [sequence, setSequence] = useState<number | undefined>(undefined);
+  const [displayedBlockNumber, setDisplayedBlockNumber] = useState<
+    number | undefined
+  >(undefined);
+  const [displayedSequence, setDisplayedSequence] = useState<
+    number | undefined
+  >(undefined);
   const { address, setAddress } = useContext(AddressContext);
+
+  useEffect(() => {
+    async function fetchSequences() {
+      console.log("Block number:", blockNumber);
+      console.log("Dex block number:", dex?.block_number);
+      let newBlockNumber = blockNumber;
+      if (blockNumber !== undefined) {
+        newBlockNumber = blockNumber;
+      } else if (dex?.block_number) {
+        newBlockNumber = Number(dex.block_number);
+      }
+      if (newBlockNumber) {
+        setDisplayedBlockNumber(newBlockNumber);
+        const sequences = await fetchBlockSequences({
+          blockNumber: newBlockNumber,
+        });
+        console.log("Sequences:", sequences);
+        if (sequences) {
+          const start = Number(sequences.startSequence);
+          const end = Number(sequences.endSequence);
+          setSequenceOptions(
+            Array.from({ length: end - start + 1 }, (_, i) => start + i)
+          );
+          if (!sequence || sequence < start || sequence > end) {
+            setSequence(end);
+          }
+        }
+      }
+    }
+    fetchSequences();
+  }, [blockNumber, dex]);
+
+  useEffect(() => {
+    if (sequence !== undefined) {
+      setDisplayedSequence(sequence);
+    } else if (dex?.sequence) {
+      console.log("Setting displayed sequence to", dex.sequence);
+      setDisplayedSequence(Number(dex.sequence));
+    }
+  }, [sequence, dex]);
+
+  useEffect(() => {
+    if (dex?.block_number) {
+      setBlockOptions(
+        Array.from({ length: dex.block_number - 1 }, (_, i) => i + 1).reverse()
+      );
+    }
+  }, [dex]);
 
   useEffect(() => {
     let mounted = true;
@@ -1114,8 +1177,87 @@ export default function DEX() {
         {/* Left Column - Chart, Orderbook, and Market Trades */}
         <div className="w-2/5 flex flex-col border-r border-[#2a2e37]">
           {/* Trading Chart */}
-          <div className="h-2/5 border-b border-[#2a2e37] bg-[#161a1e]">
-            <TradingChart />
+          {/* View Mode Switch */}
+          <div className="flex justify-between items-center px-1 py-0.5 bg-[#161a1e] border-b border-[#2a2e37]">
+            <div className="flex items-center">
+              <div className="flex border border-[#2a2e37] rounded-lg overflow-hidden text-[11px]">
+                <button
+                  className={`px-3 py-0.5 ${
+                    viewMode === "chart"
+                      ? "bg-[#1E80FF] text-white"
+                      : "bg-[#2a2e37] text-[#848e9c] hover:bg-[#3a3e47]"
+                  } transition-colors font-medium`}
+                  onClick={() => setViewMode("chart")}
+                >
+                  Chart
+                </button>
+                <button
+                  className={`px-3 py-0.5 ${
+                    viewMode === "sql"
+                      ? "bg-[#1E80FF] text-white"
+                      : "bg-[#2a2e37] text-[#848e9c] hover:bg-[#3a3e47]"
+                  } transition-colors font-medium`}
+                  onClick={() => setViewMode("sql")}
+                >
+                  SQL
+                </button>
+              </div>
+
+              {/* Block and Sequence dropdowns - Made smaller */}
+              {viewMode === "sql" && (
+                <div className="flex ml-4 space-x-1 items-center">
+                  <div className="text-[10px] text-[#848e9c] mr-0.5">
+                    {`Block: ${displayedBlockNumber}`}
+                  </div>
+                  <div className="w-10">
+                    <select
+                      value={displayedBlockNumber}
+                      onChange={(e) => setBlockNumber(Number(e.target.value))}
+                      className="w-8 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-center focus:border-accent focus:outline-none h-6 flex items-center justify-center"
+                    >
+                      {blockOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="text-[10px] text-[#848e9c] ml-1 mr-0.5">
+                    {`Sequence: ${displayedSequence}`}
+                  </div>
+                  <div className="w-10">
+                    <select
+                      value={displayedSequence}
+                      onChange={(e) => setSequence(Number(e.target.value))}
+                      className="w-8 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-center focus:border-accent focus:outline-none h-6 flex items-center justify-center"
+                    >
+                      {sequenceOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Trading Chart or SQL Query */}
+          <div className="h-[calc(2/5*100%-24px)] border-b border-[#2a2e37] bg-[#161a1e]">
+            {viewMode === "chart" ? (
+              <TradingChart />
+            ) : (
+              <SqlQuery
+                blockNumber={
+                  blockNumber ?? dex?.block_number
+                    ? Number(dex?.block_number)
+                    : 1
+                }
+                sequence={
+                  sequence ?? (dex?.sequence ? Number(dex?.sequence) : 1)
+                }
+              />
+            )}
           </div>
 
           {/* Middle section with Order Book and Market Trades */}
