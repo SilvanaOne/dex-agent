@@ -157,8 +157,15 @@ export async function sqlReadOnlyQuery(query: string) {
   return results;
 }
 
-export async function sqlActionRequestQuery(query: string) {
-  return await actionRequestOnlyPrisma.$executeRawUnsafe(query);
+export async function sqlActionRequestQuery(
+  query: string
+): Promise<{ success: boolean; data: unknown; error: string | undefined }> {
+  try {
+    const result = await actionRequestOnlyPrisma.$queryRawUnsafe(query);
+    return { success: true, data: result, error: undefined };
+  } catch (error: any) {
+    return { success: false, data: undefined, error: error?.message };
+  }
 }
 
 // UNSAFE, use with caution
