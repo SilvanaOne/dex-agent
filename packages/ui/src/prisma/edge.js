@@ -202,14 +202,6 @@ const config = {
         "fromEnvVar": null,
         "value": "darwin-arm64",
         "native": true
-      },
-      {
-        "fromEnvVar": null,
-        "value": "linux-musl-openssl-3.0.x"
-      },
-      {
-        "fromEnvVar": null,
-        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -235,8 +227,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../src/prisma\"\n  binaryTargets = [\"native\", \"linux-musl-openssl-3.0.x\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"SILVANA_DATABASE_URL\")\n}\n\nmodel State {\n  sequence BigInt\n  address  String\n\n  baseTokenAmount         BigInt\n  baseTokenStakedAmount   BigInt\n  baseTokenBorrowedAmount BigInt\n\n  quoteTokenAmount         BigInt\n  quoteTokenStakedAmount   BigInt\n  quoteTokenBorrowedAmount BigInt\n\n  bidAmount BigInt\n  bidPrice  BigInt\n  bidIsSome Boolean\n\n  askAmount BigInt\n  askPrice  BigInt\n  askIsSome Boolean\n\n  nonce BigInt\n\n  @@id([sequence, address])\n  @@index([sequence])\n  @@index([address])\n}\n\nmodel FetchedSequences {\n  sequence BigInt @id\n}\n\nenum Operation {\n  CREATE_ACCOUNT\n  BID\n  ASK\n  TRADE\n  TRANSFER\n  PROOF\n}\n\nenum ActionStatus {\n  PENDING\n  SUCCESS\n  FAILED\n}\n\nmodel ActionRequest {\n  id        Int          @id @default(autoincrement())\n  createdAt DateTime     @default(now())\n  operation Operation\n  status    ActionStatus @default(PENDING)\n\n  // CREATE_ACCOUNT fields\n  address         String?\n  poolPublicKey   String?\n  publicKey       String?\n  publicKeyBase58 String?\n  name            String?\n  role            String?\n  image           String?\n  baseBalance     BigInt?\n  quoteBalance    BigInt?\n\n  // BID/ASK fields\n  userPublicKey   String?\n  baseTokenAmount BigInt?\n  price           BigInt?\n  isSome          Boolean?\n  nonce           BigInt?\n  userSignatureR  BigInt?\n  userSignatureS  BigInt?\n\n  // TRADE fields\n  buyerPublicKey   String?\n  sellerPublicKey  String?\n  quoteTokenAmount BigInt?\n  buyerNonce       BigInt?\n  sellerNonce      BigInt?\n\n  // TRANSFER fields\n  senderPublicKey   String?\n  receiverPublicKey String?\n  senderNonce       BigInt?\n  receiverNonce     BigInt?\n  senderSignatureR  BigInt?\n  senderSignatureS  BigInt?\n\n  // PROOF fields\n  sequence BigInt?\n  //publicKeyBase58   String?\n\n  @@index([operation])\n  @@index([status])\n}\n",
-  "inlineSchemaHash": "e8e179c0d5f5600029cad242b5144e30f7fd99192e80c369cd7537d8d4f5a204",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"SILVANA_DATABASE_URL\")\n}\n\nmodel State {\n  sequence BigInt\n  address  String\n\n  baseTokenAmount         BigInt\n  baseTokenStakedAmount   BigInt\n  baseTokenBorrowedAmount BigInt\n\n  quoteTokenAmount         BigInt\n  quoteTokenStakedAmount   BigInt\n  quoteTokenBorrowedAmount BigInt\n\n  bidAmount BigInt\n  bidPrice  BigInt\n  bidIsSome Boolean\n\n  askAmount BigInt\n  askPrice  BigInt\n  askIsSome Boolean\n\n  nonce BigInt\n\n  @@id([sequence, address])\n  @@index([sequence])\n  @@index([address])\n}\n\nmodel FetchedSequences {\n  sequence BigInt @id\n}\n\nenum Operation {\n  CREATE_ACCOUNT\n  BID\n  ASK\n  TRADE\n  TRANSFER\n  PROOF\n}\n\nenum ActionStatus {\n  PENDING\n  SUCCESS\n  FAILED\n}\n\nmodel ActionRequest {\n  id        Int          @id @default(autoincrement())\n  createdAt DateTime     @default(now())\n  operation Operation\n  status    ActionStatus @default(PENDING)\n\n  // CREATE_ACCOUNT fields\n  address         String?\n  poolPublicKey   String?\n  publicKey       String?\n  publicKeyBase58 String?\n  name            String?\n  role            String?\n  image           String?\n  baseBalance     BigInt?\n  quoteBalance    BigInt?\n\n  // BID/ASK fields\n  userPublicKey   String?\n  baseTokenAmount BigInt?\n  price           BigInt?\n  isSome          Boolean?\n  nonce           BigInt?\n  userSignatureR  BigInt?\n  userSignatureS  BigInt?\n\n  // TRADE fields\n  buyerPublicKey   String?\n  sellerPublicKey  String?\n  quoteTokenAmount BigInt?\n  buyerNonce       BigInt?\n  sellerNonce      BigInt?\n\n  // TRANSFER fields\n  senderPublicKey   String?\n  receiverPublicKey String?\n  senderNonce       BigInt?\n  receiverNonce     BigInt?\n  senderSignatureR  BigInt?\n  senderSignatureS  BigInt?\n\n  // PROOF fields\n  sequence BigInt?\n  //publicKeyBase58   String?\n\n  @@index([operation])\n  @@index([status])\n}\n",
+  "inlineSchemaHash": "ba657d5e4c7edf3cb191f9221b31602495bc3e70db21c2f1429a5cbb3e9beacb",
   "copyEngine": true
 }
 config.dirname = '/'
