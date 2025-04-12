@@ -1,6 +1,8 @@
 import path from "node:path";
 import { withLogtail } from "@logtail/next";
 import { fileURLToPath } from "url";
+import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin'
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +47,7 @@ const nextConfig = {
     if (isServer) {
       // For libquery_engine files
       config.externals = [...(config.externals || []), "prisma", "@prisma/client"];
+      config.plugins = [...config.plugins, new PrismaPlugin()]
       
       // Handle the Prisma binary specifically
       const libFolder = path.join(__dirname, "..", "lib");
