@@ -7,10 +7,13 @@ import { verifyFields } from "./public-key.js";
 import secp256k1 from "secp256k1";
 import crypto from "crypto";
 import { prepareSignPayload } from "./sign.js";
-import { convertMinaSignature } from "./base58/index.js";
+import {
+  convertMinaSignatureFromBase58,
+  convertMinaSignatureToBase58,
+} from "./base58/index.js";
 
 export interface WrapMinaSignatureParams {
-  minaSignatureBase58: string;
+  minaSignature: string | MinaSignature;
   minaPublicKey: string;
   poolPublicKey: string;
   operation: Operation;
@@ -30,7 +33,6 @@ export async function wrapMinaSignature(
   suiData: number[];
 }> {
   const {
-    minaSignatureBase58,
     minaPublicKey,
     poolPublicKey,
     operation,
@@ -40,7 +42,17 @@ export async function wrapMinaSignature(
     price,
     receiverPublicKey,
   } = params;
-  const minaSignature = convertMinaSignature(minaSignatureBase58);
+  const minaSignature =
+    typeof params.minaSignature === "string"
+      ? convertMinaSignatureFromBase58(params.minaSignature)
+      : params.minaSignature;
+  const minaSignatureBase58 = convertMinaSignatureToBase58(minaSignature);
+  if (
+    typeof params.minaSignature === "string" &&
+    params.minaSignature !== minaSignatureBase58
+  ) {
+    throw new Error("wrapMinaSignature: Invalid mina signature");
+  }
   const minaData = prepareSignPayload({
     ...params,
   });

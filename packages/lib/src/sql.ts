@@ -4,8 +4,15 @@ import {
   Prisma,
   Operation as PrismaOperation,
   ActionStatus,
+  ActionRequest as PrismaActionRequest,
 } from "./prisma/client.js";
 import { SequenceState, ActionRequest, Operation } from "./types.js";
+
+export type { ActionStatus, PrismaOperation, PrismaActionRequest };
+
+export async function getPrismaObjects() {
+  return { ActionStatus, PrismaOperation };
+}
 
 // Using a type-only import for PrismaClient
 type GlobalPrisma = {
@@ -252,18 +259,47 @@ export async function addActionRequest(actionRequest: ActionRequest) {
         "senderSignature" in actionRequest
           ? actionRequest.senderSignature?.s
           : null,
-      status: "PENDING",
+      status: ActionStatus.PENDING,
     },
   });
 }
 
-export async function setRequestStatus(params: {
+export async function setSqlRequestStatus(params: {
   requestId: number;
   status: ActionStatus;
+  digest?: string;
+  da_hash?: string;
 }) {
-  const { requestId, status } = params;
+  const { requestId, status, digest, da_hash } = params;
   await prisma.actionRequest.update({
     where: { id: requestId },
-    data: { status },
+    data: { status, digest, da_hash },
+  });
+}
+
+export async function getSqlRequestStatus(params: { requestId: number }) {
+  const { requestId } = params;
+  // Use a transaction to ensure we get the latest data
+  return await prisma.$transaction(async (tx) => {
+    return tx.actionRequest.findUnique({
+      where: { id: requestId },
+    });
+  });
+}
+
+export async function getUnprocessedSqlRequests() {
+  return await prisma.actionRequest.findMany({
+    where: { status: ActionStatus.PENDING },
+  });
+}
+
+export async function setSqlRequestProcessing(params: {
+  requestId: number;
+  agent: string;
+}) {
+  const { requestId, agent } = params;
+  await prisma.actionRequest.update({
+    where: { id: requestId },
+    data: { status: ActionStatus.PROCESSING, agent },
   });
 }

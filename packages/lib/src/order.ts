@@ -5,13 +5,20 @@ import { Transaction } from "@mysten/sui/transactions";
 import { getKey, getUserKey } from "./key.js";
 import { executeOperationTx } from "./operaton.js";
 import { fetchDexAccount } from "./fetch.js";
-import { Operation } from "./types.js";
+import { ActionRequest, MinaSignature, Operation } from "./types.js";
 import { prepareSignPayload } from "./sign.js";
 import { wrapMinaSignature } from "./wrap.js";
-import { TransactionType } from "./types.js";
+import {
+  TransactionType,
+  ActionAskRequest,
+  ActionBidRequest,
+  ActionTransferRequest,
+} from "./types.js";
 import { LastTransactionData } from "./types.js";
+import { convertMinaSignatureFromBase58 } from "./base58/signature.js";
 
 export interface OrderPayload {
+  poolPublicKey: string;
   user: string;
   payload: bigint[];
   baseTokenAmount: bigint;
@@ -115,6 +122,7 @@ export async function prepareOrderPayload(params: {
     receiverPublicKey,
   });
   return {
+    poolPublicKey,
     user,
     payload,
     baseTokenAmount,
@@ -126,22 +134,148 @@ export async function prepareOrderPayload(params: {
   };
 }
 
-export async function order(params: {
-  orderPayload: OrderPayload;
+export async function orderWithPayload(params: {
+  payload: OrderPayload;
   signature: string;
   key?: string;
 }): Promise<Partial<LastTransactionData>> {
-  console.log("order", params);
-  const start = Date.now();
-  const { orderPayload } = params;
+  console.log("orderWithPayload", params);
+  const { payload, key, signature } = params;
   const {
+    poolPublicKey,
     user,
     baseTokenAmount,
     quoteTokenAmount,
     price,
     receiverPublicKey,
+    nonce,
     operation,
-  } = orderPayload;
+  } = payload;
+  if (
+    operation !== Operation.BID &&
+    operation !== Operation.ASK &&
+    operation !== Operation.TRANSFER
+  ) {
+    throw new Error("Invalid operation");
+  }
+  let actionRequest: ActionRequest;
+
+  // Parse signature string into MinaSignature object
+  const minaSignature: MinaSignature =
+    convertMinaSignatureFromBase58(signature);
+
+  switch (operation) {
+    case Operation.BID:
+      actionRequest = {
+        userPublicKey: user,
+        nonce,
+        baseTokenAmount,
+        price,
+        isSome: true,
+        userSignature: minaSignature,
+        poolPublicKey,
+        operation: Operation.BID,
+      } as ActionBidRequest;
+      break;
+    case Operation.ASK:
+      actionRequest = {
+        userPublicKey: user,
+        nonce,
+        baseTokenAmount,
+        price,
+        isSome: true,
+        userSignature: minaSignature,
+        poolPublicKey,
+        operation: Operation.ASK,
+      } as ActionAskRequest;
+      break;
+    case Operation.TRANSFER:
+      if (!receiverPublicKey) {
+        throw new Error("Receiver public key is required for transfer");
+      }
+      actionRequest = {
+        senderPublicKey: user,
+        senderNonce: nonce,
+        receiverPublicKey,
+        receiverNonce: 0n, // Default value, might need to be fetched
+        baseTokenAmount,
+        quoteTokenAmount,
+        isSome: true,
+        senderSignature: minaSignature,
+        poolPublicKey,
+        operation: Operation.TRANSFER,
+      } as ActionTransferRequest;
+      break;
+    default:
+      throw new Error(`Unsupported operation: ${operation}`);
+  }
+  if (!actionRequest) {
+    throw new Error("Invalid action request");
+  }
+
+  return order({ actionRequest, key });
+}
+
+export async function order(params: {
+  actionRequest: ActionRequest;
+  key?: string;
+}): Promise<Partial<LastTransactionData>> {
+  console.log("order", params);
+  const start = Date.now();
+  const { actionRequest } = params;
+  const { operation } = actionRequest;
+  if (
+    operation !== Operation.BID &&
+    operation !== Operation.ASK &&
+    operation !== Operation.TRANSFER
+  ) {
+    throw new Error("Invalid operation");
+  }
+  const user =
+    operation === Operation.BID
+      ? actionRequest.userPublicKey
+      : operation === Operation.ASK
+      ? actionRequest.userPublicKey
+      : actionRequest.senderPublicKey;
+
+  const userNonce =
+    operation === Operation.BID
+      ? actionRequest.nonce
+      : operation === Operation.ASK
+      ? actionRequest.nonce
+      : actionRequest.senderNonce;
+
+  const baseTokenAmount =
+    operation === Operation.BID
+      ? actionRequest.baseTokenAmount
+      : operation === Operation.ASK
+      ? actionRequest.baseTokenAmount
+      : actionRequest.baseTokenAmount;
+
+  const signature =
+    operation === Operation.BID
+      ? actionRequest.userSignature
+      : operation === Operation.ASK
+      ? actionRequest.userSignature
+      : actionRequest.senderSignature;
+
+  const receiverPublicKey =
+    operation === Operation.TRANSFER
+      ? actionRequest.receiverPublicKey
+      : undefined;
+
+  const quoteTokenAmount =
+    operation === Operation.TRANSFER
+      ? actionRequest.quoteTokenAmount
+      : undefined;
+
+  const price =
+    operation === Operation.BID
+      ? actionRequest.price
+      : operation === Operation.ASK
+      ? actionRequest.price
+      : undefined;
+
   let keyPromise: Promise<string> | undefined = undefined;
   if (params.key) {
     keyPromise = undefined;
@@ -173,14 +307,14 @@ export async function order(params: {
   }
 
   let nonce = userAccount.nonce;
-  if (nonce !== orderPayload.nonce) {
+  if (nonce !== userNonce) {
     throw new Error("Nonce mismatch");
   }
 
   const tx = new Transaction();
 
   const { minaSignature, suiSignature } = await wrapMinaSignature({
-    minaSignatureBase58: params.signature,
+    minaSignature: signature,
     minaPublicKey: user,
     poolPublicKey: poolPublicKey,
     operation,

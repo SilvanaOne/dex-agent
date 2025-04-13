@@ -80,7 +80,7 @@ export async function faucet(params: {
     });
 
     const { minaSignature, suiSignature } = await wrapMinaSignature({
-      minaSignatureBase58: faucetSignature.minaSignatureBase58,
+      minaSignature: faucetSignature.minaSignatureBase58,
       minaPublicKey: faucetPublicKey,
       poolPublicKey: poolPublicKey,
       operation: Operation.TRANSFER,
