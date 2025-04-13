@@ -38,6 +38,33 @@ export async function agentProveAccount(params: {
   return answer;
 }
 
+export async function agentSqlRequest(params: {
+  query: string;
+  blockNumber: number;
+  sequence: number;
+}) {
+  console.log("agent: starting sql request");
+  const args = JSON.stringify(params);
+
+  const answer = await dexProverRequest({
+    task: "sqlRequest",
+    metadata: `SQL request`,
+    args,
+    mode: "sync",
+  });
+  return answer;
+}
+
+export async function agentSqlProcessing() {
+  console.log("agent: starting sql processing");
+
+  const answer = await dexProverRequest({
+    task: "sqlProcessing",
+    metadata: `SQL processing`,
+  });
+  return answer;
+}
+
 export async function agentMonitor(params: { blockNumber: number }) {
   console.log("agent: starting monitor");
   const answer = await dexProverRequest({
@@ -52,9 +79,17 @@ export async function agentMonitor(params: { blockNumber: number }) {
 }
 
 async function dexProverRequest(params: {
-  task: "prove" | "merge" | "settle" | "monitor" | "proveAccount";
+  task:
+    | "prove"
+    | "merge"
+    | "settle"
+    | "monitor"
+    | "proveAccount"
+    | "sqlRequest"
+    | "sqlProcessing";
   metadata?: string;
   args?: string;
+  mode?: "async" | "sync";
 }) {
   const chain = process.env.NEXT_PUBLIC_MINA_CHAIN || process.env.MINA_CHAIN;
   if (!chain) {
@@ -63,7 +98,7 @@ async function dexProverRequest(params: {
   if (chain !== "devnet" && chain !== "zeko" && chain !== "mainet") {
     throw new Error("MINA_CHAIN is not valid");
   }
-  const { task, metadata = task, args } = params;
+  const { task, metadata = task, args, mode } = params;
   const answer = await silvanaProverRequest({
     command: "execute",
     developer: "DFST",
@@ -73,6 +108,7 @@ async function dexProverRequest(params: {
     args: args ?? JSON.stringify({ task }),
     metadata,
     chain,
+    mode,
   });
   return answer;
 }
@@ -103,7 +139,7 @@ export async function silvanaProverRequest(params: {
   transactions?: string[];
   args?: string;
   metadata?: string;
-  mode?: string;
+  mode?: "async" | "sync";
   jobId?: string;
   developer: string;
   repo: string;
@@ -140,7 +176,8 @@ export async function silvanaProverRequest(params: {
         mode,
         jobId,
       },
-      chain: `devnet`,
+      chain,
+      mode: mode ?? "async",
     };
     const endpoint = `https://api.zkcloudworker.com/v1/${chain}`;
 

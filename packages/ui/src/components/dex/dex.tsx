@@ -17,7 +17,7 @@ import {
   createAccount as createDexAccount,
   faucet as dexFaucet,
   waitTx,
-  order as dexOrder,
+  orderWithPayload,
   prepareOrderPayload,
   getUserKey,
   getNetworkInfo,
@@ -60,7 +60,7 @@ import NetworkInfo from "@/components/dex/network-info";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { getEthPrice } from "@dex-agent/lib";
-import { formatBalance, formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
 
 import { AddressContext } from "@/context/address";
 import { getWalletInfo, connectWallet } from "@/lib/wallet";
@@ -1043,9 +1043,9 @@ export default function DEX() {
         setProcessing(undefined);
         return;
       }
-      const result = await dexOrder({
+      const result = await orderWithPayload({
         signature,
-        orderPayload,
+        payload: orderPayload,
         key,
       });
 

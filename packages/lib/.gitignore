@@ -11,3 +11,4 @@ cache/
 .zkcloudworker/
 examples/
 backup/
+src/prisma/

@@ -50,6 +50,7 @@ enum Operation {
 
 enum ActionStatus {
   PENDING
+  PROCESSING
   SUCCESS
   FAILED
 }
@@ -99,6 +100,12 @@ model ActionRequest {
   sequence          BigInt?
   //publicKeyBase58   String?
 
+  // PROCESSING AGENT ID
+  agent             String?
+
+  // RESULT OF REQUEST
+  digest            String?
+  da_hash           String?
 
   @@index([operation])
   @@index([status])

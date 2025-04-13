@@ -4,7 +4,7 @@ import {
   signFields,
   verifyFields,
 } from "./public-key.js";
-import { convertMinaSignature } from "./base58/index.js";
+import { convertMinaSignatureFromBase58 } from "./base58/index.js";
 
 export function prepareSignPayload(params: {
   poolPublicKey: string;
@@ -60,7 +60,7 @@ export async function signDexFields(params: {
     privateKey: params.minaPrivateKey,
     fields: minaData,
   });
-  const minaSignature = convertMinaSignature(signedData.signature);
+  const minaSignature = convertMinaSignatureFromBase58(signedData.signature);
 
   const valid = verifyFields({
     publicKey: signedData.publicKey,

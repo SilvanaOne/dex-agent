@@ -27,3 +27,4 @@ export * from "./ipfs.js";
 export * from "./agent.js";
 export * from "./nonce.js";
 export * from "./sql.js";
+export * from "./request.js";

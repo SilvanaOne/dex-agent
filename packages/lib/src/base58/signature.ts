@@ -1,5 +1,5 @@
 import { MinaSignature } from "../types.js";
-import { fromBase58Check } from "./base58.js";
+import { fromBase58Check, toBase58Check } from "./base58.js";
 import { versionNumbers, versionBytes } from "./versions.js";
 
 type NonNegativeInteger<T extends number> = number extends T
@@ -50,12 +50,40 @@ let readBytes_ = <N extends number>(
   return readBytes(bytes, offset, versionNumbers.signature);
 };
 
-function fromBytes(bytes: number[]) {
+function fromBytes(bytes: number[]): MinaSignature {
   return readBytes_(bytes, 0);
 }
 
-export function convertMinaSignature(signature: string): MinaSignature {
+function toBytes(signature: MinaSignature): number[] {
+  const result = new Array<number>(65);
+  result[0] = versionNumbers.signature;
+
+  // Convert r to bytes
+  let r = signature.r;
+  for (let i = 0; i < 32; i++) {
+    result[i + 1] = Number(r & 0xffn);
+    r >>= 8n;
+  }
+
+  // Convert s to bytes
+  let s = signature.s;
+  for (let i = 0; i < 32; i++) {
+    result[i + 33] = Number(s & 0xffn);
+    s >>= 8n;
+  }
+
+  return result;
+}
+
+export function convertMinaSignatureFromBase58(
+  signature: string
+): MinaSignature {
   const bytes = fromBase58Check(signature, versionBytes.signature);
   const minaSignature = fromBytes(bytes);
   return minaSignature;
+}
+
+export function convertMinaSignatureToBase58(signature: MinaSignature): string {
+  const bytes = toBytes(signature);
+  return toBase58Check(bytes, versionBytes.signature);
 }

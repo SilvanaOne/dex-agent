@@ -6,10 +6,17 @@ import {
   merge,
   settle,
   monitor,
-  createAccountProof,
   fetchAccountProof,
+  fetchSequenceData,
 } from "@dex-agent/contracts";
-import { agentSettle } from "@dex-agent/lib";
+import {
+  agentSettle,
+  sqlActionRequestQuery,
+  isSequenceFetched,
+  addSequenceData,
+  agentSqlProcessing,
+  processSqlRequests,
+} from "@dex-agent/lib";
 
 const MAX_RUN_TIME = 1000 * 60 * 5; // 5 minutes
 
@@ -59,7 +66,9 @@ export class DEXAgent extends zkCloudWorker {
       task !== "merge" &&
       task !== "settle" &&
       task !== "monitor" &&
-      task !== "proveAccount"
+      task !== "proveAccount" &&
+      task !== "sqlRequest" &&
+      task !== "sqlProcessing"
     )
       throw new Error("Invalid task");
     try {
@@ -74,6 +83,10 @@ export class DEXAgent extends zkCloudWorker {
           return await this.monitorDex(undefined);
         case "proveAccount":
           return await this.proveAccount();
+        case "sqlRequest":
+          return await this.sqlRequest();
+        case "sqlProcessing":
+          return await this.sqlProcessing();
       }
     } catch (error: any) {
       console.error(`Error in ${task}`, error.message);
@@ -83,7 +96,9 @@ export class DEXAgent extends zkCloudWorker {
       });
     }
   }
-  private stringifyJobResult(result: JobResult & { blobId?: string }): string {
+  private stringifyJobResult(
+    result: JobResult & { blobId?: string; result?: object }
+  ): string {
     /*
         export interface JobResult {
           success: boolean;
@@ -98,7 +113,11 @@ export class DEXAgent extends zkCloudWorker {
       tx: result.hash ? undefined : result.tx,
       task: this.cloud.task,
     };
-    return JSON.stringify(strippedResult, null, 2);
+    return JSON.stringify(
+      strippedResult,
+      (key, value) => (typeof value === "bigint" ? value.toString() : value),
+      2
+    );
   }
 
   private async proveDex(): Promise<string> {
@@ -235,7 +254,108 @@ export class DEXAgent extends zkCloudWorker {
         blobId: result,
       });
     } catch (error: any) {
+      console.timeEnd("proveAccount");
       console.error("Error in proveAccount", error.message);
+      return this.stringifyJobResult({
+        success: false,
+        error: String(error.message),
+      });
+    }
+  }
+
+  private async sqlRequest(): Promise<string> {
+    console.time("sqlRequest");
+    try {
+      const args = this.cloud.args ? JSON.parse(this.cloud.args) : undefined;
+      const query = args?.query;
+      if (!query) throw new Error("query is not set");
+      const sequence = args?.sequence;
+      if (!sequence) throw new Error("sequence is not set");
+      const blockNumber = args?.blockNumber;
+      if (!blockNumber) throw new Error("blockNumber is not set");
+      const isFetched = await isSequenceFetched(sequence);
+      if (!isFetched) {
+        console.log(
+          `sqlRequest: sequence is not fetched, fetching sequence ${sequence} for block ${blockNumber}`
+        );
+        const sequenceData = await fetchSequenceData({
+          sequence,
+          blockNumber,
+          prove: false,
+          cache: this.cache,
+        });
+        if (!sequenceData || !sequenceData.state)
+          throw new Error("cannot fetch sequence data");
+        await addSequenceData({
+          sequence,
+          state: Object.entries(sequenceData.state.accounts).reduce(
+            (acc, [address, account]) => {
+              acc[address] = account.toAccountData();
+              return acc;
+            },
+            {} as Record<string, any>
+          ),
+        });
+      }
+      const result = await sqlActionRequestQuery(query);
+
+      console.log("sqlRequest result", result);
+      if (!result) throw new Error("cannot execute SQL request");
+
+      await this.cloud.publishTransactionMetadata({
+        txId: "dex:sqlRequest:" + this.cloud.jobId,
+        metadata: {
+          custom: {
+            task: "SQL request",
+            query,
+            result,
+          },
+        },
+      });
+
+      console.timeEnd("sqlRequest");
+      await agentSqlProcessing();
+      return this.stringifyJobResult({
+        success: true,
+        result,
+      });
+    } catch (error: any) {
+      console.error("Error in sqlRequest", error.message);
+      console.timeEnd("sqlRequest");
+      return this.stringifyJobResult({
+        success: false,
+        error: String(error.message),
+      });
+    }
+  }
+
+  private async sqlProcessing(): Promise<string> {
+    console.time("sqlProcessing");
+    try {
+      const result = await processSqlRequests();
+
+      console.log("sqlProcessing result", result);
+      if (!result) throw new Error("cannot execute SQL request");
+
+      await this.cloud.publishTransactionMetadata({
+        txId: "dex:sqlProcessing:" + this.cloud.jobId,
+        metadata: {
+          custom: {
+            task: "SQL processing",
+            itemsProcessed: result.length,
+            result,
+          },
+        },
+      });
+
+      console.timeEnd("sqlProcessing");
+      return this.stringifyJobResult({
+        success: true,
+        result,
+      });
+    } catch (error: any) {
+      console.error("Error in sqlProcessing", error.message);
+      console.timeEnd("sqlProcessing");
       return this.stringifyJobResult({
         success: false,
         error: String(error.message),
