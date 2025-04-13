@@ -42,7 +42,11 @@ export async function agentSqlRequest(params: {
   query: string;
   blockNumber: number;
   sequence: number;
-}) {
+}): Promise<{
+  success: boolean;
+  data?: any;
+  error?: string;
+}> {
   console.log("agent: starting sql request");
   const args = JSON.stringify(params);
 
@@ -52,7 +56,41 @@ export async function agentSqlRequest(params: {
     args,
     mode: "sync",
   });
-  return answer;
+  //console.log("agent: sql request answer", answer);
+  if (answer?.success !== true || !answer?.result) {
+    return {
+      success: false,
+      error: answer?.error ?? "SQL request error E005",
+    };
+  }
+  try {
+    const result = JSON.parse(answer.result);
+    console.log("agent: sql request result", result);
+    if (result?.success !== true || !result?.result) {
+      return {
+        success: false,
+        error:
+          result.error ?? result?.result?.error ?? "SQL request error E006",
+      };
+    }
+    const data = JSON.parse(result.result);
+    if (data?.success !== true || !data?.data) {
+      return {
+        success: false,
+        error:
+          result.error ?? result?.result?.error ?? "SQL request error E007",
+      };
+    }
+    return {
+      success: true,
+      data: data.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "SQL answer data parse error E008",
+    };
+  }
 }
 
 export async function agentSqlProcessing() {

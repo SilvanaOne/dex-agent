@@ -7,7 +7,9 @@ import {
   sqlReadOnlyQuery,
   sqlListTables,
   sqlGetTableStructure,
+  addSequenceData,
 } from "@dex-agent/lib";
+import { fetchSequenceData } from "@dex-agent/contracts";
 
 describe("Prisma", async () => {
   it("should save to Prisma", async () => {
@@ -37,5 +39,34 @@ describe("Prisma", async () => {
   it("should run raw query", async () => {
     const data = await sqlReadOnlyQuery('SELECT * FROM "FetchedSequences"');
     console.log("data", data);
+  });
+
+  it("should run raw query", async () => {
+    const sequence = 62n;
+    const blockNumber = 39;
+    const isFetched = await isSequenceFetched(sequence);
+    if (!isFetched) {
+      console.log(
+        `sqlRequest: sequence is not fetched, fetching sequence ${sequence} for block ${blockNumber}`
+      );
+      const sequenceData = await fetchSequenceData({
+        sequence: Number(sequence),
+        blockNumber,
+        prove: false,
+        cache: undefined as any,
+      });
+      if (!sequenceData || !sequenceData.state)
+        throw new Error("cannot fetch sequence data");
+      await addSequenceData({
+        sequence,
+        state: Object.entries(sequenceData.state.accounts).reduce(
+          (acc, [address, account]) => {
+            acc[address] = account.toAccountData();
+            return acc;
+          },
+          {} as Record<string, any>
+        ),
+      });
+    }
   });
 });

@@ -68,26 +68,40 @@ export async function addSequenceData(data: SequenceState) {
     return {
       sequence: data.sequence,
       address,
-      baseTokenAmount: account.baseTokenBalance.amount,
-      baseTokenStakedAmount: account.baseTokenBalance.stakedAmount,
-      baseTokenBorrowedAmount: account.baseTokenBalance.borrowedAmount,
-      quoteTokenAmount: account.quoteTokenBalance.amount,
-      quoteTokenStakedAmount: account.quoteTokenBalance.stakedAmount,
-      quoteTokenBorrowedAmount: account.quoteTokenBalance.borrowedAmount,
-      bidAmount: account.bid.amount,
-      bidPrice: account.bid.price,
+      baseTokenAmount: account.baseTokenBalance.amount.toString(),
+      baseTokenStakedAmount: account.baseTokenBalance.stakedAmount.toString(),
+      baseTokenBorrowedAmount:
+        account.baseTokenBalance.borrowedAmount.toString(),
+      quoteTokenAmount: account.quoteTokenBalance.amount.toString(),
+      quoteTokenStakedAmount: account.quoteTokenBalance.stakedAmount.toString(),
+      quoteTokenBorrowedAmount:
+        account.quoteTokenBalance.borrowedAmount.toString(),
+      bidAmount: account.bid.amount.toString(),
+      bidPrice: account.bid.price.toString(),
       bidIsSome: account.bid.isSome,
-      askAmount: account.ask.amount,
-      askPrice: account.ask.price,
+      askAmount: account.ask.amount.toString(),
+      askPrice: account.ask.price.toString(),
       askIsSome: account.ask.isSome,
-      nonce: account.nonce,
+      nonce: account.nonce.toString(),
     };
   });
 
-  // Use createMany to efficiently insert all records in a single database operation
-  await prisma.state.createMany({
-    data: stateRecords,
-    skipDuplicates: true, // Skip records that would cause unique constraint violations
+  console.log("stateRecords", stateRecords[0]);
+
+  // Use a transaction to make both operations atomic
+  await prisma.$transaction(async (tx) => {
+    // First operation: create state records
+    await tx.state.createMany({
+      data: stateRecords,
+      skipDuplicates: true, // Skip records that would cause unique constraint violations
+    });
+
+    // Second operation: record that we've fetched this sequence
+    await tx.fetchedSequences.create({
+      data: {
+        sequence: data.sequence,
+      },
+    });
   });
 }
 
@@ -243,21 +257,65 @@ export async function addActionRequest(actionRequest: ActionRequest) {
     data: {
       ...actionRequest,
       operation: requestType,
+      sequence:
+        "sequence" in actionRequest
+          ? Prisma.Decimal(actionRequest.sequence.toString())
+          : null,
+      baseBalance:
+        "baseBalance" in actionRequest
+          ? Prisma.Decimal(actionRequest.baseBalance.toString())
+          : null,
+      quoteBalance:
+        "quoteBalance" in actionRequest
+          ? Prisma.Decimal(actionRequest.quoteBalance.toString())
+          : null,
+      baseTokenAmount:
+        "baseTokenAmount" in actionRequest
+          ? Prisma.Decimal(actionRequest.baseTokenAmount.toString())
+          : null,
+      quoteTokenAmount:
+        "quoteTokenAmount" in actionRequest
+          ? Prisma.Decimal(actionRequest.quoteTokenAmount.toString())
+          : null,
       userSignatureR:
         "userSignature" in actionRequest
-          ? actionRequest.userSignature?.r
+          ? Prisma.Decimal(actionRequest.userSignature?.r.toString())
           : null,
       userSignatureS:
         "userSignature" in actionRequest
-          ? actionRequest.userSignature?.s
+          ? Prisma.Decimal(actionRequest.userSignature?.s.toString())
           : null,
       senderSignatureR:
         "senderSignature" in actionRequest
-          ? actionRequest.senderSignature?.r
+          ? Prisma.Decimal(actionRequest.senderSignature?.r.toString())
           : null,
       senderSignatureS:
         "senderSignature" in actionRequest
-          ? actionRequest.senderSignature?.s
+          ? Prisma.Decimal(actionRequest.senderSignature?.s.toString())
+          : null,
+      price:
+        "price" in actionRequest
+          ? Prisma.Decimal(actionRequest.price.toString())
+          : null,
+      nonce:
+        "nonce" in actionRequest
+          ? Prisma.Decimal(actionRequest.nonce.toString())
+          : null,
+      buyerNonce:
+        "buyerNonce" in actionRequest
+          ? Prisma.Decimal(actionRequest.buyerNonce.toString())
+          : null,
+      sellerNonce:
+        "sellerNonce" in actionRequest
+          ? Prisma.Decimal(actionRequest.sellerNonce.toString())
+          : null,
+      senderNonce:
+        "senderNonce" in actionRequest
+          ? Prisma.Decimal(actionRequest.senderNonce.toString())
+          : null,
+      receiverNonce:
+        "receiverNonce" in actionRequest
+          ? Prisma.Decimal(actionRequest.receiverNonce.toString())
           : null,
       status: ActionStatus.PENDING,
     },

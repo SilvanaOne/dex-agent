@@ -97,7 +97,7 @@ export class DEXAgent extends zkCloudWorker {
     }
   }
   private stringifyJobResult(
-    result: JobResult & { blobId?: string; result?: object }
+    result: JobResult & { blobId?: string; result?: object | string }
   ): string {
     /*
         export interface JobResult {
@@ -301,6 +301,12 @@ export class DEXAgent extends zkCloudWorker {
 
       console.log("sqlRequest result", result);
       if (!result) throw new Error("cannot execute SQL request");
+      const resultString = JSON.stringify(
+        result,
+        (key, value) => (typeof value === "bigint" ? value.toString() : value),
+        2
+      );
+      //console.log("sqlRequest resultString", resultString);
 
       await this.cloud.publishTransactionMetadata({
         txId: "dex:sqlRequest:" + this.cloud.jobId,
@@ -308,7 +314,7 @@ export class DEXAgent extends zkCloudWorker {
           custom: {
             task: "SQL request",
             query,
-            result,
+            result: resultString,
           },
         },
       });
@@ -317,7 +323,7 @@ export class DEXAgent extends zkCloudWorker {
       await agentSqlProcessing();
       return this.stringifyJobResult({
         success: true,
-        result,
+        result: resultString,
       });
     } catch (error: any) {
       console.error("Error in sqlRequest", error.message);

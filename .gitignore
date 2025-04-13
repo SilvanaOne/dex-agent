@@ -25,6 +25,7 @@ packages/*/data/
 packages/*/cache/
 packages/*/.env
 packages/*/.env.*
+packages/lib/src/prisma/
 .silvana/
 
 # Swap the comments on the following lines if you wish to use zero-installs
