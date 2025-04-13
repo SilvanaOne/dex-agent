@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { sqlActionRequestQuery, sqlReadOnlyQuery } from "@dex-agent/lib";
+import { agentSqlRequest } from "@dex-agent/lib";
 import Processing from "./ui/processing";
 
+const ALICE_PUBLIC_KEY = process.env.NEXT_PUBLIC_ALICE_PUBLIC_KEY;
 interface SqlQueryProps {
   blockNumber: number;
   sequence: number;
@@ -32,7 +33,15 @@ ORDER BY
     setIsExecuting(true);
     setError(null);
     try {
-      const result = await sqlActionRequestQuery(sqlQuery);
+      //const result = await sqlActionRequestQuery(sqlQuery);
+      console.time("agentSqlRequest");
+      const result = await agentSqlRequest({
+        query: sqlQuery,
+        blockNumber,
+        sequence,
+      });
+      console.timeEnd("agentSqlRequest");
+      console.log("agentSqlRequest", result);
       if (result.success) {
         setResults(result.data as any);
         setError(null);
@@ -73,18 +82,11 @@ WHERE table_schema = 'public'`
           </button>
           <button
             onClick={() =>
-              insertTemplate(`SELECT 
-  column_name, 
-  data_type, 
-  is_nullable, 
-  column_default
-FROM 
-  information_schema.columns 
-WHERE 
-  table_schema = 'public' 
-AND table_name = 'State'
-ORDER BY 
-  ordinal_position`)
+              insertTemplate(
+                `SELECT column_name, data_type, is_nullable, column_default 
+FROM information_schema.columns 
+WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position`
+              )
             }
             className="flex-1 py-1 bg-[#2a2e37] hover:bg-[#3a3e47] text-[#848e9c] hover:text-white rounded text-[10px] font-medium transition-colors"
           >
@@ -93,7 +95,9 @@ ORDER BY
           <button
             onClick={() =>
               insertTemplate(
-                "SELECT * FROM accounts WHERE address = 'B62qqevZM3XZJJJKThPx9ZRNARQQEFcx1sJxaPDjzC5rWrVnMnSK8Y2';"
+                `SELECT * 
+FROM "State" 
+WHERE sequence = '${sequence}' AND address = '${ALICE_PUBLIC_KEY ?? ""}';`
               )
             }
             className="flex-1 py-1 bg-[#2a2e37] hover:bg-[#3a3e47] text-[#848e9c] hover:text-white rounded text-[10px] font-medium transition-colors"

@@ -87,6 +87,7 @@ async function convertPrismaActionRequestToActionRequest(
       ) {
         throw new Error("Missing required fields for CREATE_ACCOUNT operation");
       }
+
       return <ActionCreateAccountRequest>{
         operation: Operation.CREATE_ACCOUNT,
         address: action.address,
@@ -96,8 +97,8 @@ async function convertPrismaActionRequestToActionRequest(
         name: action.name,
         role: action.role,
         image: action.image,
-        baseBalance: action.baseBalance,
-        quoteBalance: action.quoteBalance,
+        baseBalance: BigInt(action.baseBalance.toString()),
+        quoteBalance: BigInt(action.quoteBalance.toString()),
       };
     case PrismaOperation.BID:
       if (
@@ -115,13 +116,13 @@ async function convertPrismaActionRequestToActionRequest(
         operation: Operation.BID,
         poolPublicKey: action.poolPublicKey,
         userPublicKey: action.userPublicKey,
-        baseTokenAmount: action.baseTokenAmount,
-        price: action.price,
+        baseTokenAmount: BigInt(action.baseTokenAmount.toString()),
+        price: BigInt(action.price.toString()),
         isSome: action.isSome || false,
-        nonce: action.nonce,
+        nonce: BigInt(action.nonce.toString()),
         userSignature: {
-          r: action.userSignatureR,
-          s: action.userSignatureS,
+          r: BigInt(action.userSignatureR.toString()),
+          s: BigInt(action.userSignatureS.toString()),
         },
       };
     case PrismaOperation.ASK:
@@ -140,13 +141,13 @@ async function convertPrismaActionRequestToActionRequest(
         operation: Operation.ASK,
         poolPublicKey: action.poolPublicKey,
         userPublicKey: action.userPublicKey,
-        baseTokenAmount: action.baseTokenAmount,
-        price: action.price,
+        baseTokenAmount: BigInt(action.baseTokenAmount.toString()),
+        price: BigInt(action.price.toString()),
         isSome: action.isSome || false,
-        nonce: action.nonce,
+        nonce: BigInt(action.nonce.toString()),
         userSignature: {
-          r: action.userSignatureR,
-          s: action.userSignatureS,
+          r: BigInt(action.userSignatureR.toString()),
+          s: BigInt(action.userSignatureS.toString()),
         },
       };
     case PrismaOperation.TRADE:
@@ -167,11 +168,11 @@ async function convertPrismaActionRequestToActionRequest(
         poolPublicKey: action.poolPublicKey,
         buyerPublicKey: action.buyerPublicKey,
         sellerPublicKey: action.sellerPublicKey,
-        baseTokenAmount: action.baseTokenAmount,
-        quoteTokenAmount: action.quoteTokenAmount,
-        price: action.price,
-        buyerNonce: action.buyerNonce,
-        sellerNonce: action.sellerNonce,
+        baseTokenAmount: BigInt(action.baseTokenAmount.toString()),
+        quoteTokenAmount: BigInt(action.quoteTokenAmount.toString()),
+        price: BigInt(action.price.toString()),
+        buyerNonce: BigInt(action.buyerNonce.toString()),
+        sellerNonce: BigInt(action.sellerNonce.toString()),
       };
     case PrismaOperation.TRANSFER:
       if (
@@ -192,13 +193,13 @@ async function convertPrismaActionRequestToActionRequest(
         poolPublicKey: action.poolPublicKey,
         senderPublicKey: action.senderPublicKey,
         receiverPublicKey: action.receiverPublicKey,
-        baseTokenAmount: action.baseTokenAmount,
-        quoteTokenAmount: action.quoteTokenAmount,
-        senderNonce: action.senderNonce,
-        receiverNonce: action.receiverNonce,
+        baseTokenAmount: BigInt(action.baseTokenAmount.toString()),
+        quoteTokenAmount: BigInt(action.quoteTokenAmount.toString()),
+        senderNonce: BigInt(action.senderNonce.toString()),
+        receiverNonce: BigInt(action.receiverNonce.toString()),
         senderSignature: {
-          r: action.senderSignatureR,
-          s: action.senderSignatureS,
+          r: BigInt(action.senderSignatureR.toString()),
+          s: BigInt(action.senderSignatureS.toString()),
         },
       };
     case PrismaOperation.PROOF:
@@ -207,7 +208,7 @@ async function convertPrismaActionRequestToActionRequest(
       }
       return <ActionProofRequest>{
         operation: Operation.PROOF,
-        sequence: action.sequence,
+        sequence: BigInt(action.sequence.toString()),
         publicKeyBase58: action.publicKeyBase58,
       };
     default:

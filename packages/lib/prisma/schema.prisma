@@ -12,23 +12,23 @@ model State {
   sequence BigInt
   address  String
   
-  baseTokenAmount        BigInt
-  baseTokenStakedAmount  BigInt
-  baseTokenBorrowedAmount BigInt
+  baseTokenAmount        Decimal
+  baseTokenStakedAmount  Decimal
+  baseTokenBorrowedAmount Decimal
   
-  quoteTokenAmount       BigInt
-  quoteTokenStakedAmount BigInt
-  quoteTokenBorrowedAmount BigInt
+  quoteTokenAmount       Decimal
+  quoteTokenStakedAmount Decimal
+  quoteTokenBorrowedAmount Decimal
   
-  bidAmount              BigInt
-  bidPrice               BigInt
+  bidAmount              Decimal
+  bidPrice               Decimal
   bidIsSome              Boolean
   
-  askAmount              BigInt
-  askPrice               BigInt
+  askAmount              Decimal
+  askPrice               Decimal
   askIsSome              Boolean
   
-  nonce                  BigInt
+  nonce                  Decimal
   
   @@id([sequence, address])
   @@index([sequence])
@@ -69,35 +69,35 @@ model ActionRequest {
   name            String?
   role            String?
   image           String?
-  baseBalance     BigInt?
-  quoteBalance    BigInt?
+  baseBalance     Decimal?
+  quoteBalance    Decimal?
   
   // BID/ASK fields
   userPublicKey   String?
-  baseTokenAmount BigInt?
-  price           BigInt?
+  baseTokenAmount Decimal?
+  price           Decimal?
   isSome          Boolean?
-  nonce           BigInt?
-  userSignatureR   BigInt?
-  userSignatureS   BigInt?
+  nonce           Decimal?
+  userSignatureR   Decimal?
+  userSignatureS   Decimal?
   
   // TRADE fields
   buyerPublicKey   String?
   sellerPublicKey  String?
-  quoteTokenAmount BigInt?
-  buyerNonce       BigInt?
-  sellerNonce      BigInt?
+  quoteTokenAmount Decimal?
+  buyerNonce       Decimal?
+  sellerNonce      Decimal?
   
   // TRANSFER fields
   senderPublicKey   String?
   receiverPublicKey String?
-  senderNonce       BigInt?
-  receiverNonce     BigInt?
-  senderSignatureR   BigInt?
-  senderSignatureS   BigInt?
+  senderNonce       Decimal?
+  receiverNonce     Decimal?
+  senderSignatureR   Decimal?
+  senderSignatureS   Decimal?
 
   // PROOF fields
-  sequence          BigInt?
+  sequence          Decimal?
   //publicKeyBase58   String?
 
   // PROCESSING AGENT ID

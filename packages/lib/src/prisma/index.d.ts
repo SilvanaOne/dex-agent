@@ -1100,68 +1100,68 @@ export namespace Prisma {
 
   export type StateAvgAggregateOutputType = {
     sequence: number | null
-    baseTokenAmount: number | null
-    baseTokenStakedAmount: number | null
-    baseTokenBorrowedAmount: number | null
-    quoteTokenAmount: number | null
-    quoteTokenStakedAmount: number | null
-    quoteTokenBorrowedAmount: number | null
-    bidAmount: number | null
-    bidPrice: number | null
-    askAmount: number | null
-    askPrice: number | null
-    nonce: number | null
+    baseTokenAmount: Decimal | null
+    baseTokenStakedAmount: Decimal | null
+    baseTokenBorrowedAmount: Decimal | null
+    quoteTokenAmount: Decimal | null
+    quoteTokenStakedAmount: Decimal | null
+    quoteTokenBorrowedAmount: Decimal | null
+    bidAmount: Decimal | null
+    bidPrice: Decimal | null
+    askAmount: Decimal | null
+    askPrice: Decimal | null
+    nonce: Decimal | null
   }
 
   export type StateSumAggregateOutputType = {
     sequence: bigint | null
-    baseTokenAmount: bigint | null
-    baseTokenStakedAmount: bigint | null
-    baseTokenBorrowedAmount: bigint | null
-    quoteTokenAmount: bigint | null
-    quoteTokenStakedAmount: bigint | null
-    quoteTokenBorrowedAmount: bigint | null
-    bidAmount: bigint | null
-    bidPrice: bigint | null
-    askAmount: bigint | null
-    askPrice: bigint | null
-    nonce: bigint | null
+    baseTokenAmount: Decimal | null
+    baseTokenStakedAmount: Decimal | null
+    baseTokenBorrowedAmount: Decimal | null
+    quoteTokenAmount: Decimal | null
+    quoteTokenStakedAmount: Decimal | null
+    quoteTokenBorrowedAmount: Decimal | null
+    bidAmount: Decimal | null
+    bidPrice: Decimal | null
+    askAmount: Decimal | null
+    askPrice: Decimal | null
+    nonce: Decimal | null
   }
 
   export type StateMinAggregateOutputType = {
     sequence: bigint | null
     address: string | null
-    baseTokenAmount: bigint | null
-    baseTokenStakedAmount: bigint | null
-    baseTokenBorrowedAmount: bigint | null
-    quoteTokenAmount: bigint | null
-    quoteTokenStakedAmount: bigint | null
-    quoteTokenBorrowedAmount: bigint | null
-    bidAmount: bigint | null
-    bidPrice: bigint | null
+    baseTokenAmount: Decimal | null
+    baseTokenStakedAmount: Decimal | null
+    baseTokenBorrowedAmount: Decimal | null
+    quoteTokenAmount: Decimal | null
+    quoteTokenStakedAmount: Decimal | null
+    quoteTokenBorrowedAmount: Decimal | null
+    bidAmount: Decimal | null
+    bidPrice: Decimal | null
     bidIsSome: boolean | null
-    askAmount: bigint | null
-    askPrice: bigint | null
+    askAmount: Decimal | null
+    askPrice: Decimal | null
     askIsSome: boolean | null
-    nonce: bigint | null
+    nonce: Decimal | null
   }
 
   export type StateMaxAggregateOutputType = {
     sequence: bigint | null
     address: string | null
-    baseTokenAmount: bigint | null
-    baseTokenStakedAmount: bigint | null
-    baseTokenBorrowedAmount: bigint | null
-    quoteTokenAmount: bigint | null
-    quoteTokenStakedAmount: bigint | null
-    quoteTokenBorrowedAmount: bigint | null
-    bidAmount: bigint | null
-    bidPrice: bigint | null
+    baseTokenAmount: Decimal | null
+    baseTokenStakedAmount: Decimal | null
+    baseTokenBorrowedAmount: Decimal | null
+    quoteTokenAmount: Decimal | null
+    quoteTokenStakedAmount: Decimal | null
+    quoteTokenBorrowedAmount: Decimal | null
+    bidAmount: Decimal | null
+    bidPrice: Decimal | null
     bidIsSome: boolean | null
-    askAmount: bigint | null
-    askPrice: bigint | null
+    askAmount: Decimal | null
+    askPrice: Decimal | null
     askIsSome: boolean | null
-    nonce: bigint | null
+    nonce: Decimal | null
   }
 
   export type StateCountAggregateOutputType = {
@@ -1358,19 +1358,19 @@ export namespace Prisma {
   export type StateGroupByOutputType = {
     sequence: bigint
     address: string
-    baseTokenAmount: bigint
-    baseTokenStakedAmount: bigint
-    baseTokenBorrowedAmount: bigint
-    quoteTokenAmount: bigint
-    quoteTokenStakedAmount: bigint
-    quoteTokenBorrowedAmount: bigint
-    bidAmount: bigint
-    bidPrice: bigint
+    baseTokenAmount: Decimal
+    baseTokenStakedAmount: Decimal
+    baseTokenBorrowedAmount: Decimal
+    quoteTokenAmount: Decimal
+    quoteTokenStakedAmount: Decimal
+    quoteTokenBorrowedAmount: Decimal
+    bidAmount: Decimal
+    bidPrice: Decimal
     bidIsSome: boolean
-    askAmount: bigint
-    askPrice: bigint
+    askAmount: Decimal
+    askPrice: Decimal
     askIsSome: boolean
-    nonce: bigint
+    nonce: Decimal
     _count: StateCountAggregateOutputType | null
     _avg: StateAvgAggregateOutputType | null
     _sum: StateSumAggregateOutputType | null
@@ -1472,19 +1472,19 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       sequence: bigint
       address: string
-      baseTokenAmount: bigint
-      baseTokenStakedAmount: bigint
-      baseTokenBorrowedAmount: bigint
-      quoteTokenAmount: bigint
-      quoteTokenStakedAmount: bigint
-      quoteTokenBorrowedAmount: bigint
-      bidAmount: bigint
-      bidPrice: bigint
+      baseTokenAmount: Prisma.Decimal
+      baseTokenStakedAmount: Prisma.Decimal
+      baseTokenBorrowedAmount: Prisma.Decimal
+      quoteTokenAmount: Prisma.Decimal
+      quoteTokenStakedAmount: Prisma.Decimal
+      quoteTokenBorrowedAmount: Prisma.Decimal
+      bidAmount: Prisma.Decimal
+      bidPrice: Prisma.Decimal
       bidIsSome: boolean
-      askAmount: bigint
-      askPrice: bigint
+      askAmount: Prisma.Decimal
+      askPrice: Prisma.Decimal
       askIsSome: boolean
-      nonce: bigint
+      nonce: Prisma.Decimal
     }, ExtArgs["result"]["state"]>
     composites: {}
   }
@@ -1910,19 +1910,19 @@ export namespace Prisma {
   interface StateFieldRefs {
     readonly sequence: FieldRef<"State", 'BigInt'>
     readonly address: FieldRef<"State", 'String'>
-    readonly baseTokenAmount: FieldRef<"State", 'BigInt'>
-    readonly baseTokenStakedAmount: FieldRef<"State", 'BigInt'>
-    readonly baseTokenBorrowedAmount: FieldRef<"State", 'BigInt'>
-    readonly quoteTokenAmount: FieldRef<"State", 'BigInt'>
-    readonly quoteTokenStakedAmount: FieldRef<"State", 'BigInt'>
-    readonly quoteTokenBorrowedAmount: FieldRef<"State", 'BigInt'>
-    readonly bidAmount: FieldRef<"State", 'BigInt'>
-    readonly bidPrice: FieldRef<"State", 'BigInt'>
+    readonly baseTokenAmount: FieldRef<"State", 'Decimal'>
+    readonly baseTokenStakedAmount: FieldRef<"State", 'Decimal'>
+    readonly baseTokenBorrowedAmount: FieldRef<"State", 'Decimal'>
+    readonly quoteTokenAmount: FieldRef<"State", 'Decimal'>
+    readonly quoteTokenStakedAmount: FieldRef<"State", 'Decimal'>
+    readonly quoteTokenBorrowedAmount: FieldRef<"State", 'Decimal'>
+    readonly bidAmount: FieldRef<"State", 'Decimal'>
+    readonly bidPrice: FieldRef<"State", 'Decimal'>
     readonly bidIsSome: FieldRef<"State", 'Boolean'>
-    readonly askAmount: FieldRef<"State", 'BigInt'>
-    readonly askPrice: FieldRef<"State", 'BigInt'>
+    readonly askAmount: FieldRef<"State", 'Decimal'>
+    readonly askPrice: FieldRef<"State", 'Decimal'>
     readonly askIsSome: FieldRef<"State", 'Boolean'>
-    readonly nonce: FieldRef<"State", 'BigInt'>
+    readonly nonce: FieldRef<"State", 'Decimal'>
   }
     
 
@@ -3280,40 +3280,40 @@ export namespace Prisma {
 
   export type ActionRequestAvgAggregateOutputType = {
     id: number | null
-    baseBalance: number | null
-    quoteBalance: number | null
-    baseTokenAmount: number | null
-    price: number | null
-    nonce: number | null
-    userSignatureR: number | null
-    userSignatureS: number | null
-    quoteTokenAmount: number | null
-    buyerNonce: number | null
-    sellerNonce: number | null
-    senderNonce: number | null
-    receiverNonce: number | null
-    senderSignatureR: number | null
-    senderSignatureS: number | null
-    sequence: number | null
+    baseBalance: Decimal | null
+    quoteBalance: Decimal | null
+    baseTokenAmount: Decimal | null
+    price: Decimal | null
+    nonce: Decimal | null
+    userSignatureR: Decimal | null
+    userSignatureS: Decimal | null
+    quoteTokenAmount: Decimal | null
+    buyerNonce: Decimal | null
+    sellerNonce: Decimal | null
+    senderNonce: Decimal | null
+    receiverNonce: Decimal | null
+    senderSignatureR: Decimal | null
+    senderSignatureS: Decimal | null
+    sequence: Decimal | null
   }
 
   export type ActionRequestSumAggregateOutputType = {
     id: number | null
-    baseBalance: bigint | null
-    quoteBalance: bigint | null
-    baseTokenAmount: bigint | null
-    price: bigint | null
-    nonce: bigint | null
-    userSignatureR: bigint | null
-    userSignatureS: bigint | null
-    quoteTokenAmount: bigint | null
-    buyerNonce: bigint | null
-    sellerNonce: bigint | null
-    senderNonce: bigint | null
-    receiverNonce: bigint | null
-    senderSignatureR: bigint | null
-    senderSignatureS: bigint | null
-    sequence: bigint | null
+    baseBalance: Decimal | null
+    quoteBalance: Decimal | null
+    baseTokenAmount: Decimal | null
+    price: Decimal | null
+    nonce: Decimal | null
+    userSignatureR: Decimal | null
+    userSignatureS: Decimal | null
+    quoteTokenAmount: Decimal | null
+    buyerNonce: Decimal | null
+    sellerNonce: Decimal | null
+    senderNonce: Decimal | null
+    receiverNonce: Decimal | null
+    senderSignatureR: Decimal | null
+    senderSignatureS: Decimal | null
+    sequence: Decimal | null
   }
 
   export type ActionRequestMinAggregateOutputType = {
@@ -3328,27 +3328,27 @@ export namespace Prisma {
     name: string | null
     role: string | null
     image: string | null
-    baseBalance: bigint | null
-    quoteBalance: bigint | null
+    baseBalance: Decimal | null
+    quoteBalance: Decimal | null
     userPublicKey: string | null
-    baseTokenAmount: bigint | null
-    price: bigint | null
+    baseTokenAmount: Decimal | null
+    price: Decimal | null
     isSome: boolean | null
-    nonce: bigint | null
-    userSignatureR: bigint | null
-    userSignatureS: bigint | null
+    nonce: Decimal | null
+    userSignatureR: Decimal | null
+    userSignatureS: Decimal | null
     buyerPublicKey: string | null
     sellerPublicKey: string | null
-    quoteTokenAmount: bigint | null
-    buyerNonce: bigint | null
-    sellerNonce: bigint | null
+    quoteTokenAmount: Decimal | null
+    buyerNonce: Decimal | null
+    sellerNonce: Decimal | null
     senderPublicKey: string | null
     receiverPublicKey: string | null
-    senderNonce: bigint | null
-    receiverNonce: bigint | null
-    senderSignatureR: bigint | null
-    senderSignatureS: bigint | null
-    sequence: bigint | null
+    senderNonce: Decimal | null
+    receiverNonce: Decimal | null
+    senderSignatureR: Decimal | null
+    senderSignatureS: Decimal | null
+    sequence: Decimal | null
     agent: string | null
     digest: string | null
     da_hash: string | null
@@ -3366,27 +3366,27 @@ export namespace Prisma {
     name: string | null
     role: string | null
     image: string | null
-    baseBalance: bigint | null
-    quoteBalance: bigint | null
+    baseBalance: Decimal | null
+    quoteBalance: Decimal | null
     userPublicKey: string | null
-    baseTokenAmount: bigint | null
-    price: bigint | null
+    baseTokenAmount: Decimal | null
+    price: Decimal | null
     isSome: boolean | null
-    nonce: bigint | null
-    userSignatureR: bigint | null
-    userSignatureS: bigint | null
+    nonce: Decimal | null
+    userSignatureR: Decimal | null
+    userSignatureS: Decimal | null
     buyerPublicKey: string | null
     sellerPublicKey: string | null
-    quoteTokenAmount: bigint | null
-    buyerNonce: bigint | null
-    sellerNonce: bigint | null
+    quoteTokenAmount: Decimal | null
+    buyerNonce: Decimal | null
+    sellerNonce: Decimal | null
     senderPublicKey: string | null
     receiverPublicKey: string | null
-    senderNonce: bigint | null
-    receiverNonce: bigint | null
-    senderSignatureR: bigint | null
-    senderSignatureS: bigint | null
-    sequence: bigint | null
+    senderNonce: Decimal | null
+    receiverNonce: Decimal | null
+    senderSignatureR: Decimal | null
+    senderSignatureS: Decimal | null
+    sequence: Decimal | null
     agent: string | null
     digest: string | null
     da_hash: string | null
@@ -3683,27 +3683,27 @@ export namespace Prisma {
     name: string | null
     role: string | null
     image: string | null
-    baseBalance: bigint | null
-    quoteBalance: bigint | null
+    baseBalance: Decimal | null
+    quoteBalance: Decimal | null
     userPublicKey: string | null
-    baseTokenAmount: bigint | null
-    price: bigint | null
+    baseTokenAmount: Decimal | null
+    price: Decimal | null
     isSome: boolean | null
-    nonce: bigint | null
-    userSignatureR: bigint | null
-    userSignatureS: bigint | null
+    nonce: Decimal | null
+    userSignatureR: Decimal | null
+    userSignatureS: Decimal | null
     buyerPublicKey: string | null
     sellerPublicKey: string | null
-    quoteTokenAmount: bigint | null
-    buyerNonce: bigint | null
-    sellerNonce: bigint | null
+    quoteTokenAmount: Decimal | null
+    buyerNonce: Decimal | null
+    sellerNonce: Decimal | null
     senderPublicKey: string | null
     receiverPublicKey: string | null
-    senderNonce: bigint | null
-    receiverNonce: bigint | null
-    senderSignatureR: bigint | null
-    senderSignatureS: bigint | null
-    sequence: bigint | null
+    senderNonce: Decimal | null
+    receiverNonce: Decimal | null
+    senderSignatureR: Decimal | null
+    senderSignatureS: Decimal | null
+    sequence: Decimal | null
     agent: string | null
     digest: string | null
     da_hash: string | null
@@ -3897,27 +3897,27 @@ export namespace Prisma {
       name: string | null
       role: string | null
       image: string | null
-      baseBalance: bigint | null
-      quoteBalance: bigint | null
+      baseBalance: Prisma.Decimal | null
+      quoteBalance: Prisma.Decimal | null
       userPublicKey: string | null
-      baseTokenAmount: bigint | null
-      price: bigint | null
+      baseTokenAmount: Prisma.Decimal | null
+      price: Prisma.Decimal | null
       isSome: boolean | null
-      nonce: bigint | null
-      userSignatureR: bigint | null
-      userSignatureS: bigint | null
+      nonce: Prisma.Decimal | null
+      userSignatureR: Prisma.Decimal | null
+      userSignatureS: Prisma.Decimal | null
       buyerPublicKey: string | null
       sellerPublicKey: string | null
-      quoteTokenAmount: bigint | null
-      buyerNonce: bigint | null
-      sellerNonce: bigint | null
+      quoteTokenAmount: Prisma.Decimal | null
+      buyerNonce: Prisma.Decimal | null
+      sellerNonce: Prisma.Decimal | null
       senderPublicKey: string | null
       receiverPublicKey: string | null
-      senderNonce: bigint | null
-      receiverNonce: bigint | null
-      senderSignatureR: bigint | null
-      senderSignatureS: bigint | null
-      sequence: bigint | null
+      senderNonce: Prisma.Decimal | null
+      receiverNonce: Prisma.Decimal | null
+      senderSignatureR: Prisma.Decimal | null
+      senderSignatureS: Prisma.Decimal | null
+      sequence: Prisma.Decimal | null
       agent: string | null
       digest: string | null
       da_hash: string | null
@@ -4355,27 +4355,27 @@ export namespace Prisma {
     readonly name: FieldRef<"ActionRequest", 'String'>
     readonly role: FieldRef<"ActionRequest", 'String'>
     readonly image: FieldRef<"ActionRequest", 'String'>
-    readonly baseBalance: FieldRef<"ActionRequest", 'BigInt'>
-    readonly quoteBalance: FieldRef<"ActionRequest", 'BigInt'>
+    readonly baseBalance: FieldRef<"ActionRequest", 'Decimal'>
+    readonly quoteBalance: FieldRef<"ActionRequest", 'Decimal'>
     readonly userPublicKey: FieldRef<"ActionRequest", 'String'>
-    readonly baseTokenAmount: FieldRef<"ActionRequest", 'BigInt'>
-    readonly price: FieldRef<"ActionRequest", 'BigInt'>
+    readonly baseTokenAmount: FieldRef<"ActionRequest", 'Decimal'>
+    readonly price: FieldRef<"ActionRequest", 'Decimal'>
     readonly isSome: FieldRef<"ActionRequest", 'Boolean'>
-    readonly nonce: FieldRef<"ActionRequest", 'BigInt'>
-    readonly userSignatureR: FieldRef<"ActionRequest", 'BigInt'>
-    readonly userSignatureS: FieldRef<"ActionRequest", 'BigInt'>
+    readonly nonce: FieldRef<"ActionRequest", 'Decimal'>
+    readonly userSignatureR: FieldRef<"ActionRequest", 'Decimal'>
+    readonly userSignatureS: FieldRef<"ActionRequest", 'Decimal'>
     readonly buyerPublicKey: FieldRef<"ActionRequest", 'String'>
     readonly sellerPublicKey: FieldRef<"ActionRequest", 'String'>
-    readonly quoteTokenAmount: FieldRef<"ActionRequest", 'BigInt'>
-    readonly buyerNonce: FieldRef<"ActionRequest", 'BigInt'>
-    readonly sellerNonce: FieldRef<"ActionRequest", 'BigInt'>
+    readonly quoteTokenAmount: FieldRef<"ActionRequest", 'Decimal'>
+    readonly buyerNonce: FieldRef<"ActionRequest", 'Decimal'>
+    readonly sellerNonce: FieldRef<"ActionRequest", 'Decimal'>
     readonly senderPublicKey: FieldRef<"ActionRequest", 'String'>
     readonly receiverPublicKey: FieldRef<"ActionRequest", 'String'>
-    readonly senderNonce: FieldRef<"ActionRequest", 'BigInt'>
-    readonly receiverNonce: FieldRef<"ActionRequest", 'BigInt'>
-    readonly senderSignatureR: FieldRef<"ActionRequest", 'BigInt'>
-    readonly senderSignatureS: FieldRef<"ActionRequest", 'BigInt'>
-    readonly sequence: FieldRef<"ActionRequest", 'BigInt'>
+    readonly senderNonce: FieldRef<"ActionRequest", 'Decimal'>
+    readonly receiverNonce: FieldRef<"ActionRequest", 'Decimal'>
+    readonly senderSignatureR: FieldRef<"ActionRequest", 'Decimal'>
+    readonly senderSignatureS: FieldRef<"ActionRequest", 'Decimal'>
+    readonly sequence: FieldRef<"ActionRequest", 'Decimal'>
     readonly agent: FieldRef<"ActionRequest", 'String'>
     readonly digest: FieldRef<"ActionRequest", 'String'>
     readonly da_hash: FieldRef<"ActionRequest", 'String'>
@@ -4886,6 +4886,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -4971,19 +4985,19 @@ export namespace Prisma {
     NOT?: StateWhereInput | StateWhereInput[]
     sequence?: BigIntFilter<"State"> | bigint | number
     address?: StringFilter<"State"> | string
-    baseTokenAmount?: BigIntFilter<"State"> | bigint | number
-    baseTokenStakedAmount?: BigIntFilter<"State"> | bigint | number
-    baseTokenBorrowedAmount?: BigIntFilter<"State"> | bigint | number
-    quoteTokenAmount?: BigIntFilter<"State"> | bigint | number
-    quoteTokenStakedAmount?: BigIntFilter<"State"> | bigint | number
-    quoteTokenBorrowedAmount?: BigIntFilter<"State"> | bigint | number
-    bidAmount?: BigIntFilter<"State"> | bigint | number
-    bidPrice?: BigIntFilter<"State"> | bigint | number
+    baseTokenAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    bidAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    bidPrice?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
     bidIsSome?: BoolFilter<"State"> | boolean
-    askAmount?: BigIntFilter<"State"> | bigint | number
-    askPrice?: BigIntFilter<"State"> | bigint | number
+    askAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    askPrice?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
     askIsSome?: BoolFilter<"State"> | boolean
-    nonce?: BigIntFilter<"State"> | bigint | number
+    nonce?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
   }
 
   export type StateOrderByWithRelationInput = {
@@ -5011,19 +5025,19 @@ export namespace Prisma {
     NOT?: StateWhereInput | StateWhereInput[]
     sequence?: BigIntFilter<"State"> | bigint | number
     address?: StringFilter<"State"> | string
-    baseTokenAmount?: BigIntFilter<"State"> | bigint | number
-    baseTokenStakedAmount?: BigIntFilter<"State"> | bigint | number
-    baseTokenBorrowedAmount?: BigIntFilter<"State"> | bigint | number
-    quoteTokenAmount?: BigIntFilter<"State"> | bigint | number
-    quoteTokenStakedAmount?: BigIntFilter<"State"> | bigint | number
-    quoteTokenBorrowedAmount?: BigIntFilter<"State"> | bigint | number
-    bidAmount?: BigIntFilter<"State"> | bigint | number
-    bidPrice?: BigIntFilter<"State"> | bigint | number
+    baseTokenAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    bidAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    bidPrice?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
     bidIsSome?: BoolFilter<"State"> | boolean
-    askAmount?: BigIntFilter<"State"> | bigint | number
-    askPrice?: BigIntFilter<"State"> | bigint | number
+    askAmount?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
+    askPrice?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
     askIsSome?: BoolFilter<"State"> | boolean
-    nonce?: BigIntFilter<"State"> | bigint | number
+    nonce?: DecimalFilter<"State"> | Decimal | DecimalJsLike | number | string
   }, "sequence_address">
 
   export type StateOrderByWithAggregationInput = {
@@ -5055,19 +5069,19 @@ export namespace Prisma {
     NOT?: StateScalarWhereWithAggregatesInput | StateScalarWhereWithAggregatesInput[]
     sequence?: BigIntWithAggregatesFilter<"State"> | bigint | number
     address?: StringWithAggregatesFilter<"State"> | string
-    baseTokenAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    baseTokenStakedAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    baseTokenBorrowedAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    quoteTokenAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    quoteTokenStakedAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    quoteTokenBorrowedAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    bidAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    bidPrice?: BigIntWithAggregatesFilter<"State"> | bigint | number
+    baseTokenAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    bidAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    bidPrice?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
     bidIsSome?: BoolWithAggregatesFilter<"State"> | boolean
-    askAmount?: BigIntWithAggregatesFilter<"State"> | bigint | number
-    askPrice?: BigIntWithAggregatesFilter<"State"> | bigint | number
+    askAmount?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
+    askPrice?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
     askIsSome?: BoolWithAggregatesFilter<"State"> | boolean
-    nonce?: BigIntWithAggregatesFilter<"State"> | bigint | number
+    nonce?: DecimalWithAggregatesFilter<"State"> | Decimal | DecimalJsLike | number | string
   }
 
   export type FetchedSequencesWhereInput = {
@@ -5119,27 +5133,27 @@ export namespace Prisma {
     name?: StringNullableFilter<"ActionRequest"> | string | null
     role?: StringNullableFilter<"ActionRequest"> | string | null
     image?: StringNullableFilter<"ActionRequest"> | string | null
-    baseBalance?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    quoteBalance?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    baseBalance?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     userPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
-    baseTokenAmount?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    price?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    baseTokenAmount?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    price?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     isSome?: BoolNullableFilter<"ActionRequest"> | boolean | null
-    nonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    userSignatureR?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    userSignatureS?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    nonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
     sellerPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
-    quoteTokenAmount?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    buyerNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    sellerNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    quoteTokenAmount?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
     receiverPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
-    senderNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    receiverNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    senderSignatureR?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    senderSignatureS?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    sequence?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    senderNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    sequence?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     agent?: StringNullableFilter<"ActionRequest"> | string | null
     digest?: StringNullableFilter<"ActionRequest"> | string | null
     da_hash?: StringNullableFilter<"ActionRequest"> | string | null
@@ -5198,27 +5212,27 @@ export namespace Prisma {
     name?: StringNullableFilter<"ActionRequest"> | string | null
     role?: StringNullableFilter<"ActionRequest"> | string | null
     image?: StringNullableFilter<"ActionRequest"> | string | null
-    baseBalance?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    quoteBalance?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    baseBalance?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     userPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
-    baseTokenAmount?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    price?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    baseTokenAmount?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    price?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     isSome?: BoolNullableFilter<"ActionRequest"> | boolean | null
-    nonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    userSignatureR?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    userSignatureS?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    nonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
     sellerPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
-    quoteTokenAmount?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    buyerNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    sellerNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    quoteTokenAmount?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
     receiverPublicKey?: StringNullableFilter<"ActionRequest"> | string | null
-    senderNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    receiverNonce?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    senderSignatureR?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    senderSignatureS?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
-    sequence?: BigIntNullableFilter<"ActionRequest"> | bigint | number | null
+    senderNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    sequence?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     agent?: StringNullableFilter<"ActionRequest"> | string | null
     digest?: StringNullableFilter<"ActionRequest"> | string | null
     da_hash?: StringNullableFilter<"ActionRequest"> | string | null
@@ -5282,27 +5296,27 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     role?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     image?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
-    baseBalance?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    quoteBalance?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
+    baseBalance?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     userPublicKey?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
-    baseTokenAmount?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    price?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
+    baseTokenAmount?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    price?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     isSome?: BoolNullableWithAggregatesFilter<"ActionRequest"> | boolean | null
-    nonce?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    userSignatureR?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    userSignatureS?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
+    nonce?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     sellerPublicKey?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
-    quoteTokenAmount?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    buyerNonce?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    sellerNonce?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
+    quoteTokenAmount?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     receiverPublicKey?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
-    senderNonce?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    receiverNonce?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    senderSignatureR?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    senderSignatureS?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
-    sequence?: BigIntNullableWithAggregatesFilter<"ActionRequest"> | bigint | number | null
+    senderNonce?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    sequence?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     agent?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     digest?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     da_hash?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
@@ -5311,127 +5325,127 @@ export namespace Prisma {
   export type StateCreateInput = {
     sequence: bigint | number
     address: string
-    baseTokenAmount: bigint | number
-    baseTokenStakedAmount: bigint | number
-    baseTokenBorrowedAmount: bigint | number
-    quoteTokenAmount: bigint | number
-    quoteTokenStakedAmount: bigint | number
-    quoteTokenBorrowedAmount: bigint | number
-    bidAmount: bigint | number
-    bidPrice: bigint | number
+    baseTokenAmount: Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount: Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount: Decimal | DecimalJsLike | number | string
+    bidAmount: Decimal | DecimalJsLike | number | string
+    bidPrice: Decimal | DecimalJsLike | number | string
     bidIsSome: boolean
-    askAmount: bigint | number
-    askPrice: bigint | number
+    askAmount: Decimal | DecimalJsLike | number | string
+    askPrice: Decimal | DecimalJsLike | number | string
     askIsSome: boolean
-    nonce: bigint | number
+    nonce: Decimal | DecimalJsLike | number | string
   }
 
   export type StateUncheckedCreateInput = {
     sequence: bigint | number
     address: string
-    baseTokenAmount: bigint | number
-    baseTokenStakedAmount: bigint | number
-    baseTokenBorrowedAmount: bigint | number
-    quoteTokenAmount: bigint | number
-    quoteTokenStakedAmount: bigint | number
-    quoteTokenBorrowedAmount: bigint | number
-    bidAmount: bigint | number
-    bidPrice: bigint | number
+    baseTokenAmount: Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount: Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount: Decimal | DecimalJsLike | number | string
+    bidAmount: Decimal | DecimalJsLike | number | string
+    bidPrice: Decimal | DecimalJsLike | number | string
     bidIsSome: boolean
-    askAmount: bigint | number
-    askPrice: bigint | number
+    askAmount: Decimal | DecimalJsLike | number | string
+    askPrice: Decimal | DecimalJsLike | number | string
     askIsSome: boolean
-    nonce: bigint | number
+    nonce: Decimal | DecimalJsLike | number | string
   }
 
   export type StateUpdateInput = {
     sequence?: BigIntFieldUpdateOperationsInput | bigint | number
     address?: StringFieldUpdateOperationsInput | string
-    baseTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    baseTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bidIsSome?: BoolFieldUpdateOperationsInput | boolean
-    askAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    askPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    askAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    askPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     askIsSome?: BoolFieldUpdateOperationsInput | boolean
-    nonce?: BigIntFieldUpdateOperationsInput | bigint | number
+    nonce?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type StateUncheckedUpdateInput = {
     sequence?: BigIntFieldUpdateOperationsInput | bigint | number
     address?: StringFieldUpdateOperationsInput | string
-    baseTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    baseTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bidIsSome?: BoolFieldUpdateOperationsInput | boolean
-    askAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    askPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    askAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    askPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     askIsSome?: BoolFieldUpdateOperationsInput | boolean
-    nonce?: BigIntFieldUpdateOperationsInput | bigint | number
+    nonce?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type StateCreateManyInput = {
     sequence: bigint | number
     address: string
-    baseTokenAmount: bigint | number
-    baseTokenStakedAmount: bigint | number
-    baseTokenBorrowedAmount: bigint | number
-    quoteTokenAmount: bigint | number
-    quoteTokenStakedAmount: bigint | number
-    quoteTokenBorrowedAmount: bigint | number
-    bidAmount: bigint | number
-    bidPrice: bigint | number
+    baseTokenAmount: Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount: Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount: Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount: Decimal | DecimalJsLike | number | string
+    bidAmount: Decimal | DecimalJsLike | number | string
+    bidPrice: Decimal | DecimalJsLike | number | string
     bidIsSome: boolean
-    askAmount: bigint | number
-    askPrice: bigint | number
+    askAmount: Decimal | DecimalJsLike | number | string
+    askPrice: Decimal | DecimalJsLike | number | string
     askIsSome: boolean
-    nonce: bigint | number
+    nonce: Decimal | DecimalJsLike | number | string
   }
 
   export type StateUpdateManyMutationInput = {
     sequence?: BigIntFieldUpdateOperationsInput | bigint | number
     address?: StringFieldUpdateOperationsInput | string
-    baseTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    baseTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bidIsSome?: BoolFieldUpdateOperationsInput | boolean
-    askAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    askPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    askAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    askPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     askIsSome?: BoolFieldUpdateOperationsInput | boolean
-    nonce?: BigIntFieldUpdateOperationsInput | bigint | number
+    nonce?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type StateUncheckedUpdateManyInput = {
     sequence?: BigIntFieldUpdateOperationsInput | bigint | number
     address?: StringFieldUpdateOperationsInput | string
-    baseTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    baseTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenStakedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    quoteTokenBorrowedAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    bidPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    baseTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    baseTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenStakedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quoteTokenBorrowedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bidPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bidIsSome?: BoolFieldUpdateOperationsInput | boolean
-    askAmount?: BigIntFieldUpdateOperationsInput | bigint | number
-    askPrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    askAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    askPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     askIsSome?: BoolFieldUpdateOperationsInput | boolean
-    nonce?: BigIntFieldUpdateOperationsInput | bigint | number
+    nonce?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type FetchedSequencesCreateInput = {
@@ -5473,27 +5487,27 @@ export namespace Prisma {
     name?: string | null
     role?: string | null
     image?: string | null
-    baseBalance?: bigint | number | null
-    quoteBalance?: bigint | number | null
+    baseBalance?: Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: Decimal | DecimalJsLike | number | string | null
     userPublicKey?: string | null
-    baseTokenAmount?: bigint | number | null
-    price?: bigint | number | null
+    baseTokenAmount?: Decimal | DecimalJsLike | number | string | null
+    price?: Decimal | DecimalJsLike | number | string | null
     isSome?: boolean | null
-    nonce?: bigint | number | null
-    userSignatureR?: bigint | number | null
-    userSignatureS?: bigint | number | null
+    nonce?: Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: string | null
     sellerPublicKey?: string | null
-    quoteTokenAmount?: bigint | number | null
-    buyerNonce?: bigint | number | null
-    sellerNonce?: bigint | number | null
+    quoteTokenAmount?: Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: string | null
     receiverPublicKey?: string | null
-    senderNonce?: bigint | number | null
-    receiverNonce?: bigint | number | null
-    senderSignatureR?: bigint | number | null
-    senderSignatureS?: bigint | number | null
-    sequence?: bigint | number | null
+    senderNonce?: Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: Decimal | DecimalJsLike | number | string | null
+    sequence?: Decimal | DecimalJsLike | number | string | null
     agent?: string | null
     digest?: string | null
     da_hash?: string | null
@@ -5511,27 +5525,27 @@ export namespace Prisma {
     name?: string | null
     role?: string | null
     image?: string | null
-    baseBalance?: bigint | number | null
-    quoteBalance?: bigint | number | null
+    baseBalance?: Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: Decimal | DecimalJsLike | number | string | null
     userPublicKey?: string | null
-    baseTokenAmount?: bigint | number | null
-    price?: bigint | number | null
+    baseTokenAmount?: Decimal | DecimalJsLike | number | string | null
+    price?: Decimal | DecimalJsLike | number | string | null
     isSome?: boolean | null
-    nonce?: bigint | number | null
-    userSignatureR?: bigint | number | null
-    userSignatureS?: bigint | number | null
+    nonce?: Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: string | null
     sellerPublicKey?: string | null
-    quoteTokenAmount?: bigint | number | null
-    buyerNonce?: bigint | number | null
-    sellerNonce?: bigint | number | null
+    quoteTokenAmount?: Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: string | null
     receiverPublicKey?: string | null
-    senderNonce?: bigint | number | null
-    receiverNonce?: bigint | number | null
-    senderSignatureR?: bigint | number | null
-    senderSignatureS?: bigint | number | null
-    sequence?: bigint | number | null
+    senderNonce?: Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: Decimal | DecimalJsLike | number | string | null
+    sequence?: Decimal | DecimalJsLike | number | string | null
     agent?: string | null
     digest?: string | null
     da_hash?: string | null
@@ -5548,27 +5562,27 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    baseBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    quoteBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     userPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    baseTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    price?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isSome?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    nonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    nonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     sellerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    quoteTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    buyerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sellerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    quoteTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    senderNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    senderNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5586,27 +5600,27 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    baseBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    quoteBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     userPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    baseTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    price?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isSome?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    nonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    nonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     sellerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    quoteTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    buyerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sellerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    quoteTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    senderNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    senderNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5624,27 +5638,27 @@ export namespace Prisma {
     name?: string | null
     role?: string | null
     image?: string | null
-    baseBalance?: bigint | number | null
-    quoteBalance?: bigint | number | null
+    baseBalance?: Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: Decimal | DecimalJsLike | number | string | null
     userPublicKey?: string | null
-    baseTokenAmount?: bigint | number | null
-    price?: bigint | number | null
+    baseTokenAmount?: Decimal | DecimalJsLike | number | string | null
+    price?: Decimal | DecimalJsLike | number | string | null
     isSome?: boolean | null
-    nonce?: bigint | number | null
-    userSignatureR?: bigint | number | null
-    userSignatureS?: bigint | number | null
+    nonce?: Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: string | null
     sellerPublicKey?: string | null
-    quoteTokenAmount?: bigint | number | null
-    buyerNonce?: bigint | number | null
-    sellerNonce?: bigint | number | null
+    quoteTokenAmount?: Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: string | null
     receiverPublicKey?: string | null
-    senderNonce?: bigint | number | null
-    receiverNonce?: bigint | number | null
-    senderSignatureR?: bigint | number | null
-    senderSignatureS?: bigint | number | null
-    sequence?: bigint | number | null
+    senderNonce?: Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: Decimal | DecimalJsLike | number | string | null
+    sequence?: Decimal | DecimalJsLike | number | string | null
     agent?: string | null
     digest?: string | null
     da_hash?: string | null
@@ -5661,27 +5675,27 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    baseBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    quoteBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     userPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    baseTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    price?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isSome?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    nonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    nonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     sellerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    quoteTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    buyerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sellerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    quoteTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    senderNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    senderNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5699,27 +5713,27 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
-    baseBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    quoteBalance?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoteBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     userPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    baseTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    price?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    baseTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isSome?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    nonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    userSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    nonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    userSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     buyerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     sellerPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    quoteTokenAmount?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    buyerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sellerNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    quoteTokenAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    buyerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sellerNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     receiverPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    senderNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    receiverNonce?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureR?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    senderSignatureS?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sequence?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    senderNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5749,6 +5763,17 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -5879,6 +5904,22 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -5958,15 +5999,15 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type BigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type BoolNullableFilter<$PrismaModel = never> = {
@@ -6199,20 +6240,20 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedBigIntNullableFilter<$PrismaModel>
-    _min?: NestedBigIntNullableFilter<$PrismaModel>
-    _max?: NestedBigIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -6235,6 +6276,14 @@ export namespace Prisma {
     set?: string
   }
 
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
@@ -6255,12 +6304,12 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type NullableBigIntFieldUpdateOperationsInput = {
-    set?: bigint | number | null
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
@@ -6298,6 +6347,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -6360,6 +6420,22 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -6407,15 +6483,15 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type NestedBoolNullableFilter<$PrismaModel = never> = {
@@ -6501,31 +6577,20 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedBigIntNullableFilter<$PrismaModel>
-    _min?: NestedBigIntNullableFilter<$PrismaModel>
-    _max?: NestedBigIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {

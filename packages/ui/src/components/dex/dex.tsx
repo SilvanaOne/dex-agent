@@ -74,6 +74,7 @@ const TradingChart = dynamic(() => import("@/components/dex/trading-chart"), {
 });
 
 type ViewMode = "chart" | "sql";
+const ALICE_PUBLIC_KEY = process.env.NEXT_PUBLIC_ALICE_PUBLIC_KEY;
 
 export default function DEX() {
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
@@ -547,17 +548,20 @@ export default function DEX() {
   useEffect(() => {
     async function getAccount() {
       console.log("address", address);
-      if (!address) return;
-      const u256 = publicKeyToU256(address);
+      console.log("viewMode", viewMode);
+      const user =
+        viewMode === "sql" && ALICE_PUBLIC_KEY ? ALICE_PUBLIC_KEY : address;
+      if (!user) return;
+      const u256 = publicKeyToU256(user);
       const account = await fetchDexAccount({ addressU256: u256 });
       if (!account) return;
       setAddressU256(u256);
-      setUser(address);
+      setUser(user);
       setAccount(account);
       console.log("account", account);
     }
     getAccount();
-  }, [address, txData]);
+  }, [address, txData, viewMode]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -1154,11 +1158,15 @@ export default function DEX() {
               Silvascan
             </a>
           </div>
-          {address ? (
+          {user || address ? (
             <div className="flex items-center">
               <div className="flex items-center bg-[#2a2e37] rounded-lg px-2 py-0.5 text-xs">
-                <span className="text-[#848e9c] mr-1">Connected:</span>
-                <span className="text-white">{shortenString(address, 12)}</span>
+                <span className="text-[#848e9c] mr-1">
+                  {viewMode === "sql" ? "Alice:" : "Connected:"}
+                </span>
+                <span className="text-white">
+                  {shortenString(user ?? address, 12)}
+                </span>
               </div>
             </div>
           ) : (
