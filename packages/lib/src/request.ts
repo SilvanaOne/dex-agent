@@ -73,6 +73,7 @@ async function convertPrismaActionRequestToActionRequest(
   action: PrismaActionRequest
 ): Promise<ActionRequest> {
   const { PrismaOperation } = await getPrismaObjects();
+  console.log("convertPrismaActionRequestToActionRequest action", action);
   switch (action.operation) {
     case PrismaOperation.CREATE_ACCOUNT:
       if (
@@ -112,17 +113,28 @@ async function convertPrismaActionRequestToActionRequest(
       ) {
         throw new Error("Missing required fields for BID operation");
       }
+      console.log(
+        "bid signature",
+        action.userSignatureR,
+        action.userSignatureS,
+        action.userSignatureR.toString(),
+        action.userSignatureS.toString(),
+        action.userSignatureR.valueOf(),
+        action.userSignatureS.valueOf(),
+        action.userSignatureR.toFixed(0),
+        action.userSignatureS.toFixed(0)
+      );
       return <ActionBidRequest>{
         operation: Operation.BID,
         poolPublicKey: action.poolPublicKey,
         userPublicKey: action.userPublicKey,
-        baseTokenAmount: BigInt(action.baseTokenAmount.toString()),
-        price: BigInt(action.price.toString()),
+        baseTokenAmount: BigInt(action.baseTokenAmount.toFixed(0)),
+        price: BigInt(action.price.toFixed(0)),
         isSome: action.isSome || false,
-        nonce: BigInt(action.nonce.toString()),
+        nonce: BigInt(action.nonce.toFixed(0)),
         userSignature: {
-          r: BigInt(action.userSignatureR.toString()),
-          s: BigInt(action.userSignatureS.toString()),
+          r: BigInt(action.userSignatureR.toFixed(0)),
+          s: BigInt(action.userSignatureS.toFixed(0)),
         },
       };
     case PrismaOperation.ASK:

@@ -12,23 +12,23 @@ model State {
   sequence BigInt
   address  String
   
-  baseTokenAmount        Decimal
-  baseTokenStakedAmount  Decimal
-  baseTokenBorrowedAmount Decimal
+  baseTokenAmount        Decimal @db.Decimal(precision: 80, scale: 0)
+  baseTokenStakedAmount  Decimal @db.Decimal(precision: 80, scale: 0)
+  baseTokenBorrowedAmount Decimal @db.Decimal(precision: 80, scale: 0)
   
-  quoteTokenAmount       Decimal
-  quoteTokenStakedAmount Decimal
-  quoteTokenBorrowedAmount Decimal
+  quoteTokenAmount       Decimal @db.Decimal(precision: 80, scale: 0)
+  quoteTokenStakedAmount Decimal @db.Decimal(precision: 80, scale: 0)
+  quoteTokenBorrowedAmount Decimal @db.Decimal(precision: 80, scale: 0)
   
-  bidAmount              Decimal
-  bidPrice               Decimal
+  bidAmount              Decimal @db.Decimal(precision: 80, scale: 0)
+  bidPrice               Decimal @db.Decimal(precision: 80, scale: 0)
   bidIsSome              Boolean
   
-  askAmount              Decimal
-  askPrice               Decimal
+  askAmount              Decimal @db.Decimal(precision: 80, scale: 0)
+  askPrice               Decimal @db.Decimal(precision: 80, scale: 0)
   askIsSome              Boolean
   
-  nonce                  Decimal
+  nonce                  Decimal  @db.Decimal(precision: 80, scale: 0)
   
   @@id([sequence, address])
   @@index([sequence])
@@ -69,35 +69,35 @@ model ActionRequest {
   name            String?
   role            String?
   image           String?
-  baseBalance     Decimal?
-  quoteBalance    Decimal?
+  baseBalance     Decimal? @db.Decimal(precision: 80, scale: 0)
+  quoteBalance    Decimal? @db.Decimal(precision: 80, scale: 0)
   
   // BID/ASK fields
   userPublicKey   String?
-  baseTokenAmount Decimal?
-  price           Decimal?
+  baseTokenAmount Decimal? @db.Decimal(precision: 80, scale: 0)
+  price           Decimal? @db.Decimal(precision: 80, scale: 0)
   isSome          Boolean?
-  nonce           Decimal?
-  userSignatureR   Decimal?
-  userSignatureS   Decimal?
+  nonce           Decimal? @db.Decimal(precision: 80, scale: 0)
+  userSignatureR   Decimal? @db.Decimal(precision: 80, scale: 0)
+  userSignatureS   Decimal? @db.Decimal(precision: 80, scale: 0)
   
   // TRADE fields
   buyerPublicKey   String?
   sellerPublicKey  String?
-  quoteTokenAmount Decimal?
-  buyerNonce       Decimal?
-  sellerNonce      Decimal?
+  quoteTokenAmount Decimal? @db.Decimal(precision: 80, scale: 0)
+  buyerNonce       Decimal? @db.Decimal(precision: 80, scale: 0)
+  sellerNonce      Decimal? @db.Decimal(precision: 80, scale: 0)
   
   // TRANSFER fields
   senderPublicKey   String?
   receiverPublicKey String?
-  senderNonce       Decimal?
-  receiverNonce     Decimal?
-  senderSignatureR   Decimal?
-  senderSignatureS   Decimal?
+  senderNonce       Decimal? @db.Decimal(precision: 80, scale: 0)
+  receiverNonce     Decimal? @db.Decimal(precision: 80, scale: 0)
+  senderSignatureR   Decimal? @db.Decimal(precision: 80, scale: 0)
+  senderSignatureS   Decimal? @db.Decimal(precision: 80, scale: 0)
 
   // PROOF fields
-  sequence          Decimal?
+  sequence          Decimal? @db.Decimal(precision: 80, scale: 0)
   //publicKeyBase58   String?
 
   // PROCESSING AGENT ID

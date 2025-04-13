@@ -78,6 +78,8 @@ const ALICE_PUBLIC_KEY = process.env.NEXT_PUBLIC_ALICE_PUBLIC_KEY;
 
 export default function DEX() {
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
+  const [sqlPrice, setSqlPrice] = useState<number | undefined>(1500);
+  const [sqlAmount, setSqlAmount] = useState<number | undefined>(0.1);
   const [blockOptions, setBlockOptions] = useState<number[]>([1]);
   const [sequenceOptions, setSequenceOptions] = useState<number[]>([1]);
   const [dexVersion, setDexVersion] = useState<bigint | undefined>(undefined);
@@ -1246,6 +1248,36 @@ export default function DEX() {
                       ))}
                     </select>
                   </div>
+                  <div className="flex space-x-1 items-center">
+                    <div className="text-[10px] text-[#848e9c] mr-0.5">
+                      Price:
+                    </div>
+                    <input
+                      type="text"
+                      value={sqlPrice || ""}
+                      onChange={(e) =>
+                        setSqlPrice(
+                          e.target.value ? Number(e.target.value) : undefined
+                        )
+                      }
+                      className="mr-2 w-16 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-white focus:border-accent focus:outline-none h-6"
+                      placeholder="Price"
+                    />
+                    <div className="text-[10px] text-[#848e9c] ml-1 mr-0.5">
+                      Amount:
+                    </div>
+                    <input
+                      type="text"
+                      value={sqlAmount || ""}
+                      onChange={(e) =>
+                        setSqlAmount(
+                          e.target.value ? Number(e.target.value) : undefined
+                        )
+                      }
+                      className="w-16 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-white focus:border-accent focus:outline-none h-6"
+                      placeholder="Amount"
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -1264,6 +1296,8 @@ export default function DEX() {
                 sequence={
                   sequence ?? (dex?.sequence ? Number(dex?.sequence) : 1)
                 }
+                price={sqlPrice}
+                amount={sqlAmount}
               />
             )}
           </div>
