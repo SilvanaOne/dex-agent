@@ -16,6 +16,7 @@ import {
   addSequenceData,
   agentSqlProcessing,
   processSqlRequests,
+  LastTransactionData,
 } from "@dex-agent/lib";
 
 const MAX_RUN_TIME = 1000 * 60 * 5; // 5 minutes
@@ -297,12 +298,62 @@ export class DEXAgent extends zkCloudWorker {
           ),
         });
       }
-      const result = await sqlActionRequestQuery(query);
-
-      console.log("sqlRequest result", result);
-      if (!result) throw new Error("cannot execute SQL request");
-      const resultString = JSON.stringify(
-        result,
+      let queryResult:
+        | {
+            success: boolean;
+            data: unknown;
+            error: string | undefined;
+          }
+        | undefined = undefined;
+      try {
+        queryResult = await sqlActionRequestQuery(query);
+        console.log("sqlRequest result", queryResult);
+      } catch (error: any) {
+        console.error("Error in sqlRequest", error.message);
+        queryResult = {
+          success: false,
+          data: undefined,
+          error: String(error.message),
+        };
+      }
+      let processedResult: Partial<LastTransactionData>[] | undefined =
+        undefined;
+      if (queryResult?.success) {
+        try {
+          processedResult = await processSqlRequests();
+          console.log("sqlProcessing result", processedResult);
+        } catch (error: any) {
+          console.error("Error in sqlProcessing", error.message);
+          processedResult = [
+            {
+              errors: [
+                {
+                  code: "sql_processing_error",
+                  message: String(error.message),
+                  severity: "error",
+                },
+              ],
+            },
+          ];
+        }
+      }
+      const queryResultString = JSON.stringify(
+        queryResult ?? { error: "cannot execute SQL request" },
+        (key, value) => (typeof value === "bigint" ? value.toString() : value),
+        2
+      );
+      const processedResultString = JSON.stringify(
+        processedResult ?? [
+          {
+            errors: [
+              {
+                code: "sql_processing_error",
+                message: "cannot process SQL request",
+                severity: "error",
+              },
+            ],
+          },
+        ],
         (key, value) => (typeof value === "bigint" ? value.toString() : value),
         2
       );
@@ -314,16 +365,19 @@ export class DEXAgent extends zkCloudWorker {
           custom: {
             task: "SQL request",
             query,
-            result: resultString,
+            result: {
+              query: queryResultString,
+              processed: processedResultString,
+              itemsProcessed: processedResult?.length ?? 0,
+            },
           },
         },
       });
 
       console.timeEnd("sqlRequest");
-      await agentSqlProcessing();
       return this.stringifyJobResult({
         success: true,
-        result: resultString,
+        result: { query: queryResultString, processed: processedResultString },
       });
     } catch (error: any) {
       console.error("Error in sqlRequest", error.message);
@@ -342,6 +396,11 @@ export class DEXAgent extends zkCloudWorker {
 
       console.log("sqlProcessing result", result);
       if (!result) throw new Error("cannot execute SQL request");
+      const resultString = JSON.stringify(
+        result,
+        (key, value) => (typeof value === "bigint" ? value.toString() : value),
+        2
+      );
 
       await this.cloud.publishTransactionMetadata({
         txId: "dex:sqlProcessing:" + this.cloud.jobId,
@@ -349,7 +408,7 @@ export class DEXAgent extends zkCloudWorker {
           custom: {
             task: "SQL processing",
             itemsProcessed: result.length,
-            result,
+            result: resultString,
           },
         },
       });
@@ -357,7 +416,7 @@ export class DEXAgent extends zkCloudWorker {
       console.timeEnd("sqlProcessing");
       return this.stringifyJobResult({
         success: true,
-        result,
+        result: resultString,
       });
     } catch (error: any) {
       console.error("Error in sqlProcessing", error.message);

@@ -139,8 +139,20 @@ export async function orderWithPayload(params: {
   signature: string;
   key?: string;
 }): Promise<Partial<LastTransactionData>> {
-  console.log("orderWithPayload", params);
-  const { payload, key, signature } = params;
+  const { payload, signature, key } = params;
+  const actionRequest = await convertOrderPayloadToActionRequest({
+    payload,
+    signature,
+  });
+  return order({ actionRequest, key });
+}
+
+export async function convertOrderPayloadToActionRequest(params: {
+  payload: OrderPayload;
+  signature: string;
+}): Promise<ActionRequest> {
+  console.log("convertOrderPayloadToActionRequest", params);
+  const { payload, signature } = params;
   const {
     poolPublicKey,
     user,
@@ -212,8 +224,7 @@ export async function orderWithPayload(params: {
   if (!actionRequest) {
     throw new Error("Invalid action request");
   }
-
-  return order({ actionRequest, key });
+  return actionRequest;
 }
 
 export async function order(params: {
@@ -275,7 +286,13 @@ export async function order(params: {
       : operation === Operation.ASK
       ? actionRequest.price
       : undefined;
-
+  console.log("order", {
+    operation,
+    user,
+    userNonce,
+    baseTokenAmount,
+    price,
+  });
   let keyPromise: Promise<string> | undefined = undefined;
   if (params.key) {
     keyPromise = undefined;
@@ -295,7 +312,7 @@ export async function order(params: {
   if (!userAccount) {
     throw new Error("Cannot fetch accounts");
   }
-
+  console.log("order userAccount", userAccount);
   const packageID = config.dex_package;
   const dexID = config.dex_object;
   if (!packageID) {
@@ -308,6 +325,7 @@ export async function order(params: {
 
   let nonce = userAccount.nonce;
   if (nonce !== userNonce) {
+    console.error("nonce mismatch", { nonce, userNonce });
     throw new Error("Nonce mismatch");
   }
 

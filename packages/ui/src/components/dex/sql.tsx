@@ -1,30 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { agentSqlRequest } from "@dex-agent/lib";
+import {
+  agentSqlRequest,
+  prepareOrderPayload,
+  ActionBidRequest,
+  Operation,
+  convertOrderPayloadToActionRequest,
+} from "@dex-agent/lib";
 import Processing from "./ui/processing";
+import { signSqlRequest } from "@/lib/dex/sql";
+import { nanoid } from "nanoid";
+
+const agent = nanoid();
 
 const ALICE_PUBLIC_KEY = process.env.NEXT_PUBLIC_ALICE_PUBLIC_KEY;
 interface SqlQueryProps {
   blockNumber: number;
   sequence: number;
+  price?: number;
+  amount?: number;
 }
 
-export default function SqlQuery({ blockNumber, sequence }: SqlQueryProps) {
-  const [sqlQuery, setSqlQuery] = useState<string>(
-    `SELECT 
-  column_name, 
-  data_type, 
-  is_nullable, 
-  column_default
-FROM 
-  information_schema.columns 
-WHERE 
-  table_schema = 'public' 
-AND table_name = 'State'
-ORDER BY 
-  ordinal_position`
-  );
+export default function SqlQuery({
+  blockNumber,
+  sequence,
+  price = 1500,
+  amount = 0.1,
+}: SqlQueryProps) {
+  const [sqlQuery, setSqlQuery] =
+    useState<string>(`SELECT column_name, data_type, is_nullable, column_default 
+FROM information_schema.columns 
+WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position`);
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const [results, setResults] = useState<any[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,8 +49,8 @@ ORDER BY
       });
       console.timeEnd("agentSqlRequest");
       console.log("agentSqlRequest", result);
-      if (result.success) {
-        setResults(result.data as any);
+      if (result.success && result.queryResult) {
+        setResults(result.queryResult as any);
         setError(null);
       } else {
         setError("Error executing query: " + result.error);
@@ -62,6 +69,117 @@ ORDER BY
 
   const insertTemplate = (template: string) => {
     setSqlQuery(template);
+  };
+
+  const order = async (type: "buy" | "sell") => {
+    if (!ALICE_PUBLIC_KEY) return;
+
+    const orderPayload = await prepareOrderPayload({
+      user: ALICE_PUBLIC_KEY,
+      amount,
+      price,
+      type,
+      currency: "WETH",
+    });
+    const signedPayload = await signSqlRequest(orderPayload);
+    console.log("Alice signature", signedPayload.signature);
+    const actionRequest = await convertOrderPayloadToActionRequest({
+      payload: orderPayload,
+      signature: signedPayload.signature,
+    });
+    console.log("actionRequest", actionRequest);
+    const sqlQuery: string = `INSERT INTO "ActionRequest" (
+  "operation", 
+  "status",
+  ${
+    actionRequest.operation === 1
+      ? `
+  "address",
+  "poolPublicKey",
+  "publicKey",
+  "publicKeyBase58",
+  "name",
+  "role",
+  "image",
+  "baseBalance",
+  "quoteBalance",`
+      : ""
+  }
+  ${
+    actionRequest.operation === 2 || actionRequest.operation === 3
+      ? `
+  "poolPublicKey",
+  "userPublicKey",
+  "baseTokenAmount",
+  "price",
+  "isSome",
+  "nonce",
+  "userSignatureR",
+  "userSignatureS",`
+      : ""
+  }
+  ${
+    actionRequest.operation === 6
+      ? `
+  "sequence",
+  "publicKeyBase58",`
+      : ""
+  }
+  "agent"
+) VALUES (
+  '${
+    actionRequest.operation === 1
+      ? "CREATE_ACCOUNT"
+      : actionRequest.operation === 2
+      ? "BID"
+      : actionRequest.operation === 3
+      ? "ASK"
+      : actionRequest.operation === 4
+      ? "TRADE"
+      : actionRequest.operation === 5
+      ? "TRANSFER"
+      : actionRequest.operation === 6
+      ? "PROOF"
+      : "UNKNOWN"
+  }', 
+  'PENDING',
+  ${
+    actionRequest.operation === 1
+      ? `
+  '${(actionRequest as any).address}',
+  '${(actionRequest as any).poolPublicKey}',
+  '${(actionRequest as any).publicKey}',
+  '${(actionRequest as any).publicKeyBase58}',
+  '${(actionRequest as any).name}',
+  '${(actionRequest as any).role}',
+  '${(actionRequest as any).image}',
+  '${(actionRequest as any).baseBalance.toString()}',
+  '${(actionRequest as any).quoteBalance.toString()}',`
+      : ""
+  }
+  ${
+    actionRequest.operation === 2 || actionRequest.operation === 3
+      ? `
+  '${(actionRequest as any).poolPublicKey}',
+  '${(actionRequest as any).userPublicKey}',
+  '${(actionRequest as any).baseTokenAmount.toString()}',
+  '${(actionRequest as any).price.toString()}',
+  ${(actionRequest as any).isSome},
+  '${(actionRequest as any).nonce.toString()}',
+  '${(actionRequest as any).userSignature.r.toString()}',
+  '${(actionRequest as any).userSignature.s.toString()}',`
+      : ""
+  }
+  ${
+    actionRequest.operation === 6
+      ? `
+  '${(actionRequest as any).sequence.toString()}',
+  '${(actionRequest as any).publicKeyBase58}',`
+      : ""
+  }
+  '${agent}'
+) RETURNING *;`.replace(/\n\s*\n/g, "\n");
+    insertTemplate(sqlQuery);
   };
 
   return (
@@ -108,31 +226,19 @@ WHERE sequence = '${sequence}' AND address = '${ALICE_PUBLIC_KEY ?? ""}';`
 
         <div className="flex space-x-1">
           <button
-            onClick={() =>
-              insertTemplate(
-                "SELECT * FROM orders WHERE operation = 'buy' ORDER BY timestamp DESC LIMIT 10;"
-              )
-            }
+            onClick={() => order("buy")}
             className="flex-1 py-1 bg-[#02c076] hover:bg-[#02a76a] text-white rounded text-[10px] font-medium transition-colors"
           >
             Buy
           </button>
           <button
-            onClick={() =>
-              insertTemplate(
-                "SELECT * FROM orders WHERE operation = 'sell' ORDER BY timestamp DESC LIMIT 10;"
-              )
-            }
+            onClick={() => order("sell")}
             className="flex-1 py-1 bg-[#f6465d] hover:bg-[#e0364d] text-white rounded text-[10px] font-medium transition-colors"
           >
             Sell
           </button>
           <button
-            onClick={() =>
-              insertTemplate(
-                "SELECT * FROM proofs ORDER BY timestamp DESC LIMIT 10;"
-              )
-            }
+            onClick={() => order("sell")}
             className="flex-1 py-1 bg-[#8358FF] hover:bg-[#7048df] text-white rounded text-[10px] font-medium transition-colors"
           >
             Prove

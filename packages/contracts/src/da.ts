@@ -5,6 +5,7 @@ import {
   readFromDA,
   fetchBlock,
   saveToDA,
+  addSequenceData,
 } from "@dex-agent/lib";
 import { ProvableBlockData } from "./types/provable-types.js";
 import { getKey } from "@dex-agent/lib";
@@ -85,10 +86,24 @@ export async function checkDataAvailability(params: {
       console.error("Error reading block from Walrus");
       return undefined;
     }
+    let prismaPromise: Promise<void> | undefined;
     try {
       const blockData = ProvableBlockData.deserialize(block);
+      prismaPromise = addSequenceData({
+        sequence: BigInt(blockData.state.sequence),
+        state: Object.entries(blockData.state.state.accounts).reduce(
+          (acc, [address, account]) => {
+            acc[address] = account.toAccountData();
+            return acc;
+          },
+          {} as Record<string, any>
+        ),
+      });
     } catch (error: any) {
       console.error("Error deserializing block:", error.message);
+      if (prismaPromise) {
+        await prismaPromise;
+      }
       return undefined;
     }
     const result = await addDataAvailability({
@@ -98,6 +113,9 @@ export async function checkDataAvailability(params: {
       verbose,
       useParallelExecutor: true,
     });
+    if (prismaPromise) {
+      await prismaPromise;
+    }
     if (!result) {
       return undefined;
     }
