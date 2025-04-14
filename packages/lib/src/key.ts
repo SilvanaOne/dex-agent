@@ -4,6 +4,7 @@ import { MIST_PER_SUI } from "@mysten/sui/utils";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Secp256k1Keypair } from "@mysten/sui/keypairs/secp256k1";
 import { suiClient, network } from "./sui-client.js";
+import { sleep } from "./sleep.js";
 
 let userSecretKey: string | undefined = undefined;
 
@@ -59,13 +60,25 @@ export async function getKey(params: {
           balance
         )} SUI`
       );
-      const tx = await requestSuiFromFaucetV1({
-        host: getFaucetHost(network),
-        recipient: address,
-      });
-      console.log("Faucet tx task:", tx.task);
-      if (tx.error) {
-        console.error("Faucet tx error:", tx.error);
+      let received = false;
+      let attempts = 0;
+      const maxAttempts = 30;
+      while (!received && attempts < maxAttempts) {
+        attempts++;
+        try {
+          const tx = await requestSuiFromFaucetV1({
+            host: getFaucetHost(network),
+            recipient: address,
+          });
+          console.log("Faucet tx task:", tx.task);
+          if (tx.error) {
+            console.error("Faucet tx error:", tx.error);
+          }
+          received = true;
+        } catch (error: any) {
+          console.error("Faucet tx error:", error?.message);
+          await sleep(1000);
+        }
       }
       while (suiBalance(balance) < MIN_SUI_BALANCE) {
         await new Promise((resolve) => setTimeout(resolve, 100));

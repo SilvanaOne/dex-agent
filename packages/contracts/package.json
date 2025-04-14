@@ -32,12 +32,12 @@
   "devDependencies": {
     "@silvana-one/mina-utils": "^1.0.0",
     "@silvana-one/storage": "^1.0.0",
-    "@types/node": "^22.13.14",
-    "dotenv": "^16.4.7",
+    "@types/node": "^22.14.1",
+    "dotenv": "^16.5.0",
     "esbuild": "^0.25.2",
     "o1js": "^2.3.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "@silvana-one/mina-utils": "^0.3.0",
