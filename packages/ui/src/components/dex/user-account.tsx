@@ -332,7 +332,11 @@ export default function UserAccount({
       {/* Faucet button with blue color */}
       <button
         onClick={() => {
-          if (account) {
+          if (
+            account &&
+            account.baseTokenBalance.amount > 0n &&
+            account.quoteTokenBalance.amount > 0n
+          ) {
             proveAccount();
           } else {
             faucet();
@@ -351,7 +355,9 @@ export default function UserAccount({
             <Processing />
             Proving account...
           </>
-        ) : account ? (
+        ) : account &&
+          account.baseTokenBalance.amount > 0n &&
+          account.quoteTokenBalance.amount > 0n ? (
           "Prove Account"
         ) : (
           "Faucet"
