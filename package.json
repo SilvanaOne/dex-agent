@@ -1,7 +1,7 @@
 {
   "name": "dex-agent",
   "description": "DEX example",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "author": "DFST",
   "license": "Apache-2.0",
   "private": true,
@@ -14,7 +14,8 @@
     "build:agent": "corepack npm run build -w packages/lib && corepack npm run build -w packages/contracts && corepack npm run build -w packages/agent && corepack npm run build:root",
     "deploy:agent": "npm run build:agent && silvana deploy --exclude 'packages/ui' --repo dex-agent",
     "run:agent": "node --loader=ts-node/esm --enable-source-maps index.ts",
-    "run:worker": "node dist/index.js"
+    "run:worker": "node dist/index.js",
+    "update": "ncu -u -i --root -ws"
   },
   "workspaces": [
     "packages/client",
@@ -23,7 +24,7 @@
     "packages/contracts",
     "packages/agent"
   ],
-  "packageManager": "npm@10.9.1+sha512.c89530d37c4baa38afd43e76a077a84b9aa63840b986426584fd5c5a54ab0a0b21bb1595c851042b733784b0b43706d36a494b4d8ae1a086a762cb8d3f95942a",
+  "packageManager": "npm@11.3.0",
   "dependencies": {
     "@dex-agent/agent": "workspace:*"
   }

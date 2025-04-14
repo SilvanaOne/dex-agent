@@ -1,6 +1,9 @@
 import { saveToWalrus, readFromWalrus, getWalrusUrl } from "./walrus.js";
 import { saveToIPFS, readFromIPFS, getIPFSUrl } from "./ipfs.js";
-export const daProvider: "Walrus" | "IPFS" = "IPFS" as "Walrus" | "IPFS";
+export const daProvider: "Walrus" | "IPFS" | "Project Untitled" = "IPFS" as
+  | "Walrus"
+  | "IPFS"
+  | "Project Untitled";
 
 export async function saveToDA({
   data,
@@ -17,8 +20,10 @@ export async function saveToDA({
 }): Promise<string | undefined> {
   if (daProvider === "Walrus") {
     return saveToWalrus({ data, address, numEpochs: days });
-  } else {
+  } else if (daProvider === "IPFS") {
     return saveToIPFS({ data, owner: address, days, description, filename });
+  } else if (daProvider === "Project Untitled") {
+    throw new Error("Project Untitled support is not implemented yet");
   }
 }
 
@@ -32,15 +37,23 @@ export async function readFromDA({
   }
   if (daProvider === "Walrus") {
     return readFromWalrus({ blobId });
-  } else {
+  } else if (daProvider === "IPFS") {
     return readFromIPFS({ blobId });
+  } else if (daProvider === "Project Untitled") {
+    throw new Error("Project Untitled support is not implemented yet");
+  } else {
+    throw new Error("Invalid DA provider");
   }
 }
 
 export async function getDAUrl(params: { blobId: string }): Promise<string> {
   if (daProvider === "Walrus") {
     return getWalrusUrl(params);
-  } else {
+  } else if (daProvider === "IPFS") {
     return getIPFSUrl(params);
+  } else if (daProvider === "Project Untitled") {
+    throw new Error("Project Untitled support is not implemented yet");
+  } else {
+    throw new Error("Invalid DA provider");
   }
 }

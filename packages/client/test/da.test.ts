@@ -21,7 +21,7 @@ describe("DA", async () => {
     assert.ok(blobId1, "blobId is not set");
   });
 
-  it.skip("should save to DA big file", async () => {
+  it("should save to DA big file", async () => {
     const circuit = await readFile(
       "../contracts/src/contracts/rollup.ts",
       "utf-8"
@@ -36,7 +36,7 @@ describe("DA", async () => {
     assert.ok(blobId2, "blobId is not set");
   });
 
-  it.skip("should read from DA", async () => {
+  it("should read from DA", async () => {
     if (!blobId1) {
       throw new Error("blobId is not set");
     }
@@ -47,7 +47,7 @@ describe("DA", async () => {
     assert.ok(blob, "blob is not received");
   });
 
-  it.skip("should read from DA big file", async () => {
+  it("should read from DA big file", async () => {
     if (!blobId2) {
       throw new Error("blobId is not set");
     }

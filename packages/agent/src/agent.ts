@@ -320,8 +320,9 @@ export class DEXAgent extends zkCloudWorker {
           error: String(error.message),
         };
       }
-      let processedResult: Partial<LastTransactionData>[] | undefined =
-        undefined;
+      let processedResult:
+        | (Partial<LastTransactionData> | { jobId: string })[]
+        | undefined = undefined;
       if (queryResult?.success) {
         try {
           processedResult = await processSqlRequests({

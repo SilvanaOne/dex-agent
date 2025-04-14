@@ -106,7 +106,7 @@ describe("Topup DEX users", async () => {
       });
 
       const { minaSignature, suiSignature } = await wrapMinaSignature({
-        minaSignatureBase58: faucetSignature.minaSignatureBase58,
+        minaSignature: faucetSignature.minaSignatureBase58,
         minaPublicKey: faucet.minaPublicKey,
         poolPublicKey: pool.minaPublicKey,
         operation: Operation.TRANSFER,
