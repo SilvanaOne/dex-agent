@@ -89,16 +89,20 @@ export async function checkDataAvailability(params: {
     let prismaPromise: Promise<void> | undefined;
     try {
       const blockData = ProvableBlockData.deserialize(block);
-      prismaPromise = addSequenceData({
-        sequence: BigInt(blockData.state.sequence),
-        state: Object.entries(blockData.state.state.accounts).reduce(
-          (acc, [address, account]) => {
-            acc[address] = account.toAccountData();
-            return acc;
-          },
-          {} as Record<string, any>
-        ),
-      });
+      try {
+        prismaPromise = addSequenceData({
+          sequence: BigInt(blockData.state.sequence),
+          state: Object.entries(blockData.state.state).reduce(
+            (acc, [address, account]) => {
+              acc[address] = account;
+              return acc;
+            },
+            {} as Record<string, any>
+          ),
+        });
+      } catch (error: any) {
+        console.error("Error adding sequence data:", error.message);
+      }
     } catch (error: any) {
       console.error("Error deserializing block:", error.message);
       if (prismaPromise) {
