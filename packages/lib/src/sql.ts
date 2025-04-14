@@ -317,6 +317,10 @@ export async function addActionRequest(actionRequest: ActionRequest) {
         "receiverNonce" in actionRequest
           ? Prisma.Decimal(actionRequest.receiverNonce.toString())
           : null,
+      blockNumber:
+        "blockNumber" in actionRequest
+          ? Prisma.Decimal(actionRequest.blockNumber.toString())
+          : null,
       status: ActionStatus.PENDING,
     },
   });
@@ -327,11 +331,12 @@ export async function setSqlRequestStatus(params: {
   status: ActionStatus;
   digest?: string;
   da_hash?: string;
+  jobId?: string;
 }) {
-  const { requestId, status, digest, da_hash } = params;
+  const { requestId, status, digest, da_hash, jobId } = params;
   await prisma.actionRequest.update({
     where: { id: requestId },
-    data: { status, digest, da_hash },
+    data: { status, digest, da_hash, jobId },
   });
 }
 
@@ -348,16 +353,18 @@ export async function getSqlRequestStatus(params: { requestId: number }) {
 export async function getUnprocessedSqlRequests() {
   return await prisma.actionRequest.findMany({
     where: { status: ActionStatus.PENDING },
+    orderBy: { createdAt: "asc" },
   });
 }
 
 export async function setSqlRequestProcessing(params: {
   requestId: number;
   agent: string;
+  jobId?: string;
 }) {
-  const { requestId, agent } = params;
+  const { requestId, agent, jobId } = params;
   await prisma.actionRequest.update({
     where: { id: requestId },
-    data: { status: ActionStatus.PROCESSING, agent },
+    data: { status: ActionStatus.PROCESSING, agent, jobId },
   });
 }

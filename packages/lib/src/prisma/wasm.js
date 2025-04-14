@@ -171,8 +171,10 @@ exports.Prisma.ActionRequestScalarFieldEnum = {
   receiverNonce: 'receiverNonce',
   senderSignatureR: 'senderSignatureR',
   senderSignatureS: 'senderSignatureS',
+  blockNumber: 'blockNumber',
   sequence: 'sequence',
   agent: 'agent',
+  jobId: 'jobId',
   digest: 'digest',
   da_hash: 'da_hash'
 };

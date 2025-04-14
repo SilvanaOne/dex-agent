@@ -7,6 +7,8 @@ import {
   waitTx,
   blockCreationNeeded,
   saveToDA,
+  ActionStatus,
+  setSqlRequestStatus,
 } from "@dex-agent/lib";
 import { deserializeIndexedMerkleMap } from "@silvana-one/storage";
 import { DEXMap, SequenceData } from "./types/provable-types.js";
@@ -293,10 +295,11 @@ export async function fetchAccountProof(params: {
   sequence: number;
   blockNumber: number;
   jobId: string;
+  sqlId?: number;
   cache: Cache;
   address: string;
 }) {
-  const { sequence, blockNumber, jobId, cache, address } = params;
+  const { sequence, blockNumber, jobId, cache, address, sqlId } = params;
   const startTime = Date.now();
   const sequenceData = await fetchSequenceData({
     sequence,
@@ -325,6 +328,18 @@ export async function fetchAccountProof(params: {
       filename: `accountProof-${sequence}-${blockNumber}-${address}.json`,
       days: 2,
     });
+    if (sqlId) {
+      try {
+        await setSqlRequestStatus({
+          requestId: sqlId,
+          status: "SUCCESS",
+          da_hash: blobId,
+          jobId,
+        });
+      } catch (error) {
+        console.error("Error in setSqlRequestStatus", error);
+      }
+    }
     return blobId;
   }
   return undefined;

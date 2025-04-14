@@ -97,13 +97,15 @@ model ActionRequest {
   senderSignatureS  Decimal? @db.Decimal(precision: 80, scale: 0)
 
   // PROOF fields
-  sequence Decimal? @db.Decimal(precision: 80, scale: 0)
+  blockNumber Decimal? @db.Decimal(precision: 80, scale: 0)
+  sequence    Decimal? @db.Decimal(precision: 80, scale: 0)
   //publicKeyBase58   String?
 
   // PROCESSING AGENT ID
   agent String?
 
   // RESULT OF REQUEST
+  jobId   String?
   digest  String?
   da_hash String?
 
