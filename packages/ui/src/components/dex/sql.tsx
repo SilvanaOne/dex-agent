@@ -7,6 +7,8 @@ import {
   ActionBidRequest,
   Operation,
   convertOrderPayloadToActionRequest,
+  LastTransactionData,
+  LastTransactionErrors,
 } from "@dex-agent/lib";
 import Processing from "./ui/processing";
 import { signSqlRequest } from "@/lib/dex/sql";
@@ -20,6 +22,9 @@ interface SqlQueryProps {
   sequence: number;
   price?: number;
   amount?: number;
+  setTxData: (
+    txData: LastTransactionData | LastTransactionErrors | null
+  ) => void;
 }
 
 export default function SqlQuery({
@@ -27,6 +32,7 @@ export default function SqlQuery({
   sequence,
   price = 1500,
   amount = 0.1,
+  setTxData,
 }: SqlQueryProps) {
   const [sqlQuery, setSqlQuery] =
     useState<string>(`SELECT column_name, data_type, is_nullable, column_default 
@@ -52,6 +58,15 @@ WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position
       if (result.success && result.queryResult) {
         setResults(result.queryResult as any);
         setError(null);
+        if (
+          result.processedResult &&
+          Array.isArray(result.processedResult) &&
+          result.processedResult.length > 0
+        ) {
+          setTxData(
+            result.processedResult[0] as unknown as LastTransactionData
+          );
+        }
       } else {
         setError("Error executing query: " + result.error);
         setResults(null);

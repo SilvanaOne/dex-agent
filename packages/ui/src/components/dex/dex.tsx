@@ -1298,6 +1298,7 @@ export default function DEX() {
                 }
                 price={sqlPrice}
                 amount={sqlAmount}
+                setTxData={setTxData}
               />
             )}
           </div>
