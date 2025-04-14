@@ -17,6 +17,7 @@ import {
   agentSqlProcessing,
   processSqlRequests,
   LastTransactionData,
+  setSqlRequestStatus,
 } from "@dex-agent/lib";
 
 const MAX_RUN_TIME = 1000 * 60 * 5; // 5 minutes
@@ -228,12 +229,15 @@ export class DEXAgent extends zkCloudWorker {
       if (!sequence) throw new Error("sequence is not set");
       const blockNumber = args?.blockNumber;
       if (!blockNumber) throw new Error("blockNumber is not set");
+      const sqlId: number | undefined =
+        args?.sqlId && typeof args.sqlId === "number" ? args.sqlId : undefined;
       const result = await fetchAccountProof({
         jobId: this.cloud.jobId,
         cache: this.cache,
         address,
         sequence,
         blockNumber,
+        sqlId,
       });
 
       console.log("proveAccount result", result);
@@ -320,7 +324,9 @@ export class DEXAgent extends zkCloudWorker {
         undefined;
       if (queryResult?.success) {
         try {
-          processedResult = await processSqlRequests();
+          processedResult = await processSqlRequests({
+            jobId: this.cloud.jobId,
+          });
           console.log("sqlProcessing result", processedResult);
         } catch (error: any) {
           console.error("Error in sqlProcessing", error.message);
@@ -392,7 +398,9 @@ export class DEXAgent extends zkCloudWorker {
   private async sqlProcessing(): Promise<string> {
     console.time("sqlProcessing");
     try {
-      const result = await processSqlRequests();
+      const result = await processSqlRequests({
+        jobId: this.cloud.jobId,
+      });
 
       console.log("sqlProcessing result", result);
       if (!result) throw new Error("cannot execute SQL request");

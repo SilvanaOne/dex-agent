@@ -26,6 +26,7 @@ export async function agentProveAccount(params: {
   address: string;
   blockNumber: number;
   sequence: number;
+  sqlId?: number;
 }) {
   console.log("agent: starting prove account");
   const args = JSON.stringify(params);

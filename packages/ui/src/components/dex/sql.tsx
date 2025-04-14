@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   agentSqlRequest,
   prepareOrderPayload,
@@ -9,10 +9,15 @@ import {
   convertOrderPayloadToActionRequest,
   LastTransactionData,
   LastTransactionErrors,
+  ActionStatus,
+  dexProverResult,
+  sleep,
 } from "@dex-agent/lib";
 import Processing from "./ui/processing";
 import { signSqlRequest } from "@/lib/dex/sql";
 import { nanoid } from "nanoid";
+import { shortenString } from "@/lib/short";
+import { daUrl } from "@/lib/chain";
 
 const agent = nanoid();
 
@@ -41,10 +46,46 @@ WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const [results, setResults] = useState<any[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [proof, setProof] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (jobId) {
+      setProof("Calculating proof...");
+      const fetchProof = async () => {
+        let received: string | undefined = undefined;
+        let failed = false;
+        let result = await dexProverResult({ jobId });
+        console.log("result", result?.result);
+        while (!received && !failed) {
+          await sleep(5000);
+          result = await dexProverResult({ jobId });
+          console.log("result", result?.result);
+          try {
+            if (result?.result) {
+              const { success, blobId } = JSON.parse(result.result);
+              if (success && blobId) {
+                received = blobId;
+              } else {
+                failed = true;
+              }
+            }
+          } catch (error: any) {
+            console.error("Error parsing result:", error.message);
+            failed = true;
+          }
+        }
+        setProof(received ?? null);
+      };
+      fetchProof();
+    }
+  }, [jobId]);
 
   const executeQuery = async () => {
     setIsExecuting(true);
     setError(null);
+    setProof(null);
+    setJobId(null);
     try {
       //const result = await sqlActionRequestQuery(sqlQuery);
       console.time("agentSqlRequest");
@@ -63,9 +104,11 @@ WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position
           Array.isArray(result.processedResult) &&
           result.processedResult.length > 0
         ) {
-          setTxData(
-            result.processedResult[0] as unknown as LastTransactionData
-          );
+          if ("jobId" in result.processedResult[0]) {
+            setJobId(result.processedResult[0].jobId);
+          } else {
+            setTxData(result.processedResult[0]);
+          }
         }
       } else {
         setError("Error executing query: " + result.error);
@@ -84,6 +127,16 @@ WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position
 
   const insertTemplate = (template: string) => {
     setSqlQuery(template);
+  };
+
+  const proveAccount = async () => {
+    if (!ALICE_PUBLIC_KEY) return;
+    const address = ALICE_PUBLIC_KEY;
+    const sqlQuery = `INSERT INTO "ActionRequest"
+("operation", "blockNumber", "sequence", "publicKeyBase58")
+VALUES 
+('PROOF',  ${blockNumber}, ${sequence}, '${address}')`;
+    insertTemplate(sqlQuery);
   };
 
   const order = async (type: "buy" | "sell") => {
@@ -105,7 +158,6 @@ WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position
     console.log("actionRequest", actionRequest);
     const sqlQuery: string = `INSERT INTO "ActionRequest" (
   "operation", 
-  "status",
   ${
     actionRequest.operation === 1
       ? `
@@ -157,7 +209,6 @@ WHERE table_schema = 'public' AND table_name = 'State' ORDER BY ordinal_position
       ? "PROOF"
       : "UNKNOWN"
   }', 
-  'PENDING',
   ${
     actionRequest.operation === 1
       ? `
@@ -253,7 +304,7 @@ WHERE sequence = '${sequence}' AND address = '${ALICE_PUBLIC_KEY ?? ""}';`
             Sell
           </button>
           <button
-            onClick={() => order("sell")}
+            onClick={proveAccount}
             className="flex-1 py-1 bg-[#8358FF] hover:bg-[#7048df] text-white rounded text-[10px] font-medium transition-colors"
           >
             Prove
@@ -294,6 +345,41 @@ WHERE sequence = '${sequence}' AND address = '${ALICE_PUBLIC_KEY ?? ""}';`
         <h4 className="text-[10px] font-semibold text-[#848e9c] mb-1">
           Results
         </h4>
+        {jobId && (
+          <div className="flex justify-between text-[9px]">
+            <span className="text-[#848e9c]">Prove account Job ID:</span>
+            {jobId ? (
+              <a
+                href={`https://silvascan.io/testnet/agent-job/${jobId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-[#1E80FF] hover:underline"
+              >
+                {shortenString(jobId ?? "", 10)}
+              </a>
+            ) : (
+              <span className="font-medium">-</span>
+            )}
+          </div>
+        )}
+        {proof && (
+          <div className="flex justify-between text-[9px]">
+            <span className="text-[#848e9c]">Proof:</span>
+            {proof !== "Calculating proof..." && (
+              <a
+                href={daUrl(proof ?? "")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-[#1E80FF] hover:underline"
+              >
+                {shortenString(proof ?? "", 10)}
+              </a>
+            )}
+            {proof === "Calculating proof..." && (
+              <span className="font-medium">{proof}</span>
+            )}
+          </div>
+        )}
 
         {isExecuting && (
           <div className="flex items-center justify-center h-full">

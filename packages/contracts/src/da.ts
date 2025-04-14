@@ -86,30 +86,30 @@ export async function checkDataAvailability(params: {
       console.error("Error reading block from Walrus");
       return undefined;
     }
-    let prismaPromise: Promise<void> | undefined;
-    try {
-      const blockData = ProvableBlockData.deserialize(block);
-      try {
-        prismaPromise = addSequenceData({
-          sequence: BigInt(blockData.state.sequence),
-          state: Object.entries(blockData.state.state).reduce(
-            (acc, [address, account]) => {
-              acc[address] = account;
-              return acc;
-            },
-            {} as Record<string, any>
-          ),
-        });
-      } catch (error: any) {
-        console.error("Error adding sequence data:", error.message);
-      }
-    } catch (error: any) {
-      console.error("Error deserializing block:", error.message);
-      if (prismaPromise) {
-        await prismaPromise;
-      }
-      return undefined;
-    }
+    // let prismaPromise: Promise<void> | undefined;
+    // try {
+    //   const blockData = ProvableBlockData.deserialize(block);
+    //   try {
+    //     prismaPromise = addSequenceData({
+    //       sequence: BigInt(blockData.state.sequence),
+    //       state: Object.entries(blockData.state.state).reduce(
+    //         (acc, [address, account]) => {
+    //           acc[address] = account;
+    //           return acc;
+    //         },
+    //         {} as Record<string, any>
+    //       ),
+    //     });
+    //   } catch (error: any) {
+    //     console.error("Error adding sequence data:", error.message);
+    //   }
+    // } catch (error: any) {
+    //   console.error("Error deserializing block:", error.message);
+    //   if (prismaPromise) {
+    //     await prismaPromise;
+    //   }
+    //   return undefined;
+    // }
     const result = await addDataAvailability({
       blockNumber,
       blockBlobId,
@@ -117,9 +117,9 @@ export async function checkDataAvailability(params: {
       verbose,
       useParallelExecutor: true,
     });
-    if (prismaPromise) {
-      await prismaPromise;
-    }
+    // if (prismaPromise) {
+    //   await prismaPromise;
+    // }
     if (!result) {
       return undefined;
     }

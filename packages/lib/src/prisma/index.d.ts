@@ -3294,6 +3294,7 @@ export namespace Prisma {
     receiverNonce: Decimal | null
     senderSignatureR: Decimal | null
     senderSignatureS: Decimal | null
+    blockNumber: Decimal | null
     sequence: Decimal | null
   }
 
@@ -3313,6 +3314,7 @@ export namespace Prisma {
     receiverNonce: Decimal | null
     senderSignatureR: Decimal | null
     senderSignatureS: Decimal | null
+    blockNumber: Decimal | null
     sequence: Decimal | null
   }
 
@@ -3348,8 +3350,10 @@ export namespace Prisma {
     receiverNonce: Decimal | null
     senderSignatureR: Decimal | null
     senderSignatureS: Decimal | null
+    blockNumber: Decimal | null
     sequence: Decimal | null
     agent: string | null
+    jobId: string | null
     digest: string | null
     da_hash: string | null
   }
@@ -3386,8 +3390,10 @@ export namespace Prisma {
     receiverNonce: Decimal | null
     senderSignatureR: Decimal | null
     senderSignatureS: Decimal | null
+    blockNumber: Decimal | null
     sequence: Decimal | null
     agent: string | null
+    jobId: string | null
     digest: string | null
     da_hash: string | null
   }
@@ -3424,8 +3430,10 @@ export namespace Prisma {
     receiverNonce: number
     senderSignatureR: number
     senderSignatureS: number
+    blockNumber: number
     sequence: number
     agent: number
+    jobId: number
     digest: number
     da_hash: number
     _all: number
@@ -3448,6 +3456,7 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    blockNumber?: true
     sequence?: true
   }
 
@@ -3467,6 +3476,7 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    blockNumber?: true
     sequence?: true
   }
 
@@ -3502,8 +3512,10 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    blockNumber?: true
     sequence?: true
     agent?: true
+    jobId?: true
     digest?: true
     da_hash?: true
   }
@@ -3540,8 +3552,10 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    blockNumber?: true
     sequence?: true
     agent?: true
+    jobId?: true
     digest?: true
     da_hash?: true
   }
@@ -3578,8 +3592,10 @@ export namespace Prisma {
     receiverNonce?: true
     senderSignatureR?: true
     senderSignatureS?: true
+    blockNumber?: true
     sequence?: true
     agent?: true
+    jobId?: true
     digest?: true
     da_hash?: true
     _all?: true
@@ -3703,8 +3719,10 @@ export namespace Prisma {
     receiverNonce: Decimal | null
     senderSignatureR: Decimal | null
     senderSignatureS: Decimal | null
+    blockNumber: Decimal | null
     sequence: Decimal | null
     agent: string | null
+    jobId: string | null
     digest: string | null
     da_hash: string | null
     _count: ActionRequestCountAggregateOutputType | null
@@ -3760,8 +3778,10 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    blockNumber?: boolean
     sequence?: boolean
     agent?: boolean
+    jobId?: boolean
     digest?: boolean
     da_hash?: boolean
   }, ExtArgs["result"]["actionRequest"]>
@@ -3798,8 +3818,10 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    blockNumber?: boolean
     sequence?: boolean
     agent?: boolean
+    jobId?: boolean
     digest?: boolean
     da_hash?: boolean
   }, ExtArgs["result"]["actionRequest"]>
@@ -3836,8 +3858,10 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    blockNumber?: boolean
     sequence?: boolean
     agent?: boolean
+    jobId?: boolean
     digest?: boolean
     da_hash?: boolean
   }, ExtArgs["result"]["actionRequest"]>
@@ -3874,13 +3898,15 @@ export namespace Prisma {
     receiverNonce?: boolean
     senderSignatureR?: boolean
     senderSignatureS?: boolean
+    blockNumber?: boolean
     sequence?: boolean
     agent?: boolean
+    jobId?: boolean
     digest?: boolean
     da_hash?: boolean
   }
 
-  export type ActionRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "operation" | "status" | "address" | "poolPublicKey" | "publicKey" | "publicKeyBase58" | "name" | "role" | "image" | "baseBalance" | "quoteBalance" | "userPublicKey" | "baseTokenAmount" | "price" | "isSome" | "nonce" | "userSignatureR" | "userSignatureS" | "buyerPublicKey" | "sellerPublicKey" | "quoteTokenAmount" | "buyerNonce" | "sellerNonce" | "senderPublicKey" | "receiverPublicKey" | "senderNonce" | "receiverNonce" | "senderSignatureR" | "senderSignatureS" | "sequence" | "agent" | "digest" | "da_hash", ExtArgs["result"]["actionRequest"]>
+  export type ActionRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "operation" | "status" | "address" | "poolPublicKey" | "publicKey" | "publicKeyBase58" | "name" | "role" | "image" | "baseBalance" | "quoteBalance" | "userPublicKey" | "baseTokenAmount" | "price" | "isSome" | "nonce" | "userSignatureR" | "userSignatureS" | "buyerPublicKey" | "sellerPublicKey" | "quoteTokenAmount" | "buyerNonce" | "sellerNonce" | "senderPublicKey" | "receiverPublicKey" | "senderNonce" | "receiverNonce" | "senderSignatureR" | "senderSignatureS" | "blockNumber" | "sequence" | "agent" | "jobId" | "digest" | "da_hash", ExtArgs["result"]["actionRequest"]>
 
   export type $ActionRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ActionRequest"
@@ -3917,8 +3943,10 @@ export namespace Prisma {
       receiverNonce: Prisma.Decimal | null
       senderSignatureR: Prisma.Decimal | null
       senderSignatureS: Prisma.Decimal | null
+      blockNumber: Prisma.Decimal | null
       sequence: Prisma.Decimal | null
       agent: string | null
+      jobId: string | null
       digest: string | null
       da_hash: string | null
     }, ExtArgs["result"]["actionRequest"]>
@@ -4375,8 +4403,10 @@ export namespace Prisma {
     readonly receiverNonce: FieldRef<"ActionRequest", 'Decimal'>
     readonly senderSignatureR: FieldRef<"ActionRequest", 'Decimal'>
     readonly senderSignatureS: FieldRef<"ActionRequest", 'Decimal'>
+    readonly blockNumber: FieldRef<"ActionRequest", 'Decimal'>
     readonly sequence: FieldRef<"ActionRequest", 'Decimal'>
     readonly agent: FieldRef<"ActionRequest", 'String'>
+    readonly jobId: FieldRef<"ActionRequest", 'String'>
     readonly digest: FieldRef<"ActionRequest", 'String'>
     readonly da_hash: FieldRef<"ActionRequest", 'String'>
   }
@@ -4819,8 +4849,10 @@ export namespace Prisma {
     receiverNonce: 'receiverNonce',
     senderSignatureR: 'senderSignatureR',
     senderSignatureS: 'senderSignatureS',
+    blockNumber: 'blockNumber',
     sequence: 'sequence',
     agent: 'agent',
+    jobId: 'jobId',
     digest: 'digest',
     da_hash: 'da_hash'
   };
@@ -5153,8 +5185,10 @@ export namespace Prisma {
     receiverNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    blockNumber?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     sequence?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     agent?: StringNullableFilter<"ActionRequest"> | string | null
+    jobId?: StringNullableFilter<"ActionRequest"> | string | null
     digest?: StringNullableFilter<"ActionRequest"> | string | null
     da_hash?: StringNullableFilter<"ActionRequest"> | string | null
   }
@@ -5191,8 +5225,10 @@ export namespace Prisma {
     receiverNonce?: SortOrderInput | SortOrder
     senderSignatureR?: SortOrderInput | SortOrder
     senderSignatureS?: SortOrderInput | SortOrder
+    blockNumber?: SortOrderInput | SortOrder
     sequence?: SortOrderInput | SortOrder
     agent?: SortOrderInput | SortOrder
+    jobId?: SortOrderInput | SortOrder
     digest?: SortOrderInput | SortOrder
     da_hash?: SortOrderInput | SortOrder
   }
@@ -5232,8 +5268,10 @@ export namespace Prisma {
     receiverNonce?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    blockNumber?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     sequence?: DecimalNullableFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     agent?: StringNullableFilter<"ActionRequest"> | string | null
+    jobId?: StringNullableFilter<"ActionRequest"> | string | null
     digest?: StringNullableFilter<"ActionRequest"> | string | null
     da_hash?: StringNullableFilter<"ActionRequest"> | string | null
   }, "id">
@@ -5270,8 +5308,10 @@ export namespace Prisma {
     receiverNonce?: SortOrderInput | SortOrder
     senderSignatureR?: SortOrderInput | SortOrder
     senderSignatureS?: SortOrderInput | SortOrder
+    blockNumber?: SortOrderInput | SortOrder
     sequence?: SortOrderInput | SortOrder
     agent?: SortOrderInput | SortOrder
+    jobId?: SortOrderInput | SortOrder
     digest?: SortOrderInput | SortOrder
     da_hash?: SortOrderInput | SortOrder
     _count?: ActionRequestCountOrderByAggregateInput
@@ -5316,8 +5356,10 @@ export namespace Prisma {
     receiverNonce?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
+    blockNumber?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     sequence?: DecimalNullableWithAggregatesFilter<"ActionRequest"> | Decimal | DecimalJsLike | number | string | null
     agent?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
+    jobId?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     digest?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
     da_hash?: StringNullableWithAggregatesFilter<"ActionRequest"> | string | null
   }
@@ -5507,8 +5549,10 @@ export namespace Prisma {
     receiverNonce?: Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: Decimal | DecimalJsLike | number | string | null
+    blockNumber?: Decimal | DecimalJsLike | number | string | null
     sequence?: Decimal | DecimalJsLike | number | string | null
     agent?: string | null
+    jobId?: string | null
     digest?: string | null
     da_hash?: string | null
   }
@@ -5545,8 +5589,10 @@ export namespace Prisma {
     receiverNonce?: Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: Decimal | DecimalJsLike | number | string | null
+    blockNumber?: Decimal | DecimalJsLike | number | string | null
     sequence?: Decimal | DecimalJsLike | number | string | null
     agent?: string | null
+    jobId?: string | null
     digest?: string | null
     da_hash?: string | null
   }
@@ -5582,8 +5628,10 @@ export namespace Prisma {
     receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    blockNumber?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -5620,8 +5668,10 @@ export namespace Prisma {
     receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    blockNumber?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -5658,8 +5708,10 @@ export namespace Prisma {
     receiverNonce?: Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: Decimal | DecimalJsLike | number | string | null
+    blockNumber?: Decimal | DecimalJsLike | number | string | null
     sequence?: Decimal | DecimalJsLike | number | string | null
     agent?: string | null
+    jobId?: string | null
     digest?: string | null
     da_hash?: string | null
   }
@@ -5695,8 +5747,10 @@ export namespace Prisma {
     receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    blockNumber?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -5733,8 +5787,10 @@ export namespace Prisma {
     receiverNonce?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureR?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     senderSignatureS?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    blockNumber?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sequence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     agent?: NullableStringFieldUpdateOperationsInput | string | null
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
     digest?: NullableStringFieldUpdateOperationsInput | string | null
     da_hash?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -6052,8 +6108,10 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    blockNumber?: SortOrder
     sequence?: SortOrder
     agent?: SortOrder
+    jobId?: SortOrder
     digest?: SortOrder
     da_hash?: SortOrder
   }
@@ -6074,6 +6132,7 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    blockNumber?: SortOrder
     sequence?: SortOrder
   }
 
@@ -6109,8 +6168,10 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    blockNumber?: SortOrder
     sequence?: SortOrder
     agent?: SortOrder
+    jobId?: SortOrder
     digest?: SortOrder
     da_hash?: SortOrder
   }
@@ -6147,8 +6208,10 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    blockNumber?: SortOrder
     sequence?: SortOrder
     agent?: SortOrder
+    jobId?: SortOrder
     digest?: SortOrder
     da_hash?: SortOrder
   }
@@ -6169,6 +6232,7 @@ export namespace Prisma {
     receiverNonce?: SortOrder
     senderSignatureR?: SortOrder
     senderSignatureS?: SortOrder
+    blockNumber?: SortOrder
     sequence?: SortOrder
   }
 

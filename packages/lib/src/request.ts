@@ -3,12 +3,9 @@ import {
   setSqlRequestProcessing,
   getSqlRequestStatus,
   getPrismaObjects,
+  setSqlRequestStatus,
 } from "./sql.js";
-import type {
-  ActionStatus,
-  PrismaOperation,
-  PrismaActionRequest,
-} from "./sql.js";
+import type { PrismaActionRequest } from "./sql.js";
 import { nanoid } from "nanoid";
 import { sleep } from "./sleep.js";
 import {
@@ -24,19 +21,22 @@ import {
 } from "./types.js";
 import { order } from "./order.js";
 import { getUserKey } from "./key.js";
+import { agentProveAccount } from "./agent.js";
 const agent = nanoid();
 
-export async function processSqlRequests(): Promise<
-  Partial<LastTransactionData>[]
-> {
+export async function processSqlRequests(params: {
+  jobId?: string;
+}): Promise<(Partial<LastTransactionData> | { jobId: string })[]> {
+  const { jobId } = params;
   const sqlRequests = await getUnprocessedSqlRequests();
-  const results: Partial<LastTransactionData>[] = [];
+  const results: (Partial<LastTransactionData> | { jobId: string })[] = [];
   const { ActionStatus, PrismaOperation } = await getPrismaObjects();
   for (const sqlRequest of sqlRequests) {
     try {
       await setSqlRequestProcessing({
         requestId: sqlRequest.id,
         agent,
+        jobId,
       });
       await sleep(1000);
     } catch (error: any) {
@@ -53,12 +53,59 @@ export async function processSqlRequests(): Promise<
     }
     if (status.status === ActionStatus.PROCESSING && status.agent === agent) {
       console.log(`Processing request ${sqlRequest.id}`);
-      const actionRequest = await convertPrismaActionRequestToActionRequest(
-        sqlRequest
-      );
-      const result = await order({ actionRequest, key: await getUserKey() });
-      console.log(`Request ${sqlRequest.id} processed`, result);
-      results.push(result);
+      try {
+        const actionRequest = await convertPrismaActionRequestToActionRequest(
+          sqlRequest
+        );
+        if (actionRequest.operation === Operation.PROOF) {
+          const result = await agentProveAccount({
+            address: actionRequest.publicKeyBase58,
+            blockNumber: Number(status.blockNumber),
+            sequence: Number(actionRequest.sequence),
+            sqlId: sqlRequest.id,
+          });
+          const jobId = result.jobId;
+          console.log("ProveAccount jobId", jobId);
+          if (jobId) {
+            await setSqlRequestStatus({
+              requestId: sqlRequest.id,
+              status: ActionStatus.PROCESSING,
+              jobId,
+            });
+            results.push({ jobId });
+          } else {
+            console.error(`Request ${sqlRequest.id} failed to get jobId`);
+            await setSqlRequestStatus({
+              requestId: sqlRequest.id,
+              status: ActionStatus.FAILED,
+              jobId,
+            });
+          }
+        } else {
+          const result = await order({
+            actionRequest,
+            key: await getUserKey(),
+          });
+          console.log(`Request ${sqlRequest.id} processed`, result);
+          results.push(result);
+          await setSqlRequestStatus({
+            requestId: sqlRequest.id,
+            status: ActionStatus.SUCCESS,
+            jobId,
+            digest: result.digest,
+          });
+        }
+      } catch (error: any) {
+        console.error(
+          `Error processing request ${sqlRequest.id}:`,
+          error?.message
+        );
+        await setSqlRequestStatus({
+          requestId: sqlRequest.id,
+          status: ActionStatus.FAILED,
+          jobId,
+        });
+      }
     } else {
       console.error(
         `Request ${sqlRequest.id} is not processing, taken by other agent`,
@@ -205,11 +252,16 @@ async function convertPrismaActionRequestToActionRequest(
         },
       };
     case PrismaOperation.PROOF:
-      if (action.sequence === null || !action.publicKeyBase58) {
+      if (
+        action.sequence === null ||
+        !action.publicKeyBase58 ||
+        action.blockNumber === null
+      ) {
         throw new Error("Missing required fields for PROOF operation");
       }
       return <ActionProofRequest>{
         operation: Operation.PROOF,
+        blockNumber: BigInt(action.blockNumber.toFixed(0)),
         sequence: BigInt(action.sequence.toFixed(0)),
         publicKeyBase58: action.publicKeyBase58,
       };

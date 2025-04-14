@@ -202,6 +202,7 @@ export interface ActionCreateAccount {
 
 export interface ActionProof {
   sequence: bigint;
+  blockNumber: bigint;
   publicKeyBase58: string;
 }
 
