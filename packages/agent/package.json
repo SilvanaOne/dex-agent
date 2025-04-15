@@ -31,11 +31,11 @@
   "dependencies": {
     "@dex-agent/contracts": "*",
     "@dex-agent/lib": "*",
-    "@silvana-one/api": "^1.0.0",
-    "@silvana-one/mina-prover": "^1.0.0",
-    "@silvana-one/mina-utils": "^1.0.0",
-    "@silvana-one/prover": "^1.0.0",
-    "o1js": "2.3.0"
+    "@silvana-one/api": "^1.0.1",
+    "@silvana-one/mina-prover": "^1.0.1",
+    "@silvana-one/mina-utils": "^1.0.1",
+    "@silvana-one/prover": "^1.0.1",
+    "o1js": "2.4.0"
   },
   "c8": {
     "extension": [
