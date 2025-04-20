@@ -77,16 +77,29 @@ function apiHandlerInternal<T, V>(params: {
       req.headers["x-forwarded-for"]?.toString().split(",").shift() ||
       req.socket?.remoteAddress ||
       "0.0.0.0";
+    console.log("api ip", ip);
 
     if (await rateLimit({ name: "ipMemory", key: ip })) {
       return await reply(429, { error: "Too many requests" });
     }
 
     async function reply(status: number, json: { error: string } | V) {
-      //if (status !== 200) req.log.error("api reply", { status, json });
-      // if (await rateLimit({ name: "ipRedis", key: ip })) {
-      //   return await reply(429, { error: "Too many requests" });
-      // }
+      if (status !== 200) console.error("api reply", { status, json });
+      if (await rateLimit({ name: "ipRedis", key: ip })) {
+        return await reply(429, { error: "Too many requests" });
+      }
+      // Set CORS headers
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "*");
+      res.setHeader("Access-Control-Allow-Headers", "*");
+
+      // Set response status and send JSON
+      res.status(status).json(json);
+
+      const end = Date.now();
+      if (DEBUG) console.log("API response sent in", end - start, "ms");
+
+      return res;
     }
 
     try {
