@@ -9,6 +9,7 @@ import {
   saveToDA,
   ActionStatus,
   setSqlRequestStatus,
+  getDAMetadata,
 } from "@dex-agent/lib";
 import { deserializeIndexedMerkleMap } from "@silvana-one/storage";
 import { DEXMap, SequenceData } from "./types/provable-types.js";
@@ -30,6 +31,7 @@ import { fetchSequenceData } from "./fetch.js";
 import { ProofStatus, ProofStatusNames } from "@dex-agent/lib";
 import { Memory } from "@silvana-one/mina-utils";
 import { Cache } from "o1js";
+import { TransactionMetadata } from "@silvana-one/prover";
 const TIMEOUT = 2 * 60 * 1000; // 2 minutes
 let last_proved_block_number = 0;
 let last_proved_sequence = 0;
@@ -43,41 +45,86 @@ export async function prove(params: {
   endTime: number;
   cache: Cache;
 }): Promise<{
-  proofs_submitted: ProofResultSubmission[];
-  proofs_rejected: ProofResultSubmission[];
+  metadata: TransactionMetadata;
 }> {
   const { jobId, endTime, cache } = params;
   proofs = [];
   proofs_submitted = [];
   proofs_rejected = [];
   let nextJob: boolean = true;
-  while (Date.now() < endTime) {
+  while (Date.now() < endTime && nextJob) {
     nextJob = await proveIteration({ jobId, endTime, cache });
-    if (!nextJob || Date.now() > endTime) {
-      if (nextJob) await agentProve();
-      console.log("Awaiting proofs...");
-      console.time("Awaiting proofs...");
-      await Promise.all(proofs);
-      console.timeEnd("Awaiting proofs...");
-      console.log("Awaiting submissions...");
-      console.time("Awaiting submissions...");
-      const submissionsResults = await Promise.all(proofs_submitted);
-      console.timeEnd("Awaiting submissions...");
-      console.log("submissionsResults", submissionsResults);
-      return {
+  }
+  if (nextJob) await agentProve();
+  console.log("Awaiting proofs...");
+  console.time("Awaiting proofs...");
+  await Promise.all(proofs);
+  console.timeEnd("Awaiting proofs...");
+  console.log("Awaiting submissions...");
+  console.time("Awaiting submissions...");
+  const submissionsResults = await Promise.all(proofs_submitted);
+  console.timeEnd("Awaiting submissions...");
+  console.log("submissionsResults", submissionsResults);
+  const { chain, network } = await getDAMetadata();
+  return {
+    metadata: {
+      custom: {
+        task: "prove",
         proofs_submitted: submissionsResults.filter(
           (p) => p !== undefined
         ) as ProofResultSubmission[],
         proofs_rejected,
-      };
-    }
-  }
-  await agentProve();
-  return {
-    proofs_submitted: (await Promise.all(proofs_submitted)).filter(
-      (p) => p !== undefined
-    ) as ProofResultSubmission[],
-    proofs_rejected,
+      },
+      jobMetadata: {
+        proofs: [
+          ...submissionsResults
+            .filter((p) => p !== undefined)
+            .map((p) => ({
+              storage: {
+                chain,
+                network,
+                hash: p?.digest as string,
+              },
+              custom: { ...p, status: "submitted" },
+              linkId: p?.digest,
+            })),
+          ...proofs_rejected.map((p) => ({
+            storage: {
+              chain,
+              network,
+              hash: p?.digest as string,
+            },
+            custom: { ...p, status: "rejected" },
+            linkId: p?.digest,
+          })),
+        ],
+        proof_availability_txs: [
+          ...submissionsResults
+            .filter((p) => p !== undefined)
+            .map((p) => ({
+              chain,
+              network,
+              hash: p?.da as string,
+              custom: { ...p, status: "submitted" },
+              linkId: p?.digest,
+            })),
+        ],
+        coordination_txs: [
+          ...submissionsResults
+            .filter((p) => p !== undefined)
+            .map((p) => ({
+              chain: "sui" as "sui",
+              network: process.env.SUI_CHAIN as
+                | "devnet"
+                | "mainnet"
+                | "testnet",
+              hash: p?.digest as string,
+              custom: p,
+              linkId: p?.digest,
+            })),
+        ],
+      },
+    },
   };
 }
 

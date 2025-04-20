@@ -13,6 +13,7 @@ import {
   agentSettle,
   getConfig,
   blockCreationNeeded,
+  getDAMetadata,
 } from "@dex-agent/lib";
 import { compileDEXProgram } from "./compile.js";
 import {
@@ -28,6 +29,7 @@ import {
   rejectProof,
 } from "./proof.js";
 import { Memory } from "@silvana-one/mina-utils";
+import { TransactionMetadata } from "@silvana-one/prover";
 
 let proofs: Promise<void>[] = [];
 let proofs_submitted: Promise<ProofResultSubmission | undefined>[] = [];
@@ -42,9 +44,7 @@ export async function merge(params: {
   endTime: number;
   cache: Cache;
 }): Promise<{
-  proofs_submitted: ProofResultSubmission[];
-  proofs_verified: ProofResultSubmission[];
-  proofs_rejected: ProofResultSubmission[];
+  metadata: TransactionMetadata;
 }> {
   const { jobId, endTime, cache } = params;
   proofs = [];
@@ -52,35 +52,102 @@ export async function merge(params: {
   proofs_verified = [];
   proofs_rejected = [];
   let nextJob: boolean = true;
-  while (Date.now() < endTime) {
+  while (Date.now() < endTime && nextJob) {
     nextJob = await mergeIteration({ jobId, endTime, cache });
-    if (!nextJob || Date.now() > endTime) {
-      if (nextJob) await agentMerge();
-      console.log("Awaiting proofs...");
-      console.time("Awaiting proofs...");
-      await Promise.all(proofs);
-      console.timeEnd("Awaiting proofs...");
-      console.log("Awaiting submissions...");
-      console.time("Awaiting submissions...");
-      const submissionsResults = await Promise.all(proofs_submitted);
-      console.timeEnd("Awaiting submissions...");
-      console.log("submissionsResults", submissionsResults);
-      return {
-        proofs_submitted: submissionsResults.filter(
-          (p) => p !== undefined
-        ) as ProofResultSubmission[],
+  }
+  if (nextJob) await agentMerge();
+  console.log("Awaiting proofs...");
+  console.time("Awaiting proofs...");
+  await Promise.all(proofs);
+  console.timeEnd("Awaiting proofs...");
+  console.log("Awaiting submissions...");
+  console.time("Awaiting submissions...");
+  const submissionsResults = await Promise.all(proofs_submitted);
+  console.timeEnd("Awaiting submissions...");
+  console.log("submissionsResults", submissionsResults);
+  const { chain, network } = await getDAMetadata();
+  return {
+    metadata: {
+      custom: {
+        task: "merge",
         proofs_verified: proofs_verified,
         proofs_rejected: proofs_rejected,
-      };
-    }
-  }
-  await agentMerge();
-  return {
-    proofs_submitted: (await Promise.all(proofs_submitted)).filter(
-      (p) => p !== undefined
-    ) as ProofResultSubmission[],
-    proofs_verified: proofs_verified,
-    proofs_rejected,
+      },
+      jobMetadata: {
+        coordination_txs: [
+          ...submissionsResults
+            .filter((p) => p !== undefined && p.digest)
+            .map((p) => ({
+              chain: "sui" as "sui",
+              network: process.env.SUI_CHAIN as
+                | "devnet"
+                | "mainnet"
+                | "testnet",
+              hash: p?.digest as string,
+              custom: p,
+              linkId: p?.digest,
+            })),
+          ...proofs_rejected
+            .filter((p) => p !== undefined && p.digest)
+            .map((p) => ({
+              chain: "sui" as "sui",
+              network: process.env.SUI_CHAIN as
+                | "devnet"
+                | "mainnet"
+                | "testnet",
+              hash: p?.digest as string,
+              custom: p,
+              linkId: p.digest,
+            })),
+        ],
+        proofs: [
+          ...submissionsResults
+            .filter((p) => p !== undefined && p.da)
+            .map((p) => ({
+              storage: {
+                chain,
+                network,
+                hash: p?.da as string,
+              },
+              custom: { ...p, status: "submitted" },
+              linkId: p?.digest,
+            })),
+          ...proofs_rejected
+            .filter((p) => p !== undefined && p.da)
+            .map((p) => ({
+              storage: {
+                chain,
+                network,
+                hash: p?.da as string,
+              },
+              custom: { ...p, status: "rejected" },
+              linkId: p?.digest,
+            })),
+          ...proofs_verified
+            .filter((p) => p !== undefined && p.da)
+            .map((p) => ({
+              storage: {
+                chain,
+                network,
+                hash: p?.da as string,
+              },
+              custom: { ...p, status: "verified" },
+              linkId: p?.digest,
+            })),
+        ],
+        proof_availability_txs: [
+          ...proofs_verified
+            .filter((p) => p !== undefined && p.da)
+            .map((p) => ({
+              chain,
+              network,
+              hash: p?.da as string,
+              custom: { ...p, status: "submitted" },
+              linkId: p?.digest,
+            })),
+        ],
+      },
+    },
   };
 }
 
@@ -215,6 +282,7 @@ export async function mergeProofs(params: {
     const rejectProofResult = await rejectProof({
       blockNumber,
       sequences: proof1.sequences,
+      da: proof1.status.da_hash,
     });
     if (rejectProofResult) {
       proofs_rejected.push(rejectProofResult);
@@ -235,6 +303,7 @@ export async function mergeProofs(params: {
     const rejectProofResult = await rejectProof({
       blockNumber,
       sequences: proof2.sequences,
+      da: proof2.status.da_hash,
     });
     if (rejectProofResult) {
       proofs_rejected.push(rejectProofResult);
@@ -298,6 +367,7 @@ export async function mergeProofs(params: {
     sequences: proof1.sequences,
     type: "verify proof",
     dexID,
+    da: proof1.status.da_hash,
   });
   console.time("verify proof 2");
   const valid2 = await verify(sequenceState2.dexProof, vk);
@@ -464,6 +534,7 @@ async function proveSequenceInternal({
     const rejectProofResult = await rejectProof({
       blockNumber,
       sequences,
+      da: proof1.status.da_hash,
     });
     if (rejectProofResult) {
       proofs_rejected.push(rejectProofResult);

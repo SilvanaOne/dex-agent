@@ -5,9 +5,9 @@
   "author": "DFST",
   "bugs": "https://github.com/SilvanaOne/dex-agent/issues",
   "dependencies": {
-    "@mysten/sui": "^1.27.0",
+    "@mysten/sui": "^1.28.0",
     "@prisma/client": "^6.6.0",
-    "@silvana-one/api": "^1.0.1",
+    "@silvana-one/api": "^1.0.4",
     "js-sha256": "^0.11.0",
     "mina-signer": "^3.0.7",
     "nanoid": "^5.1.5",

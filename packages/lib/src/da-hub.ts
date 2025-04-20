@@ -57,3 +57,16 @@ export async function getDAUrl(params: { blobId: string }): Promise<string> {
     throw new Error("Invalid DA provider");
   }
 }
+
+export async function getDAMetadata(): Promise<
+  | { chain: "pinata"; network: "public" }
+  | { chain: "walrus"; network: "testnet" }
+> {
+  if (daProvider === "Walrus") {
+    return { chain: "walrus", network: "testnet" };
+  } else if (daProvider === "IPFS") {
+    return { chain: "pinata", network: "public" };
+  } else {
+    throw new Error("Invalid DA provider");
+  }
+}
