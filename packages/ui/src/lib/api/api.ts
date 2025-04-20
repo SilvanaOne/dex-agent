@@ -67,15 +67,15 @@ function apiHandlerInternal<T, V>(params: {
 
     async function reply(status: number, json: { error: string } | V) {
       if (status !== 200) console.error("api reply", { status, json });
+      console.error("api reply", { status, json });
       res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Access-Control-Allow-Methods", "*");
       res.setHeader("Access-Control-Allow-Headers", "*");
 
-      // Set response status and send JSON
-      res.status(status).json(json);
-
       const end = Date.now();
       if (DEBUG) console.log("API response sent in", end - start, "ms");
+      // Set response status and send JSON
+      res.status(status).json(json);
     }
 
     try {
