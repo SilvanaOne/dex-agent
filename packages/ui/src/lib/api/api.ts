@@ -98,8 +98,6 @@ function apiHandlerInternal<T, V>(params: {
 
       const end = Date.now();
       if (DEBUG) console.log("API response sent in", end - start, "ms");
-
-      return res;
     }
 
     try {
