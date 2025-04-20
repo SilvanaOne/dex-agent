@@ -15,11 +15,13 @@ export default apiHandler<ConfigInput, ConfigOutput>({
   handler: configHandler,
 });
 
-export async function configHandler(props: {
+async function configHandler(props: {
   params: ConfigInput;
   name: ApiName;
 }): Promise<ApiResponse<ConfigOutput>> {
   const configId = process.env.NEXT_PUBLIC_CONFIG_ID;
+  console.log("configId", configId, props);
+
   if (!configId) {
     return {
       status: 500,
