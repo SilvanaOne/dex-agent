@@ -291,6 +291,7 @@ public fun submit_proof(
     mergedSequences2: mergedSequences2,
     dexID: dexID,
     digest: digest,
+    da: blobId,
   };
   return result;
 }
@@ -298,8 +299,9 @@ public fun submit_proof(
 export async function rejectProof(params: {
   blockNumber: number;
   sequences: number[];
+  da?: string;
 }): Promise<ProofResultSubmission | undefined> {
-  const { blockNumber, sequences } = params;
+  const { blockNumber, sequences, da } = params;
   const { packageID, dexID } = await getIDs();
   if (!packageID || !dexID) {
     throw new Error("PACKAGE_ID or DEX_ID is not set");
@@ -359,6 +361,7 @@ public fun reject_proof(
     sequences: sequences,
     dexID: dexID,
     digest: digest,
+    da: da,
   };
   return result;
 }

@@ -725,5 +725,6 @@ export interface ProofResultSubmission {
   mergedSequences1?: number[];
   mergedSequences2?: number[];
   dexID: string;
+  da?: string;
   digest?: string;
 }

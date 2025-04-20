@@ -131,15 +131,7 @@ export class DEXAgent extends zkCloudWorker {
     });
     console.log("proveDex result", result);
     await this.cloud.publishTransactionMetadata({
-      txId: "dex:prove:" + this.cloud.jobId,
-      metadata: {
-        custom: {
-          task: "calculate proof",
-          submitted: result.proofs_submitted.length,
-          rejected: result.proofs_rejected.length,
-          ...result,
-        },
-      },
+      metadata: result.metadata,
     });
     console.timeEnd("proveDex");
     return this.stringifyJobResult({
@@ -156,16 +148,7 @@ export class DEXAgent extends zkCloudWorker {
     });
     console.log("mergeDex result", result);
     await this.cloud.publishTransactionMetadata({
-      txId: "dex:merge:" + this.cloud.jobId,
-      metadata: {
-        custom: {
-          task: "merge proofs",
-          submitted: result.proofs_submitted.length,
-          verified: result.proofs_verified.length,
-          rejected: result.proofs_rejected.length,
-          ...result,
-        },
-      },
+      metadata: result.metadata,
     });
     console.timeEnd("mergeDex");
     return this.stringifyJobResult({
@@ -189,15 +172,7 @@ export class DEXAgent extends zkCloudWorker {
         restart = result.restart;
         console.log("settleDex result", result);
         await this.cloud.publishTransactionMetadata({
-          txId: "dex:settle:" + this.cloud.jobId,
-          metadata: {
-            custom: {
-              task: "settle",
-              settlements_txs_number: result.settlements.length,
-              data_availability_txs_number: result.data_availability.length,
-              ...result,
-            },
-          },
+          metadata: result.metadata,
         });
       } catch (error) {
         console.error("Error in settleDex", error);

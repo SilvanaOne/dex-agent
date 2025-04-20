@@ -33,8 +33,10 @@ import {
   waitTx,
   blockCreationNeeded,
   checkBlockCreation,
+  getDAMetadata,
 } from "@dex-agent/lib";
 import { sleep } from "@silvana-one/storage";
+import { TransactionMetadata } from "@silvana-one/prover";
 import { checkMinaContractDeployment } from "./deploy.js";
 import { checkDataAvailability } from "./da.js";
 
@@ -69,8 +71,7 @@ interface DataAvailabilityTransaction {
 let data_availability: DataAvailabilityTransaction[] = [];
 
 export interface SettleResult {
-  settlements: SettlementTransaction[];
-  data_availability: DataAvailabilityTransaction[];
+  metadata: TransactionMetadata;
   nonce: number;
   restart: boolean;
 }
@@ -96,24 +97,61 @@ export async function settle(params: {
     throw new Error("nonce is not set");
   }
 
+  async function prepareResult(restart: boolean): Promise<SettleResult> {
+    const { chain, network } = await getDAMetadata();
+    return {
+      metadata: {
+        custom: {
+          task: "settle",
+        },
+        jobMetadata: {
+          settlement_txs: settlements.map((settlement) => ({
+            chain: "mina",
+            network: process.env.MINA_CHAIN as "devnet" | "mainnet",
+            hash: settlement.settlement_hash,
+            custom: settlement,
+            linkId: settlement.blockNumber.toString(),
+          })),
+          data_availability_txs: data_availability.map((da) => ({
+            chain: "sui",
+            network: process.env.SUI_CHAIN as "devnet" | "mainnet" | "testnet",
+            hash: da.data_availability_digest,
+            custom: da,
+            linkId: da.block_number.toString(),
+          })),
+          proof_availability_txs: settlements.map((settlement) => ({
+            chain,
+            network,
+            hash: settlement.proof_data_availability_digest,
+            custom: settlement,
+            linkId: settlement.blockNumber.toString(),
+          })),
+          proofs: settlements.map((settlement) => ({
+            storage: {
+              chain,
+              network,
+              hash: settlement.proof_data_availability,
+              custom: settlement,
+              linkId: settlement.blockNumber.toString(),
+            },
+            custom: settlement,
+            linkId: settlement.blockNumber.toString(),
+          })),
+        },
+      },
+      nonce,
+      restart,
+    };
+  }
+
   let nextJob: boolean = true;
   while (Date.now() < endTime) {
     nextJob = await settleIteration({ jobId, endTime, cache, chain });
     if (!nextJob || Date.now() > endTime) {
-      return {
-        settlements,
-        data_availability,
-        nonce,
-        restart: nextJob,
-      };
+      return await prepareResult(nextJob);
     }
   }
-  return {
-    settlements,
-    data_availability,
-    nonce,
-    restart: true,
-  };
+  return await prepareResult(true);
 }
 
 async function settleIteration(params: {
