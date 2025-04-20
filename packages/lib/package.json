@@ -7,7 +7,7 @@
   "dependencies": {
     "@mysten/sui": "^1.28.0",
     "@prisma/client": "^6.6.0",
-    "@silvana-one/api": "^1.0.4",
+    "@silvana-one/api": "^1.0.6",
     "js-sha256": "^0.11.0",
     "mina-signer": "^3.0.7",
     "nanoid": "^5.1.5",
