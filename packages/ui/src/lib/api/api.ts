@@ -18,26 +18,8 @@ initializeMemoryRateLimiter({
   duration: 60,
 });
 
-initializeRedisRateLimiter({
-  name: "ipRedis",
-  points: 120,
-  duration: 60,
-});
-
-initializeRedisRateLimiter({
-  name: "base64",
-  points: 20,
-  duration: 60 * 60 * 24, // 1 day
-});
-
 initializeMemoryRateLimiter({
   name: "apiMemory",
-  points: 120,
-  duration: 60,
-});
-
-initializeRedisRateLimiter({
-  name: "apiRedis",
   points: 120,
   duration: 60,
 });
@@ -85,10 +67,6 @@ function apiHandlerInternal<T, V>(params: {
 
     async function reply(status: number, json: { error: string } | V) {
       if (status !== 200) console.error("api reply", { status, json });
-      if (await rateLimit({ name: "ipRedis", key: ip })) {
-        return await reply(429, { error: "Too many requests" });
-      }
-      // Set CORS headers
       res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Access-Control-Allow-Methods", "*");
       res.setHeader("Access-Control-Allow-Headers", "*");
