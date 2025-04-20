@@ -18,11 +18,11 @@ initializeMemoryRateLimiter({
   duration: 60,
 });
 
-initializeMemoryRateLimiter({
-  name: "apiMemory",
-  points: 120,
-  duration: 60,
-});
+// initializeMemoryRateLimiter({
+//   name: "apiMemory",
+//   points: 120,
+//   duration: 60,
+// });
 
 export function apiHandler<T, V>(params: {
   name: ApiName;
