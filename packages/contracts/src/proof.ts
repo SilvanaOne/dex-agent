@@ -369,7 +369,7 @@ public fun reject_proof(
 export async function submitMinaTx(params: {
   blockNumber: number;
   minaTx: string;
-}): Promise<void> {
+}): Promise<string | undefined> {
   console.log("Submitting mina tx hash to sui contract", params);
   const { blockNumber, minaTx } = params;
   const { packageID, dexID } = await getIDs();
@@ -425,6 +425,7 @@ export async function submitMinaTx(params: {
   }
   console.log("Mina tx submitted successfully:", digest);
   await agentMonitor({ blockNumber });
+  return digest;
 }
 
 export async function submitMinaTxInclusion(params: {

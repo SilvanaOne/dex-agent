@@ -34,6 +34,7 @@ import {
   blockCreationNeeded,
   checkBlockCreation,
   getDAMetadata,
+  saveToDA,
 } from "@dex-agent/lib";
 import { sleep } from "@silvana-one/storage";
 import { TransactionMetadata } from "@silvana-one/prover";
@@ -49,7 +50,7 @@ let vkContract: VerificationKey | undefined = undefined;
 let vkProgram: VerificationKey | undefined = undefined;
 let nonce: number = 0;
 
-export interface SettlementTransaction {
+interface SettlementTransaction {
   blockNumber: number;
   number_of_transactions: number;
   sequences: number[];
@@ -57,6 +58,8 @@ export interface SettlementTransaction {
   nonce: number;
   proof_data_availability: string;
   proof_data_availability_digest: string;
+  au_proof_data_availability?: string;
+  coordination_hash?: string;
 }
 
 let settlements: SettlementTransaction[] = [];
@@ -113,30 +116,81 @@ export async function settle(params: {
             linkId: settlement.blockNumber.toString(),
           })),
           data_availability_txs: data_availability.map((da) => ({
-            chain: "sui",
-            network: process.env.SUI_CHAIN as "devnet" | "mainnet" | "testnet",
-            hash: da.data_availability_digest,
+            chain,
+            network,
+            hash: da.data_availability,
             custom: da,
             linkId: da.block_number.toString(),
           })),
           proof_availability_txs: settlements.map((settlement) => ({
             chain,
             network,
-            hash: settlement.proof_data_availability_digest,
+            hash: settlement.proof_data_availability,
             custom: settlement,
             linkId: settlement.blockNumber.toString(),
           })),
-          proofs: settlements.map((settlement) => ({
-            storage: {
-              chain,
-              network,
-              hash: settlement.proof_data_availability,
+          proofs: [
+            ...settlements.map((settlement) => ({
+              storage: {
+                chain,
+                network,
+                hash: settlement.proof_data_availability,
+                custom: settlement,
+                linkId: settlement.blockNumber.toString(),
+              },
               custom: settlement,
               linkId: settlement.blockNumber.toString(),
-            },
-            custom: settlement,
-            linkId: settlement.blockNumber.toString(),
-          })),
+            })),
+            ...settlements
+              .filter((settlement) => settlement.au_proof_data_availability)
+              .map((settlement) => ({
+                storage: {
+                  chain,
+                  network,
+                  hash: settlement.au_proof_data_availability as string,
+                  custom: settlement,
+                  linkId: settlement.blockNumber.toString(),
+                },
+                custom: { type: "AccountUpdates proofs", ...settlement },
+                linkId: settlement.blockNumber.toString(),
+              })),
+          ],
+          coordination_txs: [
+            ...data_availability.map((da) => ({
+              chain: "sui" as "sui",
+              network: process.env.SUI_CHAIN as
+                | "devnet"
+                | "mainnet"
+                | "testnet",
+              hash: da.data_availability_digest,
+              custom: da,
+              linkId: da.block_number.toString(),
+            })),
+            ...settlements.map((settlement) => ({
+              chain: "sui" as "sui",
+              network: process.env.SUI_CHAIN as
+                | "devnet"
+                | "mainnet"
+                | "testnet",
+              hash: settlement.proof_data_availability_digest,
+              custom: settlement,
+              linkId: settlement.blockNumber.toString(),
+            })),
+            ...settlements
+              .filter(
+                (settlement) => settlement.coordination_hash !== undefined
+              )
+              .map((settlement) => ({
+                chain: "sui" as "sui",
+                network: process.env.SUI_CHAIN as
+                  | "devnet"
+                  | "mainnet"
+                  | "testnet",
+                hash: settlement.coordination_hash as string,
+                custom: settlement,
+                linkId: settlement.blockNumber.toString(),
+              })),
+          ],
         },
       },
       nonce,
@@ -476,24 +530,35 @@ export async function settleMinaContract(params: {
       }
     );
     await tx.prove();
+    const auProofs = tx?.transaction?.accountUpdates
+      .map((au) => au?.authorization?.proof)
+      .filter((p) => p !== undefined);
     const sentTx = await sendTx({
       tx: tx.sign([adminPrivateKey]),
       description: "settle",
       wait: false,
       verbose: true,
     });
+
     if (sentTx?.status !== expectedTxStatus) {
       console.error("sentTx", sentTx);
       throw new Error(`Deploy DEX Contract failed: ${sentTx?.status}`);
     }
     nonce++;
     const hash = sentTx?.hash;
+    const auPromise = saveToDA({
+      data: sentTx.toJSON(),
+      description: "settle",
+      days: 50,
+      filename: "settleTx.json",
+    });
 
     Memory.info("sent Mina Tx");
-    await submitMinaTx({
+    const coordinationHash = await submitMinaTx({
       blockNumber,
       minaTx: hash,
     });
+    const au = await auPromise;
     settling = false;
     console.timeEnd("settle");
     return {
@@ -504,6 +569,8 @@ export async function settleMinaContract(params: {
       nonce,
       proof_data_availability: submitted?.blobId,
       proof_data_availability_digest: submitted?.digest,
+      au_proof_data_availability: au,
+      coordination_hash: coordinationHash,
     };
   } catch (e: any) {
     console.error("Error in settleMinaContract", e.message);

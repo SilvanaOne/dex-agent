@@ -78,25 +78,27 @@ export async function prove(params: {
       jobMetadata: {
         proofs: [
           ...submissionsResults
-            .filter((p) => p !== undefined)
+            .filter((p) => p !== undefined && p?.da !== undefined)
             .map((p) => ({
               storage: {
                 chain,
                 network,
-                hash: p?.digest as string,
+                hash: p?.da as string,
               },
               custom: { ...p, status: "submitted" },
               linkId: p?.digest,
             })),
-          ...proofs_rejected.map((p) => ({
-            storage: {
-              chain,
-              network,
-              hash: p?.digest as string,
-            },
-            custom: { ...p, status: "rejected" },
-            linkId: p?.digest,
-          })),
+          ...proofs_rejected
+            .filter((p) => p !== undefined && p?.da !== undefined)
+            .map((p) => ({
+              storage: {
+                chain,
+                network,
+                hash: p?.da as string,
+              },
+              custom: { ...p, status: "rejected" },
+              linkId: p?.digest,
+            })),
         ],
         proof_availability_txs: [
           ...submissionsResults
