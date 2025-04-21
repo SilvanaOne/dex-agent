@@ -34,6 +34,7 @@ import {
   blockCreationNeeded,
   checkBlockCreation,
   getDAMetadata,
+  saveToDA,
 } from "@dex-agent/lib";
 import { sleep } from "@silvana-one/storage";
 import { TransactionMetadata } from "@silvana-one/prover";
@@ -57,7 +58,7 @@ interface SettlementTransaction {
   nonce: number;
   proof_data_availability: string;
   proof_data_availability_digest: string;
-  au_proofs: string[];
+  au_proof_data_availability?: string;
   coordination_hash?: string;
 }
 
@@ -140,13 +141,19 @@ export async function settle(params: {
               custom: settlement,
               linkId: settlement.blockNumber.toString(),
             })),
-            ...settlements.flatMap((settlement) =>
-              settlement.au_proofs.map((p) => ({
-                proof: p,
-                custom: settlement,
+            ...settlements
+              .filter((settlement) => settlement.au_proof_data_availability)
+              .map((settlement) => ({
+                storage: {
+                  chain,
+                  network,
+                  hash: settlement.au_proof_data_availability as string,
+                  custom: settlement,
+                  linkId: settlement.blockNumber.toString(),
+                },
+                custom: { type: "AccountUpdates proofs", ...settlement },
                 linkId: settlement.blockNumber.toString(),
-              }))
-            ),
+              })),
           ],
           coordination_txs: [
             ...data_availability.map((da) => ({
@@ -532,18 +539,26 @@ export async function settleMinaContract(params: {
       wait: false,
       verbose: true,
     });
+
     if (sentTx?.status !== expectedTxStatus) {
       console.error("sentTx", sentTx);
       throw new Error(`Deploy DEX Contract failed: ${sentTx?.status}`);
     }
     nonce++;
     const hash = sentTx?.hash;
+    const auPromise = saveToDA({
+      data: sentTx.toJSON(),
+      description: "settle",
+      days: 50,
+      filename: "settleTx.json",
+    });
 
     Memory.info("sent Mina Tx");
     const coordinationHash = await submitMinaTx({
       blockNumber,
       minaTx: hash,
     });
+    const au = await auPromise;
     settling = false;
     console.timeEnd("settle");
     return {
@@ -554,7 +569,7 @@ export async function settleMinaContract(params: {
       nonce,
       proof_data_availability: submitted?.blobId,
       proof_data_availability_digest: submitted?.digest,
-      au_proofs: auProofs,
+      au_proof_data_availability: au,
       coordination_hash: coordinationHash,
     };
   } catch (e: any) {

@@ -7,7 +7,10 @@ interface ConfigInput {
 }
 
 interface ConfigOutput {
+  chain: "sui";
+  network: "devnet" | "testnet" | "mainnet";
   configId: string;
+  versions: string[];
 }
 
 export default apiHandler<ConfigInput, ConfigOutput>({
@@ -31,7 +34,10 @@ async function configHandler(props: {
   return {
     status: 200,
     json: {
+      chain: "sui",
+      network: "devnet",
       configId,
+      versions: ["0.1.0"],
     },
   };
 }
