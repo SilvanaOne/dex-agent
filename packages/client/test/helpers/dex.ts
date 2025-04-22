@@ -50,6 +50,7 @@ export function createInitialState(): DexObjects {
     name: "Alice",
     image:
       "https://www.publicdomainpictures.net/pictures/600000/velka/alice-in-wonderland-1711694002aRI.jpg",
+    privateKey: process.env.ALICE_PRIVATE_KEY,
   });
   const bob = createUser({
     name: "Bob",
