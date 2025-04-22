@@ -9,7 +9,7 @@ describe("Get Config ID", async () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        version: "1.0.0",
+        version: "0.1.0",
       }),
     });
     if (!config.ok) {
