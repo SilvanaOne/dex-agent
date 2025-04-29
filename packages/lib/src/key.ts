@@ -1,5 +1,9 @@
 import { CoinBalance } from "@mysten/sui/client";
-import { getFaucetHost, requestSuiFromFaucetV1 } from "@mysten/sui/faucet";
+import {
+  getFaucetHost,
+  requestSuiFromFaucetV1,
+  requestSuiFromFaucetV2,
+} from "@mysten/sui/faucet";
 import { MIST_PER_SUI } from "@mysten/sui/utils";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Secp256k1Keypair } from "@mysten/sui/keypairs/secp256k1";
@@ -66,13 +70,13 @@ export async function getKey(params: {
       while (!received && attempts < maxAttempts) {
         attempts++;
         try {
-          const tx = await requestSuiFromFaucetV1({
+          const tx = await requestSuiFromFaucetV2({
             host: getFaucetHost(network),
             recipient: address,
           });
-          console.log("Faucet tx task:", tx.task);
-          if (tx.error) {
-            console.error("Faucet tx error:", tx.error);
+          console.log("Faucet tx task:", tx.status, address);
+          if (tx.status !== "Success") {
+            console.error("Faucet tx error:", tx.status);
           }
           received = true;
         } catch (error: any) {
