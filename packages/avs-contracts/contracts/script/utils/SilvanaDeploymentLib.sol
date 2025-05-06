@@ -128,7 +128,7 @@ library SilvanaDeploymentLib {
     function writeDeploymentJson(
         DeploymentData memory data
     ) internal {
-        writeDeploymentJson("deployments/hello-world/", block.chainid, data);
+        writeDeploymentJson("deployments/silvana/", block.chainid, data);
     }
 
     function writeDeploymentJson(

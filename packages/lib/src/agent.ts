@@ -132,10 +132,12 @@ async function dexProverRequest(params: {
     | "monitor"
     | "proveAccount"
     | "sqlRequest"
-    | "sqlProcessing";
+    | "sqlProcessing"
+    | "metadata";
   metadata?: string;
   args?: string;
   mode?: "async" | "sync";
+  command?: string;
 }) {
   const chain = process.env.NEXT_PUBLIC_MINA_CHAIN || process.env.MINA_CHAIN;
   if (!chain) {
@@ -144,9 +146,9 @@ async function dexProverRequest(params: {
   if (chain !== "devnet" && chain !== "zeko" && chain !== "mainet") {
     throw new Error("MINA_CHAIN is not valid");
   }
-  const { task, metadata = task, args, mode } = params;
+  const { task, metadata = task, args, mode, command } = params;
   const answer = await silvanaProverRequest({
-    command: "execute",
+    command: command ?? "execute",
     developer: "DFST",
     repo: "dex-agent",
     transactions: [],
@@ -179,8 +181,37 @@ export async function dexProverResult(params: { jobId: string }) {
   return answer;
 }
 
+export async function agentMetadata(params: {
+  txId?: string;
+  metadata: object;
+  jobId: string;
+  result: string;
+  timeFinished: number;
+  timeCreated: number;
+  description: string;
+}) {
+  const chain = process.env.NEXT_PUBLIC_MINA_CHAIN || process.env.MINA_CHAIN;
+  if (!chain) {
+    throw new Error("MINA_CHAIN is not set");
+  }
+  if (chain !== "devnet" && chain !== "zeko" && chain !== "mainet") {
+    throw new Error("MINA_CHAIN is not valid");
+  }
+  const answer = await silvanaProverRequest({
+    command: "metadata",
+    data: { ...params, developer: "DFST", repo: "dex-agent" },
+    transactions: [],
+    developer: "DFST",
+    repo: "dex-agent",
+    jobId: params.jobId,
+    chain,
+  });
+  return answer;
+}
+
 export async function silvanaProverRequest(params: {
   command: string;
+  data?: object;
   task?: string;
   transactions?: string[];
   args?: string;
@@ -207,12 +238,13 @@ export async function silvanaProverRequest(params: {
       developer,
       repo,
       chain,
+      data,
     } = params;
     const apiData = {
       auth: "M6t4jtbBAFFXhLERHQWyEB9JA9xi4cWqmYduaCXtbrFjb7yaY7TyaXDunKDJNiUTBEcyUomNXJgC",
       command: command,
       jwtToken: JWT,
-      data: {
+      data: data ?? {
         task,
         transactions: transactions ?? [],
         args: args ?? "",
@@ -237,8 +269,8 @@ export async function silvanaProverRequest(params: {
     if (!response.ok) {
       throw new Error(`Failed to fetch from ${endpoint}`);
     }
-    const data = await response.json();
-    return data;
+    const result = await response.json();
+    return result;
   } catch (error: any) {
     console.error("Error in silvanaProverRequest", error.message);
   }

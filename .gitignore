@@ -13,6 +13,7 @@ env.json
 .env
 .env.test
 .env.local
+.env.avs.*
 .DS_Store
 yarn-error.log
 node_modules/

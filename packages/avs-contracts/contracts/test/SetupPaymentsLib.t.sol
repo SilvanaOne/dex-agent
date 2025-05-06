@@ -4,15 +4,15 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import "../script/utils/SetupDistributionsLib.sol";
 import "../script/utils/CoreDeploymentParsingLib.sol";
-import "../script/utils/silvanaDeploymentLib.sol";
+import "../script/utils/SilvanaDeploymentLib.sol";
 import "@eigenlayer/contracts/interfaces/IRewardsCoordinator.sol";
 import "../src/IsilvanaServiceManager.sol";
 import "@eigenlayer/contracts/interfaces/IStrategy.sol";
 import "@eigenlayer/contracts/libraries/Merkle.sol";
 import "../script/DeployEigenLayerCore.s.sol";
-import "../script/silvanaDeployer.s.sol";
+import "../script/SilvanaDeployer.s.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
-import {silvanaTaskManagerSetup} from "test/silvanaServiceManager.t.sol";
+import {SilvanaTaskManagerSetup} from "test/silvanaServiceManager.t.sol";
 import {ECDSAServiceManagerBase} from
     "@eigenlayer-middleware/src/unaudited/ECDSAServiceManagerBase.sol";
 import {
@@ -32,13 +32,13 @@ contract TestConstants {
     uint256 NUM_EARNERS = 4;
 }
 
-contract SetupDistributionsLibTest is Test, TestConstants, silvanaTaskManagerSetup {
+contract SetupDistributionsLibTest is Test, TestConstants, SilvanaTaskManagerSetup {
     using SetupDistributionsLib for *;
 
     Vm cheats = Vm(VM_ADDRESS);
 
     IRewardsCoordinator public rewardsCoordinator;
-    IsilvanaServiceManager public silvanaServiceManager;
+    ISilvanaServiceManager public silvanaServiceManager;
     IStrategy public strategy;
 
     address rewardsInitiator = address(1);
@@ -62,7 +62,7 @@ contract SetupDistributionsLibTest is Test, TestConstants, silvanaTaskManagerSet
             IECDSAStakeRegistryTypes.StrategyParams({strategy: strategy, multiplier: 10_000})
         );
 
-        silvanaDeployment = silvanaDeploymentLib.deployContracts(
+        silvanaDeployment = SilvanaDeploymentLib.deployContracts(
             proxyAdmin, coreDeployment, quorum, rewardsInitiator, rewardsOwner
         );
         labelContracts(coreDeployment, silvanaDeployment);

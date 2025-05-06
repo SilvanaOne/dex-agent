@@ -41,7 +41,7 @@ contract SilvanaDeployer is Script, Test {
         vm.label(deployer, "Deployer");
 
         silvanaConfig =
-            SilvanaDeploymentLib.readDeploymentConfigValues("config/hello-world/", block.chainid);
+            SilvanaDeploymentLib.readDeploymentConfigValues("config/silvana/", block.chainid);
 
         coreDeployment =
             CoreDeploymentParsingLib.readDeploymentJson("deployments/core/", block.chainid);

@@ -20,7 +20,7 @@ import {TransparentUpgradeableProxy} from
  * @title Primary entrypoint for procuring services from Silvana.
  * @author Eigen Labs, Inc.
  */
-contract SilvanaManager is ECDSAServiceManagerBase, ISilvanaServiceManager {
+contract SilvanaServiceManager is ECDSAServiceManagerBase, ISilvanaServiceManager {
     using ECDSAUpgradeable for bytes32;
 
     uint32 public latestTaskNum;

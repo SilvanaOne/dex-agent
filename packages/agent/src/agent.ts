@@ -123,6 +123,9 @@ export class DEXAgent extends zkCloudWorker {
   }
 
   private async proveDex(): Promise<string> {
+    return this.stringifyJobResult({
+      success: true,
+    });
     console.time("proveDex");
     const result = await prove({
       jobId: this.cloud.jobId,
@@ -140,6 +143,9 @@ export class DEXAgent extends zkCloudWorker {
   }
 
   private async mergeDex(): Promise<string> {
+    return this.stringifyJobResult({
+      success: true,
+    });
     console.time("mergeDex");
     const result = await merge({
       jobId: this.cloud.jobId,
