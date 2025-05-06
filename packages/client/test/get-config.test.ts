@@ -17,6 +17,7 @@ describe("Get Config ID", async () => {
     } else {
       const configData = await config.json();
       console.log(configData);
+      console.log(configData?.configId);
       assert.ok(configData, "config is not set");
     }
   });

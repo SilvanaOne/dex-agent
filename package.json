@@ -1,7 +1,7 @@
 {
   "name": "dex-agent",
   "description": "DEX example",
-  "version": "0.4.8",
+  "version": "0.4.10",
   "author": "DFST",
   "license": "Apache-2.0",
   "private": true,
@@ -22,7 +22,8 @@
     "packages/ui",
     "packages/lib",
     "packages/contracts",
-    "packages/agent"
+    "packages/agent",
+    "packages/avs"
   ],
   "packageManager": "npm@11.3.0",
   "dependencies": {
