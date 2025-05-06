@@ -114,6 +114,13 @@ export async function executeTx(params: {
         client: suiClient,
       });
       start = Date.now();
+      // const dryRun = await suiClient.devInspectTransactionBlock({
+      //   sender: keypair.toSuiAddress(),
+      //   transactionBlock: signedTx.bytes
+      // });
+      // dryRun.effects.gasUsed.computationCost
+      // const gasPrice = await suiClient.getReferenceGasPrice();
+
       executedTx = await suiClient.executeTransactionBlock({
         transactionBlock: signedTx.bytes,
         signature: signedTx.signature,
