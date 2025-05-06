@@ -17,7 +17,22 @@ const FETCH_INTERVAL = 1000 * 60 * 10; // 10 minutes
 export async function getConfig(configID?: string): Promise<DexConfig> {
   if (dexConfig && timeFetched > Date.now() - FETCH_INTERVAL) return dexConfig;
   if (!configID) {
-    configID = process.env.NEXT_PUBLIC_CONFIG_ID ?? process.env.CONFIG_ID;
+    //configID = process.env.NEXT_PUBLIC_CONFIG_ID ?? process.env.CONFIG_ID;
+    const config = await fetch("https://dex.silvana.dev/api/v1/config", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        version: "0.1.0",
+      }),
+    });
+    if (!config.ok) {
+      console.error("Cannot get config", config.status, config.statusText);
+    } else {
+      const configData = await config.json();
+      configID = configData?.configId;
+    }
   }
   if (!configID) {
     throw new Error("CONFIG_ID is not set");

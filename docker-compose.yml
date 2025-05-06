@@ -1,0 +1,20 @@
+services:
+  prove:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.avs.testnet
+    command: ["npm", "run", "prove"]
+
+  register:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.avs.testnet
+    command: ["npm", "run", "register"]

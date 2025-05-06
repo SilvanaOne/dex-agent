@@ -46,6 +46,7 @@ export async function prove(params: {
   cache: Cache;
 }): Promise<{
   metadata: TransactionMetadata;
+  count: number;
 }> {
   const { jobId, endTime, cache } = params;
   proofs = [];
@@ -67,6 +68,7 @@ export async function prove(params: {
   console.log("submissionsResults", submissionsResults);
   const { chain, network } = await getDAMetadata();
   return {
+    count: proofs_rejected.length + proofs_submitted.length + proofs.length,
     metadata: {
       custom: {
         task: "prove",

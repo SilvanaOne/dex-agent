@@ -1,31 +1,42 @@
 {
   "name": "dex-agent",
   "description": "DEX example",
-  "version": "0.4.8",
+  "version": "0.4.11",
   "author": "DFST",
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "prove": "npm run prove -w packages/avs-operator",
+    "register": "npm run register -w packages/avs-operator",
+    "avs:prove": "docker compose up prover",
+    "avs:register": "docker compose up register",
+    "avs:build": "docker build -t silvana-avs .",
+    "avs:run": "docker run --rm --env-file packages/avs-operator/.env -p 3000:3000 silvana-avs:latest",
+    "avs:stop": "docker stop silvana-avs",
     "run:ui": "cd packages/ui && npm run dev",
     "build": "npm run build -w packages/lib && npm run build -w packages/contracts && npm run build -w packages/ui",
+    "build:avs": "npm run build -w packages/lib && npm run build -w packages/contracts",
     "build:ui": "npm run build -w packages/lib && npm run build -w packages/ui",
     "build:root": "rm -rf dist && tsc",
     "build:agent": "corepack npm run build -w packages/lib && corepack npm run build -w packages/contracts && corepack npm run build -w packages/agent && corepack npm run build:root",
-    "deploy:agent": "npm run build:agent && silvana deploy --exclude 'packages/ui' --repo dex-agent",
+    "deploy:agent": "npm run build:agent && silvana deploy --exclude 'packages/ui' 'packages/avs-contracts' 'packages/avs-operator' --repo dex-agent",
     "run:agent": "node --loader=ts-node/esm --enable-source-maps index.ts",
     "run:worker": "node dist/index.js",
     "update": "ncu -u -i --root -ws"
+    
   },
   "workspaces": [
     "packages/client",
     "packages/ui",
     "packages/lib",
     "packages/contracts",
-    "packages/agent"
+    "packages/agent",
+    "packages/avs-operator",
+    "packages/avs-contracts"
   ],
   "packageManager": "npm@11.3.0",
   "dependencies": {
-    "@dex-agent/agent": "workspace:*"
+    "@dex-agent/agent": "file:packages/agent"
   }
 }
