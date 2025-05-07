@@ -4,9 +4,11 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start:dev":"NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps -r dotenv/config --require dotenv/config  --env-file=.env src/index.ts",
-    "prove":"NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps src/prove.ts",
-    "register":"NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps src/register.ts"
+    "start:dev": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps -r dotenv/config --require dotenv/config  --env-file=.env src/index.ts",
+    "prove": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps src/prove.ts",
+    "register": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps src/register.ts",
+    "task": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps -r dotenv/config --require dotenv/config  --env-file=../../.env.avs.testnet src/task.ts",
+    "key": "NODE_NO_WARNINGS=1 node --loader=ts-node/esm --enable-source-maps src/key.ts"
   },
   "dependencies": {
     "@dex-agent/contracts": "^0.1.0",

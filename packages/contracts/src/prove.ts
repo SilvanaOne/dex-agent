@@ -57,15 +57,18 @@ export async function prove(params: {
     nextJob = await proveIteration({ jobId, endTime, cache });
   }
   if (nextJob) await agentProve();
-  console.log("Awaiting proofs...");
-  console.time("Awaiting proofs...");
-  await Promise.all(proofs);
-  console.timeEnd("Awaiting proofs...");
-  console.log("Awaiting submissions...");
-  console.time("Awaiting submissions...");
-  const submissionsResults = await Promise.all(proofs_submitted);
-  console.timeEnd("Awaiting submissions...");
-  console.log("submissionsResults", submissionsResults);
+  if (proofs.length > 0) {
+    console.time("Awaiting proofs...");
+    await Promise.all(proofs);
+    console.timeEnd("Awaiting proofs...");
+  }
+  let submissionsResults: (ProofResultSubmission | undefined)[] = [];
+  if (proofs_submitted.length > 0) {
+    console.time("Awaiting submissions...");
+    submissionsResults = await Promise.all(proofs_submitted);
+    console.timeEnd("Awaiting submissions...");
+    console.log("submissionsResults", submissionsResults);
+  }
   const { chain, network } = await getDAMetadata();
   return {
     count: proofs_rejected.length + proofs_submitted.length + proofs.length,
@@ -178,18 +181,18 @@ async function proveIteration(params: {
     blockNumber <= current_block_number;
     blockNumber++
   ) {
-    console.log(`Fetching block ${blockNumber} proofs...`);
+    //console.log(`Fetching block ${blockNumber} proofs...`);
     const blockProofs = await fetchBlockProofs({
       blockNumber,
     });
-    console.log("blockProofs", {
-      blockNumber,
-      blockLength: blockProofs.proofs.length,
-      isFinished: blockProofs.isFinished,
-      startSequence: blockProofs.startSequence,
-      endSequence: blockProofs.endSequence,
-    });
     if (!blockProofs.isFinished) {
+      console.log("blockProofs", {
+        blockNumber,
+        blockLength: blockProofs.proofs.length,
+        isFinished: blockProofs.isFinished,
+        startSequence: blockProofs.startSequence,
+        endSequence: blockProofs.endSequence,
+      });
       let startSequence = blockProofs.startSequence;
       const maxSequence = blockProofs.endSequence ?? current_sequence;
 
