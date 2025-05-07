@@ -57,15 +57,18 @@ export async function merge(params: {
     nextJob = await mergeIteration({ jobId, endTime, cache });
   }
   if (nextJob) await agentMerge();
-  console.log("Awaiting proofs...");
-  console.time("Awaiting proofs...");
-  await Promise.all(proofs);
-  console.timeEnd("Awaiting proofs...");
-  console.log("Awaiting submissions...");
-  console.time("Awaiting submissions...");
-  const submissionsResults = await Promise.all(proofs_submitted);
-  console.timeEnd("Awaiting submissions...");
-  console.log("submissionsResults", submissionsResults);
+  if (proofs.length > 0) {
+    console.time("Awaiting merged proofs...");
+    await Promise.all(proofs);
+    console.timeEnd("Awaiting merged proofs...");
+  }
+  let submissionsResults: (ProofResultSubmission | undefined)[] = [];
+  if (proofs_submitted.length > 0) {
+    console.time("Awaiting submissions...");
+    submissionsResults = await Promise.all(proofs_submitted);
+    console.timeEnd("Awaiting submissions...");
+    console.log("submissionsResults", submissionsResults);
+  }
   const { chain, network } = await getDAMetadata();
   return {
     count: proofs_rejected.length + proofs_submitted.length + proofs.length,

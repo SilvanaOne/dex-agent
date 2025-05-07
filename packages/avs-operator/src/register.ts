@@ -1,11 +1,8 @@
 import { ethers } from "ethers";
-//import * as dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-
-//dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -111,6 +108,14 @@ const registerOperator = async () => {
   };
 
   // Calculate the digest hash, which is a unique value representing the operator, avs, unique value (salt) and expiration date.
+  console.log("Calculating operator digest hash");
+  console.log("wallet.address", wallet.address);
+  console.log(
+    "silvanaServiceManager.getAddress()",
+    await silvanaServiceManager.getAddress()
+  );
+  console.log("salt", salt);
+  console.log("expiry", expiry);
   const operatorDigestHash =
     await avsDirectory.calculateOperatorAVSRegistrationDigestHash(
       wallet.address,

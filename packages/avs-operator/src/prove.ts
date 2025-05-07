@@ -1,11 +1,9 @@
 import { ethers } from "ethers";
-//import * as dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { avs } from "@dex-agent/contracts";
-//dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,7 +17,7 @@ if (!Object.keys(process.env).length) {
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
 /// TODO: Hack
-let chainId = 31337;
+let chainId = 17000;
 
 const avsDeploymentData = JSON.parse(
   fs.readFileSync(
@@ -30,14 +28,6 @@ const avsDeploymentData = JSON.parse(
 
 const silvanaServiceManagerAddress =
   avsDeploymentData.addresses.silvanaServiceManager;
-
-// Load ABIs
-const delegationManagerABI = JSON.parse(
-  fs.readFileSync(
-    path.resolve(__dirname, "../abis/IDelegationManager.json"),
-    "utf8"
-  )
-);
 
 const silvanaServiceManagerABI = JSON.parse(
   fs.readFileSync(
@@ -57,7 +47,7 @@ const signAndRespondToTask = async (
   taskCreatedBlock: number,
   taskName: string
 ) => {
-  const message = `executed: ${taskName}`;
+  const message = `Hello, ${taskName}`;
   const messageHash = ethers.solidityPackedKeccak256(["string"], [message]);
   const messageBytes = ethers.getBytes(messageHash);
   const signature = await wallet.signMessage(messageBytes);
@@ -71,13 +61,27 @@ const signAndRespondToTask = async (
     [operators, signatures, taskCreatedBlock]
   );
 
-  const tx = await silvanaServiceManager.respondToTask(
-    { name: taskName, taskCreatedBlock: taskCreatedBlock },
-    taskIndex,
-    signedTask
-  );
-  await tx.wait();
-  console.log(`Responded to task.`);
+  console.log(`Task name: ${taskName}`);
+  console.log(`Task created block: ${taskCreatedBlock}`);
+  console.log(`Signed task: ${signedTask}`);
+  console.log(`Task index: ${taskIndex}`);
+  console.log("Contract address", silvanaServiceManagerAddress);
+
+  try {
+    const tx = await silvanaServiceManager.respondToTask(
+      { name: taskName, taskCreatedBlock: taskCreatedBlock },
+      taskIndex,
+      signedTask
+    );
+    const receipt = await tx.wait();
+
+    console.log(
+      `Transaction for task ${taskName} successful with hash: ${receipt.hash}`
+    );
+    console.log(`Responded to task.`);
+  } catch (error: any) {
+    console.error(`Error responding to task ${taskName}: ${error.message}`);
+  }
 };
 
 const monitorNewTasks = async () => {

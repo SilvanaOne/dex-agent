@@ -9,7 +9,7 @@
   "scripts": {
     "prove": "npm run prove -w packages/avs-operator",
     "register": "npm run register -w packages/avs-operator",
-    "avs:prove": "docker compose up prover",
+    "avs:prove": "docker compose up prove",
     "avs:register": "docker compose up register",
     "avs:build": "docker build -t silvana-avs .",
     "avs:run": "docker run --rm --env-file packages/avs-operator/.env -p 3000:3000 silvana-avs:latest",
@@ -24,7 +24,6 @@
     "run:agent": "node --loader=ts-node/esm --enable-source-maps index.ts",
     "run:worker": "node dist/index.js",
     "update": "ncu -u -i --root -ws"
-    
   },
   "workspaces": [
     "packages/client",

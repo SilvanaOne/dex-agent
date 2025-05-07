@@ -86,7 +86,7 @@ library SilvanaDeploymentLib {
                 core.rewardsCoordinator,
                 core.delegationManager,
                 core.allocationManager,
-                4
+                50
             )
         );
 
