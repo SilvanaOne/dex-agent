@@ -17,6 +17,7 @@
     "block": "npm run test test/block.test.ts",
     "block-da": "npm run test test/block-da.test.ts",
     "da": "npm run test test/da.test.ts",
+    "tx": "npm run test test/tx.test.ts",
     "events": "npm run test test/events.test.ts",
     "rollup": "npm run test test/rollup.test.ts",
     "circuits": "npm run test test/circuits.test.ts",
