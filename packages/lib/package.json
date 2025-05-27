@@ -11,7 +11,7 @@
     "js-sha256": "^0.11.0",
     "mina-signer": "^3.0.7",
     "nanoid": "^5.1.5",
-    "pinata": "^2.2.0",
+    "pinata": "2.2.0",
     "secp256k1": "^5.0.1"
   },
   "devDependencies": {

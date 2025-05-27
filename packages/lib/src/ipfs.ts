@@ -1,5 +1,6 @@
 import { PinataSDK } from "pinata";
 
+// IPFS
 const pinataJwt = process.env.PINATA_JWT;
 const pinataGateway = process.env.PINATA_GATEWAY_URL;
 const pinataGatewayKey = process.env.PINATA_GATEWAY_API_KEY;
