@@ -1,6 +1,6 @@
 import { saveToWalrus, readFromWalrus, getWalrusUrl } from "./walrus.js";
 import { saveToIPFS, readFromIPFS, getIPFSUrl } from "./ipfs.js";
-export const daProvider: "Walrus" | "IPFS" | "Project Untitled" = "Walrus" as
+export const daProvider: "Walrus" | "IPFS" | "Project Untitled" = "IPFS" as
   | "Walrus"
   | "IPFS"
   | "Project Untitled";
