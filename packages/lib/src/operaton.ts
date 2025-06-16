@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { Secp256k1Keypair } from "@mysten/sui/keypairs/secp256k1";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Operation, OperationNames } from "./types.js";
 import { LastTransactionData } from "./types.js";
 import { executeTx } from "./execute.js";
@@ -8,7 +8,7 @@ import { agentProve, agentSettle } from "./agent.js";
 export async function executeOperationTx(params: {
   operation: Operation;
   tx: Transaction;
-  keyPair: Secp256k1Keypair;
+  keyPair: Ed25519Keypair;
   useParallelExecutor?: boolean;
 }): Promise<Partial<LastTransactionData> | undefined> {
   const { tx, keyPair, useParallelExecutor = false, operation } = params;
