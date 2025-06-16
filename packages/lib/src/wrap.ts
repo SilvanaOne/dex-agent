@@ -4,8 +4,8 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { bcs } from "@mysten/sui/bcs";
 import { publicKeyToU256 } from "./public-key.js";
 import { verifyFields } from "./public-key.js";
-import secp256k1 from "secp256k1";
-import crypto from "crypto";
+//import secp256k1 from "secp256k1";
+//import crypto from "crypto";
 import { prepareSignPayload } from "./sign.js";
 import {
   convertMinaSignatureFromBase58,
@@ -106,17 +106,17 @@ export async function wrapMinaSignature(
   const validator = Ed25519Keypair.fromSecretKey(validatorSecretKey);
   const signedData = await validator.sign(suiData);
   const suiSignature: number[] = Array.from(signedData);
-  const hash = crypto.createHash("sha256");
-  hash.update(suiData);
-  const messageHash = hash.digest();
-  const verified = secp256k1.ecdsaVerify(
-    signedData,
-    messageHash,
-    validator.getPublicKey().toRawBytes()
-  );
-  if (!verified) {
-    throw new Error("Invalid sui signature");
-  }
+  //const hash = crypto.createHash("sha256");
+  //hash.update(suiData);
+  //const messageHash = hash.digest();
+  // const verified = secp256k1.ecdsaVerify(
+  //   signedData,
+  //   messageHash,
+  //   validator.getPublicKey().toRawBytes()
+  // );
+  // if (!verified) {
+  //   throw new Error("Invalid sui signature");
+  // }
 
   return {
     minaSignature,

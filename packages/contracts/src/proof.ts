@@ -5,22 +5,19 @@ import {
   waitTx,
   saveToDA,
   ProofResultSubmission,
-  ProofSubmittedEvent,
   fetchBlockProofs,
   fetchBlock,
   fetchDex,
   checkBlockCreation,
+  agentMerge,
+  agentSettle,
+  agentMonitor,
+  silvanaFaucetReturnKey,
 } from "@dex-agent/lib";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
 import { SequenceState } from "./contracts/rollup.js";
 import os from "node:os";
 import { getIDs } from "./id.js";
-import {
-  agentProve,
-  agentMerge,
-  agentSettle,
-  agentMonitor,
-} from "@dex-agent/lib";
 import { sleep } from "@silvana-one/storage";
 import { findProofsToMerge } from "./merge.js";
 
@@ -31,12 +28,21 @@ export async function getProverSecretKey() {
   if (proverSecretKey) {
     return proverSecretKey;
   }
-  const { secretKey } = await getKey({
-    secretKey: proverSecretKey,
-    name: "prover",
-  });
+  const { secretKey } = await getKey({ name: "prover" });
   proverSecretKey = secretKey;
   return secretKey;
+}
+
+export async function clearProverSecretKey() {
+  if (proverSecretKey) {
+    const key = proverSecretKey;
+    proverSecretKey = undefined;
+    try {
+      await silvanaFaucetReturnKey({ secretKey: key });
+    } catch (error: any) {
+      console.error("return key error", error?.message);
+    }
+  }
 }
 
 export async function startProving(params: {

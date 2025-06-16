@@ -5,7 +5,7 @@ import { fetchDex } from "./fetch.js";
 import { getConfig } from "./config.js";
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { getKey, getUserKey } from "./key.js";
+import { getKey, getUserKey, returnUserKey } from "./key.js";
 import { executeOperationTx } from "./operaton.js";
 import { LastTransactionData, Operation } from "./types.js";
 import { agentSettle } from "./agent.js";

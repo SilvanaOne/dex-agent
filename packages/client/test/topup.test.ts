@@ -17,9 +17,9 @@ import {
 } from "@dex-agent/lib";
 import { DexObjects } from "./helpers/dex.js";
 
-const faucetSecretKey: string = process.env.SECRET_KEY_3!;
+const adminSecretKey: string = process.env.ADMIN_SECRET_KEY!;
 
-if (!faucetSecretKey) {
+if (!adminSecretKey) {
   throw new Error("Missing environment variables");
 }
 
@@ -71,7 +71,7 @@ describe("Topup DEX users", async () => {
     }
 
     const { address, keypair } = await getKey({
-      secretKey: faucetSecretKey,
+      secretKey: adminSecretKey,
       name: "faucet",
     });
 
@@ -128,6 +128,12 @@ describe("Topup DEX users", async () => {
               senderSignature_s: u256,
               validatorSignature: vector<u8>,
       */
+
+      const signatureLength = suiSignature.length;
+      console.log("signatureLength", signatureLength);
+      if (signatureLength !== 32) {
+        throw new Error("Invalid signature length");
+      }
 
       const userTopupArguments = [
         tx.object(dexID),

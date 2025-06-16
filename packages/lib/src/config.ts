@@ -40,6 +40,7 @@ export async function getConfig(configID?: string): Promise<DexConfig> {
   const fetchResult = await fetchSuiObject(configID);
   dexConfig = (fetchResult.data?.content as any)
     ?.fields as unknown as DexConfig;
+
   if (!dexConfig) {
     throw new Error("Config object not found");
   }

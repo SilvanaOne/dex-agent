@@ -26,16 +26,14 @@ export async function getUserKey(): Promise<string> {
 }
 
 export async function returnUserKey() {
-  if (!userSecretKey) {
-    return;
-  }
-  try {
-    const address = Ed25519Keypair.fromSecretKey(userSecretKey)
-      .getPublicKey()
-      .toSuiAddress();
-    await silvanaFaucetReturnKey({ address });
-  } catch (error: any) {
-    console.error("return key error", error?.message);
+  if (userSecretKey) {
+    const key = userSecretKey;
+    userSecretKey = undefined;
+    try {
+      await silvanaFaucetReturnKey({ secretKey: key });
+    } catch (error: any) {
+      console.error("return key error", error?.message);
+    }
   }
 }
 

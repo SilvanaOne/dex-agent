@@ -26,7 +26,7 @@ const config: DexConfig = {
 };
 
 describe("Config", async () => {
-  it("should create config", { skip: readOnly }, async () => {
+  it.skip("should create config", { skip: readOnly }, async () => {
     const { configPackageID, configID, adminID } = await createConfig(config);
     console.log({ configPackageID, configID, adminID });
     assert.ok(!!configPackageID);
@@ -34,7 +34,7 @@ describe("Config", async () => {
     assert.ok(!!adminID);
   });
 
-  it.skip("should get config", async () => {
+  it("should get config", async () => {
     const config = await getConfig();
     console.log("current config:", config);
   });

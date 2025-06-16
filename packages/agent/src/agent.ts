@@ -18,6 +18,7 @@ import {
   processSqlRequests,
   LastTransactionData,
   setSqlRequestStatus,
+  returnUserKey,
 } from "@dex-agent/lib";
 
 const MAX_RUN_TIME = 1000 * 60 * 5; // 5 minutes
@@ -73,25 +74,42 @@ export class DEXAgent extends zkCloudWorker {
       task !== "sqlProcessing"
     )
       throw new Error("Invalid task");
+    let result: string | undefined = undefined;
     try {
       switch (task) {
         case "prove":
-          return await this.proveDex();
+          result = await this.proveDex();
+          break;
         case "merge":
-          return await this.mergeDex();
+          result = await this.mergeDex();
+          break;
         case "settle":
-          return await this.settleDex();
+          result = await this.settleDex();
+          break;
         case "monitor":
-          return await this.monitorDex(undefined);
+          result = await this.monitorDex(undefined);
+          break;
         case "proveAccount":
-          return await this.proveAccount();
+          result = await this.proveAccount();
+          break;
         case "sqlRequest":
-          return await this.sqlRequest();
+          result = await this.sqlRequest();
+          break;
         case "sqlProcessing":
-          return await this.sqlProcessing();
+          result = await this.sqlProcessing();
+          break;
       }
+      await returnUserKey();
+      return (
+        result ??
+        this.stringifyJobResult({
+          success: false,
+          error: "no result",
+        })
+      );
     } catch (error: any) {
       console.error(`Error in ${task}`, error.message);
+      await returnUserKey();
       return this.stringifyJobResult({
         success: false,
         error: String(error.message),
