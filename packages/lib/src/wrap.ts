@@ -1,6 +1,6 @@
 "use server";
 import { MinaSignature, Operation, DEX_SIGNATURE_CONTEXT } from "./types.js";
-import { Secp256k1Keypair } from "@mysten/sui/keypairs/secp256k1";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { bcs } from "@mysten/sui/bcs";
 import { publicKeyToU256 } from "./public-key.js";
 import { verifyFields } from "./public-key.js";
@@ -103,7 +103,7 @@ export async function wrapMinaSignature(
   if (!validatorSecretKey) {
     throw new Error("Missing environment variables VALIDATOR_SECRET_KEY");
   }
-  const validator = Secp256k1Keypair.fromSecretKey(validatorSecretKey);
+  const validator = Ed25519Keypair.fromSecretKey(validatorSecretKey);
   const signedData = await validator.sign(suiData);
   const suiSignature: number[] = Array.from(signedData);
   const hash = crypto.createHash("sha256");

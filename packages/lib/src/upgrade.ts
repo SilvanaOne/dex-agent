@@ -1,4 +1,4 @@
-import { Secp256k1Keypair } from "@mysten/sui/keypairs/secp256k1";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import {
   Transaction,
   TransactionResult,
@@ -13,7 +13,7 @@ export async function buildUpgradeTx(params: {
   dependencies: string[];
   digest: number[];
   address: string;
-  keypair: Secp256k1Keypair;
+  keypair: Ed25519Keypair;
   packageID: string;
   upgradeCap: string;
 }): Promise<{

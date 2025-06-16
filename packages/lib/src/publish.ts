@@ -1,4 +1,4 @@
-import { Secp256k1Keypair } from "@mysten/sui/keypairs/secp256k1";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { Transaction } from "@mysten/sui/transactions";
 import { SignatureWithBytes } from "@mysten/sui/cryptography";
 import { suiClient } from "./sui-client.js";
@@ -6,7 +6,7 @@ import { suiClient } from "./sui-client.js";
 export async function buildPublishTx(params: {
   modules: string[];
   dependencies: string[];
-  keypair: Secp256k1Keypair;
+  keypair: Ed25519Keypair;
 }): Promise<{
   tx: Transaction;
 }> {

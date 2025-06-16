@@ -35,7 +35,7 @@ async function configHandler(props: {
     status: 200,
     json: {
       chain: "sui",
-      network: "devnet",
+      network: "testnet",
       configId,
       versions: ["0.1.0"],
     },
