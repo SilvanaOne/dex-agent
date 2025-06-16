@@ -131,7 +131,7 @@ describe("Topup DEX users", async () => {
 
       const signatureLength = suiSignature.length;
       console.log("signatureLength", signatureLength);
-      if (signatureLength !== 32) {
+      if (signatureLength !== 64) {
         throw new Error("Invalid signature length");
       }
 
