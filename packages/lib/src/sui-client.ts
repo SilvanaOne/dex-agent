@@ -13,6 +13,7 @@ export const suiClient = new SuiClient({
 });
 
 function getUrl(network: SuiNetwork) {
+  console.log("Sui network:", network);
   if (network === "testnet") {
     return "https://rpc-testnet.suiscan.xyz:443";
   } else if (network === "devnet") {

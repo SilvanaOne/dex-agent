@@ -8,23 +8,23 @@ import { executeTx, waitTx } from "@dex-agent/lib";
 import { publicKeyToU256 } from "@dex-agent/lib";
 import { DexObjects } from "./helpers/dex.js";
 
-const userSecretKeys: string[] = [
-  process.env.SECRET_KEY_1!,
-  process.env.SECRET_KEY_2!,
-  process.env.SECRET_KEY_3!,
-];
+// const userSecretKeys: string[] = [
+//   process.env.SECRET_KEY_1!,
+//   process.env.SECRET_KEY_2!,
+//   process.env.SECRET_KEY_3!,
+// ];
 const adminSecretKey: string = process.env.ADMIN_SECRET_KEY!;
 const validatorSecretKey: string = process.env.VALIDATOR_SECRET_KEY!;
-const proverSecretKey: string = process.env.PROVER_SECRET_KEY!;
+//const proverSecretKey: string = process.env.PROVER_SECRET_KEY!;
 
-if (!adminSecretKey || !validatorSecretKey || !proverSecretKey) {
+if (!adminSecretKey || !validatorSecretKey) {
   throw new Error("Missing environment variables");
 }
-userSecretKeys.map((secretKey) => {
-  if (!secretKey) {
-    throw new Error("Missing environment variables");
-  }
-});
+// userSecretKeys.map((secretKey) => {
+//   if (!secretKey) {
+//     throw new Error("Missing environment variables");
+//   }
+// });
 
 const packageID = process.env.PACKAGE_ID;
 const dexID = process.env.DEX_ID;

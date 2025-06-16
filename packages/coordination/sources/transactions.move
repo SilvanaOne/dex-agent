@@ -27,7 +27,7 @@ use dex::user::{
     get_ask
 };
 use std::string::String;
-use sui::ecdsa_k1::secp256k1_verify;
+use sui::ed25519::ed25519_verify;
 use sui::event;
 use sui::hash::blake2b256;
 
@@ -645,13 +645,13 @@ public fun verify_signature(
     minaSignature: MinaSignature,
     operationData: &OperationData,
 ): bool {
-    assert!(vector::length(&dex_public_key) == 33, EInvalidPublicKey);
+    assert!(vector::length(&dex_public_key) == 32, EInvalidPublicKey);
+    assert!(vector::length(&signature) == 64, EInvalidSignature);
     let mut msg = vector::empty<u8>();
     vector::append(&mut msg, std::bcs::to_bytes(&DEX_SIGNATURE_CONTEXT));
     vector::append(&mut msg, minaSignature.to_bytes());
     vector::append(&mut msg, operationData.data);
-    let hash: u8 = 1;
-    let valid = secp256k1_verify(&signature, &dex_public_key, &msg, hash);
+    let valid = ed25519_verify(&signature, &dex_public_key, &msg);
     assert!(valid, EInvalidSignature);
     valid
 }

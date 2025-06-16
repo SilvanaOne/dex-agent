@@ -1,5 +1,7 @@
 "use server";
 
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+
 export async function silvanaFaucet(params: {
   address: string;
   amount?: number;
@@ -57,12 +59,23 @@ export async function silvanaFaucetGetKey(): Promise<{
 }
 
 export async function silvanaFaucetReturnKey(params: {
-  address: string;
+  address?: string;
+  secretKey?: string;
 }): Promise<{
   message: string;
-  success: true;
+  success: boolean;
 }> {
-  const { address } = params;
+  const address =
+    params.address ??
+    (params.secretKey
+      ? Ed25519Keypair.fromSecretKey(params.secretKey).toSuiAddress()
+      : undefined);
+  if (!address) {
+    return {
+      message: "Address or secret key is required",
+      success: false,
+    };
+  }
   const response = await fetch(`${silvanaFaucetEndpoint()}/return_key`, {
     method: "POST",
     headers: {

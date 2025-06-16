@@ -26,32 +26,32 @@ import {
 import { TokenId } from "o1js";
 import { serializeIndexedMap, sleep } from "@silvana-one/storage";
 
-const userSecretKeys: string[] = [
-  process.env.SECRET_KEY_1!,
-  process.env.SECRET_KEY_2!,
-  process.env.SECRET_KEY_3!,
-];
+// const userSecretKeys: string[] = [
+//   process.env.SECRET_KEY_1!,
+//   process.env.SECRET_KEY_2!,
+//   process.env.SECRET_KEY_3!,
+// ];
 
 const adminAddress: string = process.env.ADMIN!;
 const adminSecretKey: string = process.env.ADMIN_SECRET_KEY!;
 const validatorSecretKey: string = process.env.VALIDATOR_SECRET_KEY!;
-const proverSecretKey: string = process.env.PROVER_SECRET_KEY!;
+// const proverSecretKey: string = process.env.PROVER_SECRET_KEY!;
 const minaAdminSecretKey: string = process.env.TEST_ACCOUNT_1_PRIVATE_KEY!;
 
 if (
   !adminAddress ||
   !adminSecretKey ||
   !validatorSecretKey ||
-  !proverSecretKey ||
+  // !proverSecretKey ||
   !minaAdminSecretKey
 ) {
   throw new Error("Missing environment variables");
 }
-userSecretKeys.map((secretKey) => {
-  if (!secretKey) {
-    throw new Error("Missing environment variables");
-  }
-});
+// userSecretKeys.map((secretKey) => {
+//   if (!secretKey) {
+//     throw new Error("Missing environment variables");
+//   }
+// });
 
 let packageID: string | undefined = undefined;
 let adminID: string | undefined = undefined;

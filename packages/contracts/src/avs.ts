@@ -1,7 +1,8 @@
 import { prove } from "./prove.js";
 import { merge } from "./merge.js";
 import { Cache } from "o1js";
-import { agentMetadata } from "@dex-agent/lib";
+import { agentMetadata, returnUserKey } from "@dex-agent/lib";
+import { clearProverSecretKey } from "./proof.js";
 
 export async function avs(params: { endTime: number }) {
   const { endTime } = params;
@@ -46,6 +47,8 @@ export async function avs(params: { endTime: number }) {
       metadata: mergeResult.metadata,
     });
   }
+  await returnUserKey();
+  await clearProverSecretKey();
   return {
     proveResult,
     mergeResult,
