@@ -1128,9 +1128,9 @@ export default function DEX() {
   }
 
   return (
-    <div className="flex flex-col  h-screen bg-[#0b0e11] text-white overflow-hidden">
+    <div className="flex flex-col  h-screen bg-gray-50 text-gray-900 overflow-hidden">
       {/* Professional Header with price and absolute change */}
-      <header className="flex items-center justify-between px-3 py-1 bg-[#161a1e] border-b border-[#2a2e37]">
+      <header className="flex items-center justify-between px-3 py-1 bg-white border-b border-gray-200">
         <div className="flex items-center space-x-3">
           <div className="flex items-center">
             <Image
@@ -1146,11 +1146,11 @@ export default function DEX() {
           </div>
           {price && change && (
             <div className="flex items-center">
-              <div className="text-white text-sm font-medium mr-2">
+              <div className="text-gray-900 text-sm font-medium mr-2">
                 WETH/WUSD
               </div>
               <div className="flex items-center">
-                <div className="text-white text-sm font-medium mr-1">
+                <div className="text-gray-900 text-sm font-medium mr-1">
                   {formatPrice(price, 6)}
                 </div>
                 {priceDirection === "up" ? (
@@ -1181,11 +1181,11 @@ export default function DEX() {
           </div>
           {user || address ? (
             <div className="flex items-center">
-              <div className="flex items-center bg-[#2a2e37] rounded-lg px-2 py-0.5 text-xs">
-                <span className="text-[#848e9c] mr-1">
+              <div className="flex items-center bg-gray-100 rounded-lg px-2 py-0.5 text-xs">
+                <span className="text-gray-600 mr-1">
                   {viewMode === "sql" ? "Alice:" : "Connected:"}
                 </span>
-                <span className="text-white">
+                <span className="text-gray-900">
                   {shortenString(user ?? address, 12)}
                 </span>
               </div>
@@ -1204,17 +1204,17 @@ export default function DEX() {
       {/* Main Trading Interface */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Column - Chart, Orderbook, and Market Trades */}
-        <div className="w-2/5 flex flex-col border-r border-[#2a2e37]">
+        <div className="w-2/5 flex flex-col border-r border-gray-200">
           {/* Trading Chart */}
           {/* View Mode Switch */}
-          <div className="flex justify-between items-center px-1 py-0.5 bg-[#161a1e] border-b border-[#2a2e37]">
+          <div className="flex justify-between items-center px-1 py-0.5 bg-white border-b border-gray-200">
             <div className="flex items-center">
-              <div className="flex border border-[#2a2e37] rounded-lg overflow-hidden text-[11px]">
+              <div className="flex border border-gray-200 rounded-lg overflow-hidden text-[11px]">
                 <button
                   className={`px-3 py-0.5 ${
                     viewMode === "chart"
                       ? "bg-[#1E80FF] text-white"
-                      : "bg-[#2a2e37] text-[#848e9c] hover:bg-[#3a3e47]"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   } transition-colors font-medium`}
                   onClick={() => setViewMode("chart")}
                 >
@@ -1224,7 +1224,7 @@ export default function DEX() {
                   className={`px-3 py-0.5 ${
                     viewMode === "sql"
                       ? "bg-[#1E80FF] text-white"
-                      : "bg-[#2a2e37] text-[#848e9c] hover:bg-[#3a3e47]"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   } transition-colors font-medium`}
                   onClick={() => setViewMode("sql")}
                 >
@@ -1235,14 +1235,14 @@ export default function DEX() {
               {/* Block and Sequence dropdowns - Made smaller */}
               {viewMode === "sql" && (
                 <div className="flex ml-4 space-x-1 items-center">
-                  <div className="text-[10px] text-[#848e9c] mr-0.5">
+                  <div className="text-[10px] text-gray-600 mr-0.5">
                     {`Block: ${displayedBlockNumber}`}
                   </div>
                   <div className="w-10">
                     <select
                       value={displayedBlockNumber}
                       onChange={(e) => setBlockNumber(Number(e.target.value))}
-                      className="w-8 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-center focus:border-accent focus:outline-none h-6 flex items-center justify-center"
+                      className="w-8 bg-white border border-gray-300 rounded px-1 text-[10px] text-center focus:border-accent focus:outline-none h-6 flex items-center justify-center"
                     >
                       {blockOptions.map((option) => (
                         <option key={option} value={option}>
@@ -1251,14 +1251,14 @@ export default function DEX() {
                       ))}
                     </select>
                   </div>
-                  <div className="text-[10px] text-[#848e9c] ml-1 mr-0.5">
+                  <div className="text-[10px] text-gray-600 ml-1 mr-0.5">
                     {`Sequence: ${displayedSequence}`}
                   </div>
                   <div className="w-10">
                     <select
                       value={displayedSequence}
                       onChange={(e) => setSequence(Number(e.target.value))}
-                      className="w-8 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-center focus:border-accent focus:outline-none h-6 flex items-center justify-center"
+                      className="w-8 bg-white border border-gray-300 rounded px-1 text-[10px] text-center focus:border-accent focus:outline-none h-6 flex items-center justify-center"
                     >
                       {sequenceOptions.map((option) => (
                         <option key={option} value={option}>
@@ -1268,7 +1268,7 @@ export default function DEX() {
                     </select>
                   </div>
                   <div className="flex space-x-1 items-center">
-                    <div className="text-[10px] text-[#848e9c] mr-0.5">
+                    <div className="text-[10px] text-gray-600 mr-0.5">
                       Price:
                     </div>
                     <input
@@ -1279,10 +1279,10 @@ export default function DEX() {
                           e.target.value ? Number(e.target.value) : undefined
                         )
                       }
-                      className="mr-2 w-16 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-white focus:border-accent focus:outline-none h-6"
+                      className="mr-2 w-16 bg-white border border-gray-300 rounded px-1 text-[10px] text-gray-900 focus:border-accent focus:outline-none h-6"
                       placeholder="Price"
                     />
-                    <div className="text-[10px] text-[#848e9c] ml-1 mr-0.5">
+                    <div className="text-[10px] text-gray-600 ml-1 mr-0.5">
                       Amount:
                     </div>
                     <input
@@ -1293,7 +1293,7 @@ export default function DEX() {
                           e.target.value ? Number(e.target.value) : undefined
                         )
                       }
-                      className="w-16 bg-[#2a2e37] border border-[#3a3e47] rounded px-1 text-[10px] text-white focus:border-accent focus:outline-none h-6"
+                      className="w-16 bg-white border border-gray-300 rounded px-1 text-[10px] text-gray-900 focus:border-accent focus:outline-none h-6"
                       placeholder="Amount"
                     />
                   </div>
@@ -1302,7 +1302,7 @@ export default function DEX() {
             </div>
           </div>
           {/* Trading Chart or SQL Query */}
-          <div className="h-[calc(2/5*100%-24px)] border-b border-[#2a2e37] bg-[#161a1e]">
+          <div className="h-[calc(2/5*100%-24px)] border-b border-gray-200 bg-white">
             {viewMode === "chart" ? (
               <TradingChart />
             ) : (
@@ -1323,9 +1323,9 @@ export default function DEX() {
           </div>
 
           {/* Middle section with Order Book and Market Trades */}
-          <div className="h-2/5 flex border-b border-[#2a2e37] bg-[#161a1e]">
+          <div className="h-2/5 flex border-b border-gray-200 bg-white">
             {/* Order Book */}
-            <div className="w-1/2 border-r border-[#2a2e37] overflow-hidden">
+            <div className="w-1/2 border-r border-gray-200 overflow-hidden">
               <OrderBook orderbook={orderbook} account={account} />
             </div>
 
@@ -1336,7 +1336,7 @@ export default function DEX() {
           </div>
 
           {/* Last Orders - Now under Market Trades */}
-          <div className="h-1/5 bg-[#161a1e] overflow-hidden">
+          <div className="h-1/5 bg-white overflow-hidden">
             <LastOrders orders={orders} />
           </div>
         </div>
@@ -1344,9 +1344,9 @@ export default function DEX() {
         {/* Right Column - Trading Form and Info */}
         <div className="w-3/5 flex flex-col">
           {/* Trading Form and User Account - Now 2/5 height to match chart */}
-          <div className="flex h-2/5 border-b border-[#2a2e37]">
+          <div className="flex h-2/5 border-b border-gray-200">
             {/* Trading Form */}
-            <div className="w-1/2 border-r border-[#2a2e37] bg-[#161a1e] p-1">
+            <div className="w-1/2 border-r border-gray-200 bg-white p-1">
               <OrderForm
                 orderType={orderType}
                 setOrderType={setOrderType}
@@ -1359,7 +1359,7 @@ export default function DEX() {
             </div>
 
             {/* User Account Section - Now with Open Orders above Wallet Balance */}
-            <div className="w-1/2 flex flex-col bg-[#161a1e] p-1 space-y-1">
+            <div className="w-1/2 flex flex-col bg-white p-1 space-y-1">
               {/* Open Orders - Takes 1/3 of the height */}
               <div className="h-1/3">
                 <OpenOrders
@@ -1388,23 +1388,23 @@ export default function DEX() {
           </div>
 
           {/* Bottom Panels - Now 3/5 height to fill remaining space */}
-          <div className="h-3/5 flex flex-col gap-0.5 p-0.5 overflow-hidden bg-[#0b0e11]">
+          <div className="h-3/5 flex flex-col gap-0.5 p-0.5 overflow-hidden bg-gray-50">
             {/* Row 1: Your Last Transaction and Last Proofs side by side */}
             <div className="flex gap-0.5 h-1/2">
-              <div className="bg-[#161a1e] rounded overflow-hidden w-1/2">
+              <div className="bg-white rounded overflow-hidden w-1/2">
                 <LastTransaction txData={txData} proofs={txProofs} tx={l1Tx} />
               </div>
-              <div className="bg-[#161a1e] rounded overflow-hidden w-1/2">
+              <div className="bg-white rounded overflow-hidden w-1/2">
                 <LastProofs proofs={proofs} />
               </div>
             </div>
 
             {/* Row 2: Network Info and Last L1 Txs with equal widths */}
             <div className="flex gap-0.5 h-1/2">
-              <div className="bg-[#161a1e] rounded overflow-hidden w-1/2">
+              <div className="bg-white rounded overflow-hidden w-1/2">
                 <NetworkInfo networkInfo={networkInfo} />
               </div>
-              <div className="bg-[#161a1e] rounded overflow-hidden w-1/2">
+              <div className="bg-white rounded overflow-hidden w-1/2">
                 <LastL1Txs transactions={l1Events} />
               </div>
             </div>

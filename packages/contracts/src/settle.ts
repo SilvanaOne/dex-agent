@@ -35,6 +35,8 @@ import {
   checkBlockCreation,
   getDAMetadata,
   saveToDA,
+  agentProve,
+  agentMerge,
 } from "@dex-agent/lib";
 import { sleep } from "@silvana-one/storage";
 import { TransactionMetadata } from "@silvana-one/prover";
@@ -102,6 +104,8 @@ export async function settle(params: {
 
   async function prepareResult(restart: boolean): Promise<SettleResult> {
     const { chain, network } = await getDAMetadata();
+    await agentProve();
+    await agentMerge();
     return {
       metadata: {
         custom: {
