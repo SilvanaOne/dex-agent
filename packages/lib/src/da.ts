@@ -6,6 +6,8 @@ import { getKey } from "./key.js";
 import { executeOperationTx } from "./operaton.js";
 import { LastTransactionData, Operation } from "./types.js";
 import { fetchDex, fetchBlock } from "./fetch.js";
+const TOPUP_AMOUNT = 10;
+const MIN_SUI_BALANCE = 6;
 
 export async function getDataAvailabilityBlock(verbose = false): Promise<
   | {
@@ -97,6 +99,8 @@ export async function addDataAvailability(params: {
   const { address, keypair } = await getKey({
     secretKey: adminKey,
     name: "admin",
+    minBalance: MIN_SUI_BALANCE,
+    topupAmount: TOPUP_AMOUNT,
   });
 
   tx.setSender(address);

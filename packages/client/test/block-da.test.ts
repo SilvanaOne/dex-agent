@@ -138,6 +138,8 @@ describe("DEX Block Data Availability", async () => {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
 
     /*

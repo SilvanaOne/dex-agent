@@ -45,6 +45,8 @@ import {
   dexProverResult,
   sleep,
   fetchBlockSequences,
+  pingUserKey,
+  checkDeals,
 } from "@dex-agent/lib";
 import OrderBook from "@/components/dex/order-book";
 import { OrderForm } from "@/components/dex/order-form";
@@ -224,6 +226,11 @@ export default function DEX() {
         setDex(dexObject);
         const orderbook = getOrderbook(dexObject);
         setOrderbook(orderbook);
+        await checkDeals({
+          key,
+          verbose: false,
+          useParallelExecutor: false,
+        });
       }
     }
     getDex();
@@ -666,11 +673,23 @@ export default function DEX() {
 
   useEffect(() => {
     async function getKey() {
-      const key = await getUserKey();
+      const key = await getUserKey({ autoReturn: true });
       setKey(key);
     }
     getKey();
   }, []);
+
+  useEffect(() => {
+    async function pingKey() {
+      await pingUserKey();
+    }
+
+    const pingInterval = setInterval(pingKey, 10 * 60 * 1000); // 10 minutes
+
+    return () => {
+      clearInterval(pingInterval);
+    };
+  }, [key]);
 
   useEffect(() => {
     async function getDexConfig() {

@@ -13,6 +13,8 @@ if (!adminSecretKey) {
 const { address, keypair } = await getKey({
   secretKey: adminSecretKey,
   name: "admin",
+  minBalance: 1,
+  topupAmount: 5,
 });
 
 const config: DexConfig = {

@@ -48,6 +48,8 @@ describe("DEX Block", async () => {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
 
     const dex = await fetchDex();
@@ -200,6 +202,8 @@ describe("DEX Block", async () => {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
 
     /*

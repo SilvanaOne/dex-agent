@@ -24,6 +24,8 @@ describe("Upgrade DEX package", async () => {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
     const { modules, dependencies, digest } = await buildMovePackage(
       "../coordination"
