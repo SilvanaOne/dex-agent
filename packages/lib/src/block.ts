@@ -115,7 +115,7 @@ export async function createBlock(params: {
       operation: Operation.CREATE_BLOCK,
       tx,
       keyPair: keypair,
-      useParallelExecutor: true,
+      useParallelExecutor: false,
     });
     if (verbose) {
       console.log("Create block:", result);

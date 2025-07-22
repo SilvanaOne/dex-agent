@@ -7,6 +7,7 @@ import { CoinBalance } from "@mysten/sui/client";
 import {
   silvanaFaucet,
   silvanaFaucetGetKey,
+  silvanaFaucetPingKey,
   silvanaFaucetReturnKey,
 } from "./faucet.js";
 import { MIST_PER_SUI } from "@mysten/sui/utils";
@@ -16,10 +17,14 @@ import { sleep } from "./sleep.js";
 
 let userSecretKey: string | undefined = undefined;
 
-export async function getUserKey(): Promise<string> {
+export async function getUserKey(
+  params: { autoReturn: boolean } = { autoReturn: true }
+): Promise<string> {
+  const { autoReturn } = params;
   if (userSecretKey) return userSecretKey;
   const { secretKey } = await getKey({
     name: "user",
+    autoReturn,
   });
   userSecretKey = secretKey;
   return secretKey;
@@ -37,49 +42,70 @@ export async function returnUserKey() {
   }
 }
 
+export async function pingUserKey() {
+  if (userSecretKey) {
+    const address = Ed25519Keypair.fromSecretKey(userSecretKey).toSuiAddress();
+    try {
+      await silvanaFaucetPingKey({ address });
+    } catch (error: any) {
+      console.error("return key error", error?.message);
+    }
+  }
+}
+
 export function suiBalance(balance: CoinBalance): number {
   return Number.parseInt(balance.totalBalance) / Number(MIST_PER_SUI);
 }
 
-const MIN_SUI_BALANCE = 5;
+const MIN_SUI_BALANCE = 1;
+const TOPUP_AMOUNT = 5;
 
 export async function getKey(params: {
   secretKey?: string;
   name?: string;
   topup?: boolean;
+  autoReturn?: boolean;
+  minBalance?: number;
+  topupAmount?: number;
 }): Promise<{
   address: string;
   secretKey: string;
   keypair: Ed25519Keypair;
   balance?: CoinBalance;
 }> {
-  let { topup = params.secretKey !== undefined, name = "" } = params;
+  const { minBalance = MIN_SUI_BALANCE, topupAmount = TOPUP_AMOUNT } = params;
+  let {
+    topup = params.secretKey !== undefined,
+    name = "",
+    autoReturn = true,
+  } = params;
   let secretKey: string | undefined = params.secretKey;
   let address: string;
   let keypair: Ed25519Keypair;
-  let topup_amount = 1_000_000_000 * MIN_SUI_BALANCE;
   if (!secretKey || secretKey === "0") {
     try {
-      const key = await silvanaFaucetGetKey();
+      const key = await silvanaFaucetGetKey({ autoReturn });
       secretKey = key.key_pair.private_key_bech32;
+      keypair = Ed25519Keypair.fromSecretKey(secretKey);
       address = key.key_pair.address;
       const balance = await suiClient.getBalance({
         owner: address,
         coinType: "0x2::sui::SUI",
       });
-      return {
-        address,
-        secretKey,
-        keypair: Ed25519Keypair.fromSecretKey(secretKey),
-        balance,
-      };
+      if (suiBalance(balance) >= minBalance) {
+        return {
+          address,
+          secretKey,
+          keypair: Ed25519Keypair.fromSecretKey(secretKey),
+          balance,
+        };
+      }
     } catch (error: any) {
       console.error("Faucet get key error:", error?.message);
+      keypair = new Ed25519Keypair();
+      secretKey = keypair.getSecretKey();
+      topup = true;
     }
-    keypair = new Ed25519Keypair();
-    secretKey = keypair.getSecretKey();
-    topup = true;
-    topup_amount = 1_000_000_000;
   } else {
     keypair = Ed25519Keypair.fromSecretKey(secretKey);
   }
@@ -91,7 +117,7 @@ export async function getKey(params: {
       coinType: "0x2::sui::SUI",
     });
     if (
-      suiBalance(balance) < MIN_SUI_BALANCE &&
+      suiBalance(balance) < minBalance &&
       (network === "localnet" || network === "devnet" || network === "testnet")
     ) {
       console.log(
@@ -107,7 +133,7 @@ export async function getKey(params: {
         try {
           const tx = await silvanaFaucet({
             address,
-            amount: 1_000_000_000 * MIN_SUI_BALANCE,
+            amount: 1_000_000_000 * topupAmount,
           });
           console.log("Faucet reply:", tx.success);
           received = true;
@@ -134,4 +160,25 @@ export async function getKey(params: {
   console.log(`${name} address`, address);
 
   return { address, secretKey, keypair, balance };
+}
+
+export async function getSuiBalance(address: string): Promise<number> {
+  try {
+    const balance = await suiClient.getBalance({
+      owner: address,
+      coinType: "0x2::sui::SUI",
+    });
+    return suiBalance(balance);
+  } catch (error: any) {
+    console.error("getSuiBalance error:", error?.message);
+    return 0;
+  }
+}
+
+export async function getSuiAddress(params: {
+  secretKey: string;
+}): Promise<string> {
+  return Ed25519Keypair.fromSecretKey(params.secretKey)
+    .getPublicKey()
+    .toSuiAddress();
 }

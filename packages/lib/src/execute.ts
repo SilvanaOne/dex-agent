@@ -8,7 +8,6 @@ import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { suiClient } from "./sui-client.js";
 import { nanoid } from "nanoid";
 import { sleep } from "./sleep.js";
-import { LastTransactionData } from "./types.js";
 
 const executors: { [key: string]: ParallelTransactionExecutor } = {};
 const locks: { [key: string]: string | undefined } = {};
@@ -84,6 +83,7 @@ export async function executeTx(params: {
     let end = 0;
     if (useParallelExecutor) {
       address = keyPair.toSuiAddress();
+      console.log("executeTx: ParallelExecutor address", address);
       lockId = await getLock(address);
       if (!lockId) {
         throw new Error("Failed to get lock");
@@ -105,6 +105,7 @@ export async function executeTx(params: {
       await releaseLock({ address: address, id: lockId });
     } else {
       address = keyPair.toSuiAddress();
+      console.log("executeTx: Executor address", address);
       lockId = await getLock(address);
       if (!lockId) {
         throw new Error("Failed to get lock");
@@ -155,7 +156,7 @@ export async function executeTx(params: {
     if (lockId && address) {
       await releaseLock({ address, id: lockId });
     }
-    console.error("Error in executeTx", error.message);
+    console.error("executeTx: catch error:", error.message);
     return undefined;
   }
 }

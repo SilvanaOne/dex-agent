@@ -10,7 +10,7 @@ const readerUrl =
     : "https://wal-aggregator-testnet.staketab.org/v1/blobs/";
 //"https://aggregator.walrus-testnet.walrus.space/v1/blobs/";
 
-const MIN_EPOCHS = 2;
+const MIN_EPOCHS = 14;
 const MAX_EPOCHS = 53;
 
 export async function saveToWalrus({

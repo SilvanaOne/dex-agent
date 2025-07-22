@@ -13,6 +13,7 @@ import { fetchSequenceData } from "@dex-agent/contracts";
 import { serializeIndexedMap } from "@silvana-one/storage";
 import { calculateStateRoot } from "@dex-agent/contracts";
 import { Cache } from "o1js";
+import { TOPUP_AMOUNT, MIN_SUI_BALANCE } from "./topup.js";
 
 export async function checkDataAvailability(params: {
   adminKey: string;
@@ -24,6 +25,8 @@ export async function checkDataAvailability(params: {
     const { address, keypair } = await getKey({
       secretKey: adminKey,
       name: "admin",
+      minBalance: MIN_SUI_BALANCE,
+      topupAmount: TOPUP_AMOUNT,
     });
     const daBlock = await getDataAvailabilityBlock(verbose);
     if (!daBlock || !daBlock.blockNumber) {

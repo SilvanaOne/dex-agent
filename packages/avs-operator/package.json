@@ -12,16 +12,13 @@
   },
   "dependencies": {
     "@dex-agent/contracts": "^0.1.0",
-    "dotenv": "^10.0.0",
-    "ethers": "^6.13.2"
+    "dotenv": "^17.2.0",
+    "ethers": "^6.15.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.13",
-    "@types/node": "^20.12.12",
+    "@types/node": "^24.0.15",
     "@viem/anvil": "^0.0.10",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.8.3"
   }
 }

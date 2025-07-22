@@ -89,6 +89,8 @@ describe("Deploy DEX contracts", async () => {
     const { keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
     const { modules, dependencies } = await buildMovePackage("../coordination");
     const { tx } = await buildPublishTx({
@@ -159,6 +161,8 @@ describe("Deploy DEX contracts", async () => {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
 
     const { keypair: validator } = await getKey({
@@ -390,6 +394,8 @@ describe("Deploy DEX contracts", async () => {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
 
     /*

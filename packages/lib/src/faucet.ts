@@ -10,7 +10,7 @@ export async function silvanaFaucet(params: {
   success: true;
   transaction_hash: string;
 }> {
-  const { address, amount } = params;
+  const { address, amount = 1 } = params;
   const response = await fetch(`${silvanaFaucetEndpoint()}/fund`, {
     method: "POST",
     headers: {
@@ -18,7 +18,7 @@ export async function silvanaFaucet(params: {
     },
     body: JSON.stringify({
       address,
-      amount: amount ?? 1,
+      amount,
     }),
   });
 
@@ -31,7 +31,13 @@ export async function silvanaFaucet(params: {
   return response.json();
 }
 
-export async function silvanaFaucetGetKey(): Promise<{
+export async function silvanaFaucetGetKey(
+  params: {
+    autoReturn: boolean;
+  } = {
+    autoReturn: false,
+  }
+): Promise<{
   key_pair: {
     address: string;
     issued_at: string;
@@ -47,11 +53,46 @@ export async function silvanaFaucetGetKey(): Promise<{
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      auto_return: params.autoReturn,
+    }),
   });
 
   if (!response.ok) {
     throw new Error(
       `Failed to get key: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
+}
+
+export async function silvanaFaucetPingKey(params: {
+  address: string;
+}): Promise<{
+  message: string;
+  success: boolean;
+}> {
+  const { address } = params;
+  if (!address) {
+    return {
+      message: "Address is required",
+      success: false,
+    };
+  }
+  const response = await fetch(`${silvanaFaucetEndpoint()}/ping_key`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      address,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to return key: ${response.status} ${response.statusText}`
     );
   }
 

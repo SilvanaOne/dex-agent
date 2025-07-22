@@ -5,22 +5,22 @@
   "author": "DFST",
   "bugs": "https://github.com/SilvanaOne/dex-agent/issues",
   "dependencies": {
-    "@mysten/sui": "^1.28.0",
-    "@prisma/client": "^6.6.0",
-    "@silvana-one/api": "^1.0.6",
-    "js-sha256": "^0.11.0",
+    "@mysten/sui": "^1.36.1",
+    "@prisma/client": "^6.12.0",
+    "@silvana-one/api": "^1.0.25",
+    "js-sha256": "^0.11.1",
     "mina-signer": "^3.0.7",
     "nanoid": "^5.1.5",
-    "pinata": "2.2.0",
+    "pinata": "2.4.9",
     "secp256k1": "^5.0.1"
   },
   "devDependencies": {
-    "@types/node": "^22.14.1",
+    "@types/node": "^24.0.15",
     "@types/secp256k1": "^4.0.6",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.2.0",
     "dotenv-cli": "^8.0.0",
-    "esbuild": "^0.25.2",
-    "prisma": "^6.6.0",
+    "esbuild": "^0.25.8",
+    "prisma": "^6.12.0",
     "typescript": "^5.8.3"
   },
   "engines": {

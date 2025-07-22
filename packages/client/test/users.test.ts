@@ -77,6 +77,8 @@ describe("Create users", async () => {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: 1,
+      topupAmount: 5,
     });
 
     const { faucet, liquidityProvider, alice, bob } = dexObjects;

@@ -13,6 +13,8 @@ import {
   agentSettle,
   agentMonitor,
   silvanaFaucetReturnKey,
+  getSuiBalance,
+  getSuiAddress,
 } from "@dex-agent/lib";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
 import { SequenceState } from "./contracts/rollup.js";
@@ -20,6 +22,7 @@ import os from "node:os";
 import { getIDs } from "./id.js";
 import { sleep } from "@silvana-one/storage";
 import { findProofsToMerge } from "./merge.js";
+import { TOPUP_AMOUNT, MIN_SUI_BALANCE } from "./topup.js";
 
 let proverSecretKey: string | undefined = undefined;
 let adminSecretKey: string | undefined = process.env.ADMIN_SECRET_KEY;
@@ -28,8 +31,15 @@ export async function getProverSecretKey() {
   if (proverSecretKey) {
     return proverSecretKey;
   }
-  const { secretKey } = await getKey({ name: "prover" });
+  const { secretKey } = await getKey({
+    name: "prover",
+    minBalance: MIN_SUI_BALANCE,
+    topupAmount: TOPUP_AMOUNT,
+  });
   proverSecretKey = secretKey;
+  const address = await getSuiAddress({ secretKey });
+  const balance = await getSuiBalance(address);
+  console.log(`Prover address: ${address}, balance: ${balance} SUI`);
   return secretKey;
 }
 
@@ -58,12 +68,12 @@ export async function startProving(params: {
   if (!packageID || !dexID) {
     throw new Error("PACKAGE_ID or DEX_ID is not set");
   }
-
-  const { address, keypair, secretKey } = await getKey({
-    secretKey: proverSecretKey,
+  const { address, keypair } = await getKey({
+    secretKey: await getProverSecretKey(),
     name: "prover",
+    minBalance: MIN_SUI_BALANCE,
+    topupAmount: TOPUP_AMOUNT,
   });
-  proverSecretKey = secretKey;
 
   try {
     const tx = new Transaction();
@@ -150,10 +160,11 @@ export async function submitProof(params: {
   }
 
   const { address, keypair, secretKey } = await getKey({
-    secretKey: proverSecretKey,
+    secretKey: await getProverSecretKey(),
     name: "prover",
+    minBalance: MIN_SUI_BALANCE,
+    topupAmount: TOPUP_AMOUNT,
   });
-  proverSecretKey = secretKey;
 
   const blobData = state.toJSON();
   console.time("saveToDA");
@@ -313,11 +324,12 @@ export async function rejectProof(params: {
     throw new Error("PACKAGE_ID or DEX_ID is not set");
   }
 
-  const { address, keypair, secretKey } = await getKey({
-    secretKey: proverSecretKey,
+  const { address, keypair } = await getKey({
+    secretKey: await getProverSecretKey(),
     name: "prover",
+    minBalance: MIN_SUI_BALANCE,
+    topupAmount: TOPUP_AMOUNT,
   });
-  proverSecretKey = secretKey;
 
   const tx = new Transaction();
   /*
@@ -386,6 +398,8 @@ export async function submitMinaTx(params: {
   const { address, keypair } = await getKey({
     secretKey: adminSecretKey,
     name: "admin",
+    minBalance: MIN_SUI_BALANCE,
+    topupAmount: TOPUP_AMOUNT,
   });
 
   const tx = new Transaction();
@@ -448,6 +462,8 @@ export async function submitMinaTxInclusion(params: {
   const { address, keypair } = await getKey({
     secretKey: adminSecretKey,
     name: "admin",
+    minBalance: MIN_SUI_BALANCE,
+    topupAmount: TOPUP_AMOUNT,
   });
 
   const tx = new Transaction();
@@ -517,6 +533,8 @@ export async function submitBlockProofDataAvailability(params: {
     const { address, keypair } = await getKey({
       secretKey: adminSecretKey,
       name: "admin",
+      minBalance: MIN_SUI_BALANCE,
+      topupAmount: TOPUP_AMOUNT,
     });
 
     const tx = new Transaction();

@@ -1,13 +1,13 @@
 "use server";
 
 export async function agentProve() {
-  return;
+  //return;
   console.log("agent: starting prove");
   const answer = await dexProverRequest({ task: "prove" });
   return answer;
 }
 export async function agentMerge() {
-  return;
+  //return;
   console.log("agent: starting merge");
   const answer = await dexProverRequest({
     task: "merge",
