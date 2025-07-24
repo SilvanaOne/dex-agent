@@ -25,7 +25,7 @@ dist/
 packages/*/data/
 packages/*/cache/
 packages/*/.env
-packages/*/.env.*
+packages/*/.env
 packages/lib/src/prisma/
 .silvana/
 
